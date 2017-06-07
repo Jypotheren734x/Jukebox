@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Jukebox</title>
+		<link rel="stylesheet" href="css/stylesheet.css">
+		<script src="js/main.js"></script>
+	</head>
+	<body>
+		<ul id="tracks"></ul>
+		<footer>
+			<audio id="music" preload="true">
+				<source id="mp3" src="Music/Waving%20Through%20a%20Window%20(HD).mp3" type="audio/mp3">
+			</audio>
+			<div id="player">
+				<button id="playbtn" class="play"></button>
+				<div id="timeline"><div id="indicator"></div>
+				</div>
+				<div id="duration">0:00/0:00</div>
+			</div>
+		</footer>
+		<script src="js/jukebox.js"></script>
+	</body>
+</html>
