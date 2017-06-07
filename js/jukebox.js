@@ -1,18 +1,31 @@
 /**
  * Created by komar on 6/7/2017.
  */
-function Track(path,artist) {
-	var audio = new Audio();
-	audio.src = path;
+function Track(path) {
+	var self = this;
+	this.audio = new Audio();
+	this.audio.src = path;
 	this.path = path;
-	this.artist = artist;
-	this.duration = audio.duration;
+	this.name = path.split("/")[1];
+	this.loaded = false;
+	this.load = function () {
+		this.audio.addEventListener('loadedmetadata', function() {
+			self.duration = self.audio.duration;
+			self.loaded = true;
+			console.log(self.loaded);
+		});
+		while(!this.loaded){
+			console.log("loading...");
+		}
+
+	};
 }
 function Playlist(name){
 	this.tracks = [];
 	this.name = name;
 	this.addTrack = function(track){
 		if (track instanceof Track) {
+			track.load();
 			this.tracks.push(track);
 		}
 	};
@@ -115,18 +128,21 @@ function Player(){
 		}
 		this.changeSrc = function(src) {
 			self.mp3src.src = src;
-			console.log(src);
+			self.music.load();
+			self.music.play();
 		}
 	}
 }
 function Jukebox(){
+	var self = this;
 	this.library = new Library();
 	this.player = new Player();
 	this.player.init();
 	this.listTracks = function () {
 		var tracks = $('#tracks');
-		for(i = 0; i<this.library.tracks.length; i++){
-			tracks.innerHTML += "<li><button onclick='changeTrack(\""+this.library.tracks[i].path+"\")'>"+this.library.tracks[i].path+"</button></li>";
+		for(i = 0; i<this.library.tracks.length; i++) {
+			var current = this.library.tracks[i];
+			tracks.innerHTML += "<div><button class='trackbtn' onclick='jukebox.changeTrack(\"  "+self.path+"\")'>"+self.name+":"+formatSecondsAsTime(self.audio.duration)+"</button></div>";
 		}
 	};
 	this.add = function () {
@@ -139,23 +155,20 @@ function Jukebox(){
 	}
 }
 var jukebox = new Jukebox();
-jukebox.add(new Track("Music/Arc North - Digital Happiness.mp3"));
-jukebox.add(new Track("Music/Arcade Ahri League Of Legends Login Screen With Music.mp3"));
-jukebox.add(new Track("Music/B0untya & Ulchero - Rainbow.mp3"));
-jukebox.add(new Track("Music/Calcanda - Impact.mp3"));
-jukebox.add(new Track("Music/Denjy - Waste All My Love (Ft. Molly).mp3"));
-jukebox.add(new Track("Music/Dogena - Around The Globe (ft. Babz Wayne).mp3"));
-jukebox.add(new Track("Music/Drianu - Good Times (ft. Marx).mp3"));
-jukebox.add(new Track("Music/Hier - Turn Around (HD).mp3"));
-jukebox.add(new Track("Music/Illenium & Kerli - Sound of Walking Away (HD).mp3"));
-jukebox.add(new Track("Music/Jacob Tillberg - No Money.mp3"));
-jukebox.add(new Track("Music/Konac ft. juu - Won\'t Let Go (HD).mp3"));
-jukebox.add(new Track("Music/Lauv - I Like Me Better (HD).mp3"));
-jukebox.add(new Track("Music/Linkin Park ft. Kiiara - Heavy (Nicky Romero Remix) (HD).mp3"));
-jukebox.add(new Track("Music/Marcus Mouya - Divinity (HD).mp3"));
-jukebox.add(new Track("Music/nanobii - Chipland (HD).mp3"));
-jukebox.add(new Track("Music/Nightcore - How To Be A Heartbreaker ♥ (HD).mp3"));
-function changeTrack(track) {
-	jukebox.changeTrack(track);
-}
+jukebox.add(new Track("Music/Arc North - Digital Happiness.mp3"),
+	new Track("Music/Arcade Ahri League Of Legends Login Screen With Music.mp3"),
+	new Track("Music/B0untya & Ulchero - Rainbow.mp3"),
+	new Track("Music/Calcanda - Impact.mp3"),
+	new Track("Music/Denjy - Waste All My Love (Ft. Molly).mp3"),
+	new Track("Music/Dogena - Around The Globe (ft. Babz Wayne).mp3"),
+	new Track("Music/Drianu - Good Times (ft. Marx).mp3"),
+	new Track("Music/Hier - Turn Around (HD).mp3"),
+	new Track("Music/Illenium & Kerli - Sound of Walking Away (HD).mp3"),
+	new Track("Music/Jacob Tillberg - No Money.mp3"),
+	new Track("Music/Konac ft. juu - Won\'t Let Go (HD).mp3"),
+	new Track("Music/Lauv - I Like Me Better (HD).mp3"),
+	new Track("Music/Linkin Park ft. Kiiara - Heavy (Nicky Romero Remix) (HD).mp3"),
+	new Track("Music/Marcus Mouya - Divinity (HD).mp3"),
+	new Track("Music/nanobii - Chipland (HD).mp3"),
+	new Track("Music/Nightcore - How To Be A Heartbreaker ♥ (HD).mp3"));
 jukebox.listTracks();
