@@ -8,11 +8,12 @@ function Track(path) {
 	this.path = path;
 	this.name = path.split("/")[1];
 	this.loaded = false;
+	this.visible = false;
 	this.load = function () {
 		this.audio.addEventListener('loadedmetadata', function() {
 			self.duration = self.audio.duration;
 			self.loaded = true;
-			$('#tracks').innerHTML += "<div><button class='trackbtn' id='"+self.name+"' onclick='jukebox.changeTrack(new Track(\""+self.path+"\"))'><span style='float: left'>"+self.name+"</span><span style='float: right'>"+formatSecondsAsTime(self.audio.duration)+"</span></button></div>";
+			self.label = "<div><button class='trackbtn' id='"+self.name+"' onclick='jukebox.changeTrack(new Track(\""+self.path+"\"))'><span style='float: left'>"+self.name+"</span><span style='float: right'>"+formatSecondsAsTime(self.audio.duration)+"</span></button></div>";
 		});
 	};
 }
@@ -144,7 +145,9 @@ function Player(){
 		}
 		this.changeSrc = function(src) {
 			self.mp3src.src = src.path;
-			$('#'+src.name).focus();
+			if($('#' + src.name) != undefined) {
+				$('#' + src.name).focus();
+			}
 			self.music.load();
 			self.music.play();
 			self.playbtn.className = "";
@@ -165,16 +168,28 @@ function Jukebox() {
 	this.nextbtn.addEventListener("click", next, false);
 	this.previousbtn.addEventListener("click", previous, false);
 	this.current_track = 0;
+	this.search_bar = $('#search-bar');
+	this.queue = [];
 	this.shufflebtn.addEventListener("click", function () {
+		let curr = self.queue[self.current_track];
 		shuffle(self.queue);
-		console.log(self.queue);
+		self.displayCurrent();
+		self.current_track =  findWithAttr(self.queue, 'path', curr.path);
 	}, false);
 	this.drop_zone.addEventListener("dragover", getFile,false);
 	this.drop_zone.addEventListener("drop", openFile, false);
 	this.play = function () {
 		self.queue = self.library.tracks;
+		self.displayCurrent();
 		self.changeTrack(self.queue[self.current_track]);
 		self.player.music.addEventListener("ended", next, false);
+	};
+	this.displayCurrent = function () {
+		$('#tracks').innerHTML = "";
+		for(i = 0; i<self.queue.length; i++){
+			$('#tracks').innerHTML += self.queue[i].label;
+			self.queue[i].visible = true;
+		}
 	};
 	this.add = function () {
 		for (i = 0; i < arguments.length; i++) {
