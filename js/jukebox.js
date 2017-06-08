@@ -174,11 +174,9 @@ function Jukebox() {
 		this.player.changeSrc(track);
 	};
 	function next(){
-		if (self.player.music.currentTime === self.player.duration) {
-			var next = self.queue.pop();
-			console.log(next);
-			self.changeTrack(next.path);
-		}
+		var next = self.queue.pop();
+		console.log(next);
+		self.changeTrack(next.path);
 	}
 	function openFile(e) {
 		e.stopPropagation();
