@@ -9,7 +9,6 @@
 		new Track("Music/Hier - Turn Around (HD).mp3"),
 		new Track("Music/Illenium & Kerli - Sound of Walking Away (HD).mp3"),
 		new Track("Music/Jacob Tillberg - No Money.mp3"),
-		new Track("Music/Konac ft. juu - Won\'t Let Go (HD).mp3"),
 		new Track("Music/Lauv - I Like Me Better (HD).mp3"),
 		new Track("Music/Linkin Park ft. Kiiara - Heavy (Nicky Romero Remix) (HD).mp3"),
 		new Track("Music/Marcus Mouya - Divinity (HD).mp3"),

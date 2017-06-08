@@ -145,9 +145,6 @@ function Player(){
 		}
 		this.changeSrc = function(src) {
 			self.mp3src.src = src.path;
-			if($('#' + src.name) != undefined) {
-				$('#' + src.name).focus();
-			}
 			self.music.load();
 			self.music.play();
 			self.playbtn.className = "";
@@ -180,9 +177,9 @@ function Jukebox() {
 	this.drop_zone.addEventListener("drop", openFile, false);
 	this.play = function () {
 		self.queue = self.library.tracks;
-		self.displayCurrent();
 		self.changeTrack(self.queue[self.current_track]);
 		self.player.music.addEventListener("ended", next, false);
+		self.player.music.addEventListener("canplaythrough", self.displayCurrent,false)
 	};
 	this.displayCurrent = function () {
 		$('#tracks').innerHTML = "";
@@ -202,6 +199,7 @@ function Jukebox() {
 	this.changeTrack = function (track) {
 		this.current_track = findWithAttr(this.queue, 'path', track.path);
 		this.player.changeSrc(track);
+		$('#' + track.name).focus();
 	};
 	function previous() {
 		self.current_track--;
