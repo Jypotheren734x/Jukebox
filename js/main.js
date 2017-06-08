@@ -12,9 +12,9 @@ function $(element) {
 	}
 }
 function formatSecondsAsTime(secs, format) {
-	var hr  = Math.floor(secs / 3600);
-	var min = Math.floor((secs - (hr * 3600))/60);
-	var sec = Math.floor(secs - (hr * 3600) -  (min * 60));
+	let hr = Math.floor(secs / 3600);
+	let min = Math.floor((secs - (hr * 3600)) / 60);
+	let sec = Math.floor(secs - (hr * 3600) - (min * 60));
 
 	if (min < 10){
 		min = "0" + min;
@@ -24,4 +24,10 @@ function formatSecondsAsTime(secs, format) {
 	}
 
 	return min + ':' + sec;
+}
+function shuffle(a) {
+	for (let i = a.length; i; i--) {
+		let j = Math.floor(Math.random() * i);
+		[a[i - 1], a[j]] = [a[j], a[i - 1]];
+	}
 }

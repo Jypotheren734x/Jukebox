@@ -2,7 +2,7 @@
  * Created by komar on 6/7/2017.
  */
 function Track(path) {
-	var self = this;
+	let self = this;
 	this.audio = new Audio();
 	this.audio.src = path;
 	this.path = path;
@@ -12,7 +12,7 @@ function Track(path) {
 		this.audio.addEventListener('loadedmetadata', function() {
 			self.duration = self.audio.duration;
 			self.loaded = true;
-			$('#tracks').innerHTML += "<div><button class='trackbtn' onclick='jukebox.changeTrack(\"  "+self.path+"\")'>"+self.name+"<span style='float: right'>"+formatSecondsAsTime(self.audio.duration)+"</span></button></div>";
+			$('#tracks').innerHTML += "<div><button class='trackbtn' onclick='jukebox.changeTrack(new Track(\""+self.path+"\"))'>"+self.name+"<span style='float: right'>"+formatSecondsAsTime(self.audio.duration)+"</span></button></div>";
 		});
 	};
 }
@@ -66,7 +66,8 @@ function Player(){
 		this.indicator = $('#indicator');
 		this.timeline = $('#timeline');
 		this.duration_indicator = $('#duration');
-		var self = this;
+		this.current_track = $('#current_song');
+		let self = this;
 		this.timelineWidth = this.timeline.offsetWidth - this.indicator.offsetWidth;
 		this.playbtn.addEventListener("click", play);
 		this.stopbtn.addEventListener("click", stop);
@@ -96,7 +97,7 @@ function Player(){
 			self.onplayhead = false;
 		}
 		function moveplayhead(event) {
-			var newMargLeft = event.clientX - getPosition(self.timeline);
+			let newMargLeft = event.clientX - getPosition(self.timeline);
 
 			if (newMargLeft >= 0 && newMargLeft <= self.timelineWidth) {
 				self.indicator.style.marginLeft = newMargLeft + "px";
@@ -109,7 +110,7 @@ function Player(){
 			}
 		}
 		function timeUpdate() {
-			var playPercent = self.timelineWidth * (self.music.currentTime / self.duration);
+			let playPercent = self.timelineWidth * (self.music.currentTime / self.duration);
 			self.duration_indicator.innerHTML = ""+ formatSecondsAsTime(Math.floor(self.music.currentTime)) +"/"+ formatSecondsAsTime(Math.floor(self.duration));
 			self.indicator.style.marginLeft = playPercent + "px";
 			if (self.music.currentTime == self.duration) {
@@ -142,24 +143,37 @@ function Player(){
 			return el.getBoundingClientRect().left;
 		}
 		this.changeSrc = function(src) {
-			self.mp3src.src = src;
+			self.mp3src.src = src.path;
+			self.current_track.innerHTML = "Current Track: " + src.name;
 			self.music.load();
 			self.music.play();
+			self.playbtn.className = "";
+			self.playbtn.className = "fa fa-pause";
 		}
 	}
 }
 function Jukebox() {
-	var self = this;
+	let self = this;
 	this.library = new Library();
 	this.player = new Player();
 	this.player.init();
 	this.tracks_loaded = false;
 	this.drop_zone = $('#drop-zone');
+	this.shufflebtn = $('#shufflebtn');
+	this.nextbtn = $('#nextbtn');
+	this.previousbtn = $('#previousbtn');
+	this.nextbtn.addEventListener("click", next, false);
+	this.previousbtn.addEventListener("click", previous, false);
+	this.current_track = 0;
+	this.shufflebtn.addEventListener("click", function () {
+		shuffle(self.queue);
+		console.log(self.queue);
+	}, false);
 	this.drop_zone.addEventListener("dragover", getFile,false);
 	this.drop_zone.addEventListener("drop", openFile, false);
 	this.play = function () {
-		self.queue = self.library.tracks;
-		self.changeTrack(self.queue.pop().path);
+		self.queue = self.library.tracks
+		self.changeTrack(self.queue[self.current_track]);0
 		self.player.music.addEventListener("ended", next, false);
 	};
 	this.add = function () {
@@ -173,19 +187,26 @@ function Jukebox() {
 	this.changeTrack = function (track) {
 		this.player.changeSrc(track);
 	};
+	function previous() {
+		self.current_track--;
+		let previous = self.queue[self.current_track];
+		self.changeTrack(previous);
+	}
 	function next(){
-		var next = self.queue.pop();
-		console.log(next);
-		self.changeTrack(next.path);
+		self.current_track++;
+		let next = self.queue[self.current_track];
+		self.changeTrack(next);
 	}
 	function openFile(e) {
 		e.stopPropagation();
 		e.preventDefault();
-		var blob = window.URL || webkit.webkitURL;
-		var files = e.dataTransfer.files;
-		var file = files[0];
-		var fileUrl = blob.createObjectURL(file);
-		self.changeTrack(fileUrl);
+		let blob = window.URL || webkit.webkitURL;
+		let files = e.dataTransfer.files;
+		let file = files[0];
+		let fileUrl = blob.createObjectURL(file);
+		let track = new Track(fileUrl);
+		track.name = file.name;
+		self.changeTrack(track);
 	}
 	function getFile(e) {
 		e.stopPropagation();
