@@ -60,7 +60,7 @@ function Player(){
 	this.init = function(){
 		this.music = $('#music');
 		this.mp3src = $('#mp3');
-		this.duration = music.duration;
+		this.duration = this.music.duration;
 		this.playbtn = $('#playbtn');
 		this.stopbtn = $('#stopbtn');
 		this.indicator = $('#indicator');
@@ -153,10 +153,21 @@ function Jukebox() {
 	this.library = new Library();
 	this.player = new Player();
 	this.player.init();
-	this.tracks_loaded = 0;
+	this.tracks_loaded = false;
 	this.addbtn = $('#addbtn');
 	this.addbtn.addEventListener("dragover", getFile,false);
 	this.addbtn.addEventListener("drop", openFile, false);
+	this.play = function () {
+		self.queue = self.library.tracks;
+		self.changeTrack(self.queue.pop());
+		while(!self.queue.length > 0){
+			if(self.player.music.currentTime === self.player.duration){
+				var next = self.queue.pop();
+				console.log(next);
+				self.changeTrack(next.path);
+			}
+		}
+	};
 	this.add = function () {
 		for (i = 0; i < arguments.length; i++) {
 			this.library.add(arguments[i]);

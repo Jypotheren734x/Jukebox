@@ -15,3 +15,4 @@ jukebox.add(
 	new Track("Music/Marcus Mouya - Divinity (HD).mp3"),
 	new Track("Music/nanobii - Chipland (HD).mp3"),
 	new Track("Music/Nightcore - How To Be A Heartbreaker ♥ (HD).mp3"));
+jukebox.play();
