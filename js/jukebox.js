@@ -62,12 +62,14 @@ function Player(){
 		this.mp3src = $('#mp3');
 		this.duration = music.duration;
 		this.playbtn = $('#playbtn');
+		this.stopbtn = $('#stopbtn');
 		this.indicator = $('#indicator');
 		this.timeline = $('#timeline');
 		this.duration_indicator = $('#duration');
 		var self = this;
 		this.timelineWidth = this.timeline.offsetWidth - this.indicator.offsetWidth;
 		this.playbtn.addEventListener("click", play);
+		this.stopbtn.addEventListener("click", stop);
 		this.music.addEventListener("timeupdate", timeUpdate, false);
 		this.timeline.addEventListener("click", function(event) {
 			moveplayhead(event);
@@ -119,12 +121,19 @@ function Player(){
 			if (self.music.paused) {
 				self.music.play();
 				self.playbtn.className = "";
-				self.playbtn.className = "pause";
+				self.playbtn.className = "fa fa-pause";
 			} else {
 				self.music.pause();
 				self.playbtn.className = "";
-				self.playbtn.className = "play";
+				self.playbtn.className = "fa fa-play";
 			}
+		}
+		function stop() {
+			self.music.currentTime = 0;
+			self.music.pause();
+			self.playbtn.className = "";
+			self.playbtn.className = "fa fa-play";
+			self.mp3src.src = "";
 		}
 		self.music.addEventListener("canplaythrough", function() {
 			self.duration = self.music.duration;
@@ -139,21 +148,38 @@ function Player(){
 		}
 	}
 }
-function Jukebox(){
+function Jukebox() {
 	var self = this;
 	this.library = new Library();
 	this.player = new Player();
 	this.player.init();
 	this.tracks_loaded = 0;
+	this.addbtn = $('#addbtn');
+	this.addbtn.addEventListener("dragover", getFile,false);
+	this.addbtn.addEventListener("drop", openFile, false);
 	this.add = function () {
-		for(i = 0; i<arguments.length; i++){
+		for (i = 0; i < arguments.length; i++) {
 			this.library.add(arguments[i]);
-			if(this.library.tracks[i].loaded) {
+			if (this.library.tracks[i].loaded) {
 				this.tracks_loaded++;
 			}
 		}
 	};
-	this.changeTrack = function(track){
+	this.changeTrack = function (track) {
 		this.player.changeSrc(track);
+	};
+	function openFile(e) {
+		e.stopPropagation();
+		e.preventDefault();
+		var blob = window.URL || webkit.webkitURL;
+		var files = e.dataTransfer.files;
+		var file = files[0];
+		var fileUrl = blob.createObjectURL(file);
+		self.changeTrack(fileUrl);
+	}
+	function getFile(e) {
+		e.stopPropagation();
+		e.preventDefault();
+		e.dataTransfer.dropEffect = 'copy';
 	}
 }

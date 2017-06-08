@@ -6,21 +6,45 @@
 }
 
 #playbtn{
+    height: 60px;
+    width: 60px;
+    border: none;
+    background-size: 50% 50%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background: transparent;
+    float:left;
+    outline:none;
+}
+
+#stopbtn{
     height:60px;
     width: 60px;
     border: none;
     background-size: 50% 50%;
     background-repeat: no-repeat;
     background-position: center;
+    background: transparent;
     float:left;
     outline:none;
 }
 
-.play{background: url('http://www.alexkatz.me/codepen/img/play.png') ;}
-.pause{background: url('http://www.alexkatz.me/codepen/img/pause.png') ;}
+
+#shufflebtn{
+    height:60px;
+    width: 60px;
+    border: none;
+    background-size: 50% 50%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background: transparent;
+    float:left;
+    outline:none;
+}
+
 
 #timeline{
-    width: 95%;
+    width: 85%;
     height: 2px;
     margin-top: 30px;
     float: left;
