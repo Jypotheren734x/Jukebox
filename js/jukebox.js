@@ -12,7 +12,7 @@ function Track(path) {
 		this.audio.addEventListener('loadedmetadata', function() {
 			self.duration = self.audio.duration;
 			self.loaded = true;
-			$('#tracks').innerHTML += "<div><button class='trackbtn' onclick='jukebox.changeTrack(new Track(\""+self.path+"\"))'>"+self.name+"<span style='float: right'>"+formatSecondsAsTime(self.audio.duration)+"</span></button></div>";
+			$('#tracks').innerHTML += "<div><button class='trackbtn' onclick='jukebox.changeTrack(new Track(\""+self.path+"\"))'><span style='float: left'>"+self.name+"</span><span style='float: right'>"+formatSecondsAsTime(self.audio.duration)+"</span></button></div>";
 		});
 	};
 }
@@ -186,6 +186,7 @@ function Jukebox() {
 	};
 	this.changeTrack = function (track) {
 		this.current_track = findWithAttr(this.queue, 'path', track.path);
+		$('#next_song').innerHTML = "Next Song: " + this.queue[this.current_track + 1].name;
 		this.player.changeSrc(track);
 	};
 	function previous() {
