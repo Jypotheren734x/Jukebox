@@ -12,12 +12,8 @@ function Track(path) {
 		this.audio.addEventListener('loadedmetadata', function() {
 			self.duration = self.audio.duration;
 			self.loaded = true;
-			console.log(self.loaded);
+			$('#tracks').innerHTML += "<div><button class='trackbtn' onclick='jukebox.changeTrack(\"  "+self.path+"\")'>"+self.name+"<span style='float: right'>"+formatSecondsAsTime(self.audio.duration)+"</span></button></div>";
 		});
-		while(!this.loaded){
-			console.log("loading...");
-		}
-
 	};
 }
 function Playlist(name){
@@ -46,7 +42,17 @@ function Library() {
 	this.tracks = [];
 	this.add = function (item) {
 		if(item instanceof Track){
+			item.load();
 			this.tracks.push(item);
+		}
+		if(item instanceof Playlist){
+			this.playlists.push(item);
+		}
+		if(item instanceof Artist){
+			this.artists.push(item);
+		}
+		if(item instanceof Album){
+			this.albums.push(item);
 		}
 	};
 }
@@ -138,37 +144,16 @@ function Jukebox(){
 	this.library = new Library();
 	this.player = new Player();
 	this.player.init();
-	this.listTracks = function () {
-		var tracks = $('#tracks');
-		for(i = 0; i<this.library.tracks.length; i++) {
-			var current = this.library.tracks[i];
-			tracks.innerHTML += "<div><button class='trackbtn' onclick='jukebox.changeTrack(\"  "+self.path+"\")'>"+self.name+":"+formatSecondsAsTime(self.audio.duration)+"</button></div>";
-		}
-	};
+	this.tracks_loaded = 0;
 	this.add = function () {
 		for(i = 0; i<arguments.length; i++){
 			this.library.add(arguments[i]);
+			if(this.library.tracks[i].loaded) {
+				this.tracks_loaded++;
+			}
 		}
 	};
 	this.changeTrack = function(track){
 		this.player.changeSrc(track);
 	}
 }
-var jukebox = new Jukebox();
-jukebox.add(new Track("Music/Arc North - Digital Happiness.mp3"),
-	new Track("Music/Arcade Ahri League Of Legends Login Screen With Music.mp3"),
-	new Track("Music/B0untya & Ulchero - Rainbow.mp3"),
-	new Track("Music/Calcanda - Impact.mp3"),
-	new Track("Music/Denjy - Waste All My Love (Ft. Molly).mp3"),
-	new Track("Music/Dogena - Around The Globe (ft. Babz Wayne).mp3"),
-	new Track("Music/Drianu - Good Times (ft. Marx).mp3"),
-	new Track("Music/Hier - Turn Around (HD).mp3"),
-	new Track("Music/Illenium & Kerli - Sound of Walking Away (HD).mp3"),
-	new Track("Music/Jacob Tillberg - No Money.mp3"),
-	new Track("Music/Konac ft. juu - Won\'t Let Go (HD).mp3"),
-	new Track("Music/Lauv - I Like Me Better (HD).mp3"),
-	new Track("Music/Linkin Park ft. Kiiara - Heavy (Nicky Romero Remix) (HD).mp3"),
-	new Track("Music/Marcus Mouya - Divinity (HD).mp3"),
-	new Track("Music/nanobii - Chipland (HD).mp3"),
-	new Track("Music/Nightcore - How To Be A Heartbreaker ♥ (HD).mp3"));
-jukebox.listTracks();
