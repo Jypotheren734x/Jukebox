@@ -70,9 +70,6 @@
     outline: 0;
     border: 1px solid rgba(173, 163, 151, 0.4);
     background-color: rgba(173, 163, 151, 0.2);
-    border-radius: 3px;
-    padding: 10px 15px;
-    margin: 0 auto 10px auto;
     font-size: 18px;
     -webkit-transition-duration: 0.25s;
     transition-duration: 0.25s;

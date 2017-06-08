@@ -90,7 +90,7 @@ function Player(){
 			if (self.onplayhead == true) {
 				moveplayhead(event);
 				window.removeEventListener('mousemove', moveplayhead, true);
-				self.music.currentTime = duration * clickPercent(event);
+				self.music.currentTime = self.duration * clickPercent(event);
 				self.music.addEventListener('timeupdate', timeUpdate, false);
 			}
 			self.onplayhead = false;
@@ -154,19 +154,13 @@ function Jukebox() {
 	this.player = new Player();
 	this.player.init();
 	this.tracks_loaded = false;
-	this.addbtn = $('#addbtn');
-	this.addbtn.addEventListener("dragover", getFile,false);
-	this.addbtn.addEventListener("drop", openFile, false);
+	this.drop_zone = $('#drop-zone');
+	this.drop_zone.addEventListener("dragover", getFile,false);
+	this.drop_zone.addEventListener("drop", openFile, false);
 	this.play = function () {
 		self.queue = self.library.tracks;
-		self.changeTrack(self.queue.pop());
-		while(!self.queue.length > 0){
-			if(self.player.music.currentTime === self.player.duration){
-				var next = self.queue.pop();
-				console.log(next);
-				self.changeTrack(next.path);
-			}
-		}
+		self.changeTrack(self.queue.pop().path);
+		self.player.music.addEventListener("ended", next, false);
 	};
 	this.add = function () {
 		for (i = 0; i < arguments.length; i++) {
@@ -179,6 +173,13 @@ function Jukebox() {
 	this.changeTrack = function (track) {
 		this.player.changeSrc(track);
 	};
+	function next(){
+		if (self.player.music.currentTime === self.player.duration) {
+			var next = self.queue.pop();
+			console.log(next);
+			self.changeTrack(next.path);
+		}
+	}
 	function openFile(e) {
 		e.stopPropagation();
 		e.preventDefault();
