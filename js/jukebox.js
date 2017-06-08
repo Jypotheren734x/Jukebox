@@ -172,8 +172,8 @@ function Jukebox() {
 	this.drop_zone.addEventListener("dragover", getFile,false);
 	this.drop_zone.addEventListener("drop", openFile, false);
 	this.play = function () {
-		self.queue = self.library.tracks
-		self.changeTrack(self.queue[self.current_track]);0
+		self.queue = self.library.tracks;
+		self.changeTrack(self.queue[self.current_track]);
 		self.player.music.addEventListener("ended", next, false);
 	};
 	this.add = function () {
@@ -185,15 +185,22 @@ function Jukebox() {
 		}
 	};
 	this.changeTrack = function (track) {
+		this.current_track = findWithAttr(this.queue, 'path', track.path);
 		this.player.changeSrc(track);
 	};
 	function previous() {
 		self.current_track--;
+		if(self.current_track < 0){
+			self.current_track = self.queue.length-1;
+		}
 		let previous = self.queue[self.current_track];
 		self.changeTrack(previous);
 	}
 	function next(){
 		self.current_track++;
+		if(self.current_track === self.queue.length){
+			self.current_track = 0;
+		}
 		let next = self.queue[self.current_track];
 		self.changeTrack(next);
 	}

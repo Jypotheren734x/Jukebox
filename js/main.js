@@ -31,3 +31,11 @@ function shuffle(a) {
 		[a[i - 1], a[j]] = [a[j], a[i - 1]];
 	}
 }
+function findWithAttr(array, attr, value) {
+	for(var i = 0; i < array.length; i += 1) {
+		if(array[i][attr] === value) {
+			return i;
+		}
+	}
+	return -1;
+}
