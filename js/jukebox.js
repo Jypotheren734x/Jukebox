@@ -1,53 +1,6 @@
 /**
  * Created by komar on 6/7/2017.
  */
-function Track(src) {
-	let self = this;
-	this.path = src.uri;
-	this.id = src.id;
-	this.title = src.title;
-	this.duration = src.duration;
-	this.label = "<div><button class='trackbtn' id='"+self.title+"' onclick='jukebox.player.changeSrc("+this.id+")'><span style='float: left'>"+self.title+"</span><span style='float: right'>"+formatSecondsAsTime(Math.floor(self.duration / 1000))+"</span></button></div>";
-}
-function Playlist(name){
-	this.tracks = [];
-	this.title = name;
-	this.addTrack = function(track){
-		if (track instanceof Track) {
-			track.load();
-			this.tracks.push(track);
-		}
-	};
-	this.removeTrack = function (track) {
-		this.tracks.splice(this.tracks.indexOf(track), 1);
-	};
-}
-function Artist(name){
-	Playlist.call(this, name);
-}
-function Album(name){
-	Playlist.call(this, name);
-}
-function Library() {
-	this.albums = [];
-	this.artists = [];
-	this.playlists = [];
-	this.tracks = [];
-	this.add = function (item) {
-		if(item instanceof Track){
-			this.tracks.push(item);
-		}
-		if(item instanceof Playlist){
-			this.playlists.push(item);
-		}
-		if(item instanceof Artist){
-			this.artists.push(item);
-		}
-		if(item instanceof Album){
-			this.albums.push(item);
-		}
-	};
-}
 function Player(){
 	this.init = function(){
 		this.playbtn = $('#playbtn');
@@ -62,6 +15,7 @@ function Player(){
 		this.playbtn.click(play);
 		this.stopbtn.click(stop);
 		this.paused = false;
+		this.options = {};
 		setInterval(timeUpdate, 1000);
 		function timeUpdate() {
 			let percent = self.timelineWidth * (self.audio.currentTime()/self.current_track.duration);
@@ -89,7 +43,8 @@ function Player(){
 			return el.getBoundingClientRect().left;
 		}
 		this.changeSrc = function(src) {
-			SC.stream(`/tracks/`+src).then(function (player) {
+			self.current_track = src;
+			SC.stream(`/tracks/`+src.id, self.options).then(function (player) {
 				self.audio = player;
 				self.paused = false;
 				play();
@@ -99,7 +54,6 @@ function Player(){
 }
 function Jukebox(src) {
 	let self = this;
-	this.library = new Library();
 	this.player = new Player();
 	this.player.init();
 	SC.initialize({
@@ -118,11 +72,11 @@ function Jukebox(src) {
 		this.search_results = [];
 		SC.get(src).then(function(playlist) {
 			playlist.tracks.forEach(function (track) {
-				console.log(track.title);
-				self.add(new Track(track));
+				track.label = "<div><button class='trackbtn' id='"+track.id+"'><span style='float: left'>"+track.title+"</span><span style='float: right'>"+formatSecondsAsTime(Math.floor(track.duration / 1000))+"</span></button></div>";
+				$('#' + track.id).click(self.player.changeSrc(track));
+				self.add(track);
 			});
 			self.play();
-			self.player.audio._player._html5Audio.addEventListener('ended', next);
 		});
 		function search() {
 			SC.get(`/tracks`,{q: self.search_bar.val()}).then(function (tracks) {
@@ -131,7 +85,9 @@ function Jukebox(src) {
 				}else {
 					self.search_results = [];
 					tracks.forEach(function (track) {
-						self.search_results.push(new Track(track));
+						track.label = "<div><button class='trackbtn' id='"+track.title+"'><span style='float: left'>"+track.title+"</span><span style='float: right'>"+formatSecondsAsTime(Math.floor(track.duration / 1000))+"</span></button></div>";
+						$('#' + track.id).click(self.player.changeSrc(track));
+						self.search_results.push(track);
 					});
 					self.displaySearchResults();
 				}
@@ -144,9 +100,8 @@ function Jukebox(src) {
 			self.current_track =  findWithAttr(self.queue, 'id', curr.id);
 		}, false);
 		this.play = function () {
-			self.queue = self.library.tracks;
 			self.displayCurrent();
-			self.changeTrack(self.queue[self.current_track].id);
+			self.player.changeSrc(self.queue[self.current_track]);
 		};
 		this.displaySearchResults = function () {
 			$('#tracks').empty();
@@ -162,29 +117,25 @@ function Jukebox(src) {
 		};
 		this.add = function () {
 			for (i = 0; i < arguments.length; i++) {
-				this.library.add(arguments[i]);
+				this.queue.push(arguments[i]);
 			}
-		};
-		this.changeTrack = function (track) {
-			this.current_track = findWithAttr(this.queue, 'id', track);
-			this.player.changeSrc(this.queue[this.current_track].id);
-			this.player.current_track = this.queue[this.current_track];
 		};
 		function previous() {
 			self.current_track--;
 			if(self.current_track < 0){
 				self.current_track = self.queue.length-1;
 			}
-			let previous = self.queue[self.current_track].id;
-			self.changeTrack(previous);
+			let previous = self.queue[self.current_track];
+			self.player.changeSrc(previous);
 		}
 		function next(){
 			self.current_track++;
 			if(self.current_track === self.queue.length){
 				self.current_track = 0;
 			}
-			let next = self.queue[self.current_track].id;
-			self.changeTrack(next);
+			let next = self.queue[self.current_track];
+			next.seek(0);
+			self.player.changeSrc(next);
 		}
 	};
 }
