@@ -15,7 +15,6 @@ function Player(){
 		this.playbtn.click(play);
 		this.stopbtn.click(stop);
 		this.paused = false;
-		this.options = {};
 		setInterval(timeUpdate, 1000);
 		function timeUpdate() {
 			let percent = self.timelineWidth * (self.audio.currentTime()/self.current_track.duration);
@@ -44,7 +43,8 @@ function Player(){
 		}
 		this.changeSrc = function(src) {
 			self.current_track = src;
-			SC.stream(`/tracks/`+src.id, self.options).then(function (player) {
+			console.log("Playing: "+src.title);
+			SC.stream(`/tracks/`+src.id).then(function (player) {
 				self.audio = player;
 				self.paused = false;
 				play();
@@ -72,8 +72,15 @@ function Jukebox(src) {
 		this.search_results = [];
 		SC.get(src).then(function(playlist) {
 			playlist.tracks.forEach(function (track) {
-				track.label = "<div><button class='trackbtn' id='"+track.id+"'><span style='float: left'>"+track.title+"</span><span style='float: right'>"+formatSecondsAsTime(Math.floor(track.duration / 1000))+"</span></button></div>";
-				$('#' + track.id).click(self.player.changeSrc(track));
+				track.label = "<div>" +
+					"<button class='trackbtn' id='"+track.id+"'>" +
+					"<img src="+track.artwork_url+" style='float: left'>" +
+					"<span style='float: left'>"+track.title+"</span>" +
+					"<span style='float: middle'>"+track.label_name+"</span>" +
+					"<span style='float: right'>"+track.genre+"</span>" +
+					"<span style='float: right'>"+formatSecondsAsTime(Math.floor(track.duration / 1000))+"</span>" +
+					"</button>" +
+					"</div>";
 				self.add(track);
 			});
 			self.play();
@@ -85,8 +92,15 @@ function Jukebox(src) {
 				}else {
 					self.search_results = [];
 					tracks.forEach(function (track) {
-						track.label = "<div><button class='trackbtn' id='"+track.title+"'><span style='float: left'>"+track.title+"</span><span style='float: right'>"+formatSecondsAsTime(Math.floor(track.duration / 1000))+"</span></button></div>";
-						$('#' + track.id).click(self.player.changeSrc(track));
+						track.label = "<div>" +
+							"<button class='trackbtn' id='"+track.id+"'>" +
+							"<img src="+track.artwork_url+" style='float: left'>" +
+							"<span style='float: left'>"+track.title+"</span>" +
+							"<span style='float: middle'>"+track.label_name+"</span>" +
+							"<span style='float: right'>"+track.genre+"</span>" +
+							"<span style='float: right'>"+formatSecondsAsTime(Math.floor(track.duration / 1000))+"</span>" +
+							"</button>" +
+							"</div>";
 						self.search_results.push(track);
 					});
 					self.displaySearchResults();
@@ -100,19 +114,21 @@ function Jukebox(src) {
 			self.current_track =  findWithAttr(self.queue, 'id', curr.id);
 		}, false);
 		this.play = function () {
-			self.displayCurrent();
 			self.player.changeSrc(self.queue[self.current_track]);
+			self.displayCurrent();
 		};
 		this.displaySearchResults = function () {
 			$('#tracks').empty();
 			for(i = 0; i<self.search_results.length; i++){
 				$('#tracks').append(self.search_results[i].label);
+				$('#' + self.search_results[i].id).click(self.player.changeSrc(track));
 			}
 		};
 		this.displayCurrent = function () {
 			$('#tracks').empty();
 			for(i = 0; i<self.queue.length; i++){
 				$('#tracks').append(self.queue[i].label);
+				$('#' + self.queue[i].id).click(self.player.changeSrc(track));
 			}
 		};
 		this.add = function () {
@@ -134,7 +150,6 @@ function Jukebox(src) {
 				self.current_track = 0;
 			}
 			let next = self.queue[self.current_track];
-			next.seek(0);
 			self.player.changeSrc(next);
 		}
 	};
