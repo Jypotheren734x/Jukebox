@@ -29,3 +29,7 @@ function findWithAttr(array, attr, value) {
 	}
 	return -1;
 }
+$.fn.setClass = function(classes) {
+	this.attr('class', classes);
+	return this;
+};
