@@ -1,25 +1,17 @@
 /**
  * Created by komar on 6/7/2017.
  */
-function Track(path) {
+function Track(src) {
 	let self = this;
-	this.audio = new Audio();
-	this.audio.src = path;
-	this.path = path;
-	this.name = path.split("/")[1];
-	this.loaded = false;
-	this.visible = false;
-	this.load = function () {
-		this.audio.addEventListener('loadedmetadata', function() {
-			self.duration = self.audio.duration;
-			self.loaded = true;
-			self.label = "<div><button class='trackbtn' id='"+self.name+"' onclick='jukebox.changeTrack(new Track(\""+self.path+"\"))'><span style='float: left'>"+self.name+"</span><span style='float: right'>"+formatSecondsAsTime(self.audio.duration)+"</span></button></div>";
-		});
-	};
+	this.path = src.uri;
+	this.id = src.id;
+	this.title = src.title;
+	this.duration = src.duration;
+	this.label = "<div><button class='trackbtn' id='"+self.title+"' onclick='jukebox.changeTrack("+this.id+")'><span style='float: left'>"+self.title+"</span><span style='float: right'>"+formatSecondsAsTime(self.duration)+"</span></button></div>";
 }
 function Playlist(name){
 	this.tracks = [];
-	this.name = name;
+	this.title = name;
 	this.addTrack = function(track){
 		if (track instanceof Track) {
 			track.load();
@@ -43,7 +35,6 @@ function Library() {
 	this.tracks = [];
 	this.add = function (item) {
 		if(item instanceof Track){
-			item.load();
 			this.tracks.push(item);
 		}
 		if(item instanceof Playlist){
@@ -59,73 +50,34 @@ function Library() {
 }
 function Player(){
 	this.init = function(){
-		this.music = $('#music');
-		this.mp3src = $('#mp3');
-		this.duration = this.music.duration;
 		this.playbtn = $('#playbtn');
 		this.stopbtn = $('#stopbtn');
 		this.indicator = $('#indicator');
 		this.timeline = $('#timeline');
 		this.duration_indicator = $('#duration');
-		this.current_track = $('#current_song');
+		this.current_track = undefined;
 		let self = this;
 		this.timelineWidth = this.timeline.offsetWidth - this.indicator.offsetWidth;
-		this.playbtn.addEventListener("click", play);
-		this.stopbtn.addEventListener("click", stop);
-		this.music.addEventListener("timeupdate", timeUpdate, false);
-		this.timeline.addEventListener("click", function(event) {
-			moveplayhead(event);
-			self.music.currentTime = self.duration * clickPercent(event);
-		}, false);
-		function clickPercent(event) {
-			return (event.clientX - getPosition(self.timeline)) / self.timelineWidth;
-		}
-		this.indicator.addEventListener('mousedown', mouseDown, false);
-		window.addEventListener('mouseup', mouseUp, false);
-		this.onplayhead = false;
-		function mouseDown() {
-			self.onplayhead = true;
-			window.addEventListener('mousemove', moveplayhead, true);
-			self.music.removeEventListener('timeupdate', timeUpdate, false);
-		}
-		function mouseUp(event) {
-			if (self.onplayhead == true) {
-				moveplayhead(event);
-				window.removeEventListener('mousemove', moveplayhead, true);
-				self.music.currentTime = self.duration * clickPercent(event);
-				self.music.addEventListener('timeupdate', timeUpdate, false);
-			}
-			self.onplayhead = false;
-		}
-		function moveplayhead(event) {
-			let newMargLeft = event.clientX - getPosition(self.timeline);
-
-			if (newMargLeft >= 0 && newMargLeft <= self.timelineWidth) {
-				self.indicator.style.marginLeft = newMargLeft + "px";
-			}
-			if (newMargLeft < 0) {
-				self.indicator.style.marginLeft = "0px";
-			}
-			if (newMargLeft > self.timelineWidth) {
-				self.indicator.style.marginLeft = self.timelineWidth + "px";
-			}
-		}
+		this.playbtn.click(play);
+		this.stopbtn.click(stop);
+		this.paused = false;
+		setInterval(timeUpdate, 1000);
 		function timeUpdate() {
-			let playPercent = self.timelineWidth * (self.music.currentTime / self.duration);
-			self.duration_indicator.innerHTML = ""+ formatSecondsAsTime(Math.floor(self.music.currentTime)) +"/"+ formatSecondsAsTime(Math.floor(self.duration));
-			self.indicator.style.marginLeft = playPercent + "px";
-			if (self.music.currentTime == self.duration) {
-				self.playbtn.className = "";
-				self.playbtn.className = "play";
-			}
+			let playPercent = self.timelineWidth * (self.current_track.currentTime / self.current_track.duration);
+			self.duration_indicator.html(""+formatSecondsAsTime(Math.floor(self.current_track.position)) +"/"+ formatSecondsAsTime(Math.floor(self.current_track.duration)));
 		}
 		function play() {
-			if (self.music.paused) {
-				self.music.play();
+			if (!self.paused) {
+				SC.stream(`/tracks/`+self.current_track.id).then(function (player) {
+					player.play();
+				});
 				self.playbtn.className = "";
 				self.playbtn.className = "fa fa-pause";
 			} else {
-				self.music.pause();
+				SC.stream(`/tracks/`+self.current_track.id).then(function (player) {
+					player.pause();
+				});
+				console.log("paused");
 				self.playbtn.className = "";
 				self.playbtn.className = "fa fa-play";
 			}
@@ -137,16 +89,12 @@ function Player(){
 			self.playbtn.className = "fa fa-play";
 			self.mp3src.src = "";
 		}
-		self.music.addEventListener("canplaythrough", function() {
-			self.duration = self.music.duration;
-		}, false);
 		function getPosition(el) {
 			return el.getBoundingClientRect().left;
 		}
 		this.changeSrc = function(src) {
-			self.mp3src.src = src.path;
-			self.music.load();
-			self.music.play();
+			self.current_track = src;
+			play();
 			self.playbtn.className = "";
 			self.playbtn.className = "fa fa-pause";
 		}
@@ -158,55 +106,47 @@ function Jukebox() {
 	this.player = new Player();
 	this.player.init();
 	this.tracks_loaded = false;
-	this.drop_zone = $('#drop-zone');
 	this.shufflebtn = $('#shufflebtn');
 	this.nextbtn = $('#nextbtn');
 	this.previousbtn = $('#previousbtn');
-	this.nextbtn.addEventListener("click", next, false);
-	this.previousbtn.addEventListener("click", previous, false);
+	this.nextbtn.click(next);
+	this.previousbtn.click(previous);
 	this.current_track = 0;
 	this.search_bar = $('#search-bar');
 	this.queue = [];
-	this.shufflebtn.addEventListener("click", function () {
+	this.shufflebtn.click(function () {
 		let curr = self.queue[self.current_track];
 		shuffle(self.queue);
 		self.displayCurrent();
-		self.current_track =  findWithAttr(self.queue, 'path', curr.path);
+		self.current_track =  findWithAttr(self.queue, 'id', curr.id);
 	}, false);
-	this.drop_zone.addEventListener("dragover", getFile,false);
-	this.drop_zone.addEventListener("drop", openFile, false);
 	this.play = function () {
 		self.queue = self.library.tracks;
-		self.changeTrack(self.queue[self.current_track]);
-		self.player.music.addEventListener("ended", next, false);
-		self.player.music.addEventListener("canplaythrough", self.displayCurrent,false)
+		self.displayCurrent();
+		self.changeTrack(self.queue[self.current_track].id);
 	};
 	this.displayCurrent = function () {
-		$('#tracks').innerHTML = "";
+		$('#tracks').html("");
 		for(i = 0; i<self.queue.length; i++){
-			$('#tracks').innerHTML += self.queue[i].label;
-			self.queue[i].visible = true;
+			$('#tracks').append(self.queue[i].label);
 		}
 	};
 	this.add = function () {
 		for (i = 0; i < arguments.length; i++) {
 			this.library.add(arguments[i]);
-			if (this.library.tracks[i].loaded) {
-				this.tracks_loaded++;
-			}
 		}
 	};
 	this.changeTrack = function (track) {
-		this.current_track = findWithAttr(this.queue, 'path', track.path);
-		this.player.changeSrc(track);
-		$('#' + track.name).focus();
+		this.current_track = findWithAttr(this.queue, 'id', track);
+		this.player.changeSrc(this.queue[this.current_track]);
+		$('#' + track.title).focus();
 	};
 	function previous() {
 		self.current_track--;
 		if(self.current_track < 0){
 			self.current_track = self.queue.length-1;
 		}
-		let previous = self.queue[self.current_track];
+		let previous = self.queue[self.current_track].id;
 		self.changeTrack(previous);
 	}
 	function next(){
@@ -214,23 +154,7 @@ function Jukebox() {
 		if(self.current_track === self.queue.length){
 			self.current_track = 0;
 		}
-		let next = self.queue[self.current_track];
+		let next = self.queue[self.current_track].id;
 		self.changeTrack(next);
-	}
-	function openFile(e) {
-		e.stopPropagation();
-		e.preventDefault();
-		let blob = window.URL || webkit.webkitURL;
-		let files = e.dataTransfer.files;
-		let file = files[0];
-		let fileUrl = blob.createObjectURL(file);
-		let track = new Track(fileUrl);
-		track.name = file.name;
-		self.changeTrack(track);
-	}
-	function getFile(e) {
-		e.stopPropagation();
-		e.preventDefault();
-		e.dataTransfer.dropEffect = 'copy';
 	}
 }
