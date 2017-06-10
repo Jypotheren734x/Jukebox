@@ -76,7 +76,6 @@ function Jukebox(src) {
 					"<button class='trackbtn' id='"+track.id+"'>" +
 					"<img src="+track.artwork_url+" style='float: left'>" +
 					"<span style='float: left'>"+track.title+"</span>" +
-					"<span style='float: middle'>"+track.label_name+"</span>" +
 					"<span style='float: right'>"+track.genre+"</span>" +
 					"<span style='float: right'>"+formatSecondsAsTime(Math.floor(track.duration / 1000))+"</span>" +
 					"</button>" +
@@ -96,7 +95,6 @@ function Jukebox(src) {
 							"<button class='trackbtn' id='"+track.id+"'>" +
 							"<img src="+track.artwork_url+" style='float: left'>" +
 							"<span style='float: left'>"+track.title+"</span>" +
-							"<span style='float: middle'>"+track.label_name+"</span>" +
 							"<span style='float: right'>"+track.genre+"</span>" +
 							"<span style='float: right'>"+formatSecondsAsTime(Math.floor(track.duration / 1000))+"</span>" +
 							"</button>" +
@@ -116,19 +114,22 @@ function Jukebox(src) {
 		this.play = function () {
 			self.player.changeSrc(self.queue[self.current_track]);
 			self.displayCurrent();
+			self.player.audio.on('finish', function(){
+				self.player.changeSrc(self.queue[self.current_track++]);
+			});
 		};
 		this.displaySearchResults = function () {
 			$('#tracks').empty();
 			for(i = 0; i<self.search_results.length; i++){
 				$('#tracks').append(self.search_results[i].label);
-				$('#' + self.search_results[i].id).click(self.player.changeSrc(track));
+				// $('#' + self.search_results[i].id).click(self.player.changeSrc(track));
 			}
 		};
 		this.displayCurrent = function () {
 			$('#tracks').empty();
 			for(i = 0; i<self.queue.length; i++){
 				$('#tracks').append(self.queue[i].label);
-				$('#' + self.queue[i].id).click(self.player.changeSrc(track));
+				// $('#' + self.queue[i].id).click(self.player.changeSrc(track));
 			}
 		};
 		this.add = function () {
@@ -143,14 +144,21 @@ function Jukebox(src) {
 			}
 			let previous = self.queue[self.current_track];
 			self.player.changeSrc(previous);
+			self.player.audio.on('finish', function(){
+				self.next()
+			});
 		}
 		function next(){
 			self.current_track++;
+			console.log("Next");
 			if(self.current_track === self.queue.length){
 				self.current_track = 0;
 			}
 			let next = self.queue[self.current_track];
 			self.player.changeSrc(next);
+			self.player.audio.on('finish', function(){
+				next();
+			});
 		}
 	};
 }
