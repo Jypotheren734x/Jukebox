@@ -60,6 +60,7 @@ function Jukebox(src) {
 		client_id: 'DoPASlLzDUFjxJHRDESP267TmnAjyrza'
 	});
 	this.init = function () {
+		this.shuffle = false;
 		this.shufflebtn = $('#shufflebtn');
 		this.nextbtn = $('#nextbtn');
 		this.previousbtn = $('#previousbtn');
@@ -70,6 +71,10 @@ function Jukebox(src) {
 		this.search_bar.keyup(search);
 		this.queue = [];
 		this.search_results = [];
+		$('#shufflebtn').click(function () {
+			self.shuffle = !self.shuffle;
+			self.displayCurrent();
+        })
 		SC.get(src).then(function(playlist) {
 			playlist.tracks.forEach(function (track) {
 				track.tag = "<div>" +
@@ -135,7 +140,7 @@ function Jukebox(src) {
                         "<span style='float: left'>"+current.title+"</span></a>"+
 						"<p>"+current.description+"</p>");
                     self.search_bar.val("");
-                    self.queue.push(current);
+                    self.queue.unshift(current);
                     self.displayCurrent();
                 });
 			}
@@ -171,7 +176,11 @@ function Jukebox(src) {
 			});
 		}
 		function next(){
-			self.current_track++;
+			if(self.shuffle){
+				self.current_track = Math.floor(Math.random() * self.queue.length)
+			}else{
+                self.current_track++;
+			}
 			console.log("Next");
 			if(self.current_track === self.queue.length){
 				self.current_track = 0;
