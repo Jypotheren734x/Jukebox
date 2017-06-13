@@ -157,8 +157,12 @@ function Jukebox(src) {
 			if(self.current_track < 0){
 				self.current_track = self.queue.length-1;
 			}
-			let previous = self.queue[self.current_track];
-			self.player.changeSrc(previous);
+			let current = self.queue[self.current_track];
+			self.player.changeSrc(current);
+            $('#current').html("<a href='"+current.permalink_url+"'><img src="+current.artwork_url+" style='float: left'>" +
+                "<span style='float: left'>"+current.label_name+":</span>" +
+                "<span style='float: left'>"+current.title+"</span></a>"+
+                "<p>"+current.description+"</p>");
 			self.player.audio.on('finish', function(){
 				self.next()
 			});
@@ -169,10 +173,14 @@ function Jukebox(src) {
 			if(self.current_track === self.queue.length){
 				self.current_track = 0;
 			}
-			let next = self.queue[self.current_track];
-			self.player.changeSrc(next);
+			let current = self.queue[self.current_track];
+			self.player.changeSrc(current);
+            $('#current').html("<a href='"+current.permalink_url+"'><img src="+current.artwork_url+" style='float: left'>" +
+                "<span style='float: left'>"+current.label_name+":</span>" +
+                "<span style='float: left'>"+current.title+"</span></a>"+
+                "<p>"+current.description+"</p>");
 			self.player.audio.on('finish', function(){
-				next();
+				current();
 			});
 		}
 	};
