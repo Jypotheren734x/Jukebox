@@ -15,13 +15,13 @@ function Player(){
 		this.playbtn.click(play);
 		this.stopbtn.click(stop);
 		this.paused = false;
-		setInterval(timeUpdate, 1000);
 		function timeUpdate() {
 			let percent = self.timelineWidth * (self.audio.currentTime()/self.current_track.duration);
 			self.duration_indicator.html(""+formatSecondsAsTime(Math.floor(self.audio.currentTime() / 1000)) +"/"+ formatSecondsAsTime(Math.floor(self.current_track.duration / 1000)));
 			self.indicator.css('margin-left', percent + 'px');
 		}
 		function play() {
+            setInterval(timeUpdate, 1000);
 			if(self.paused===true) {
 				self.audio.pause();
 				self.paused = false;
@@ -72,17 +72,19 @@ function Jukebox(src) {
 		this.search_results = [];
 		SC.get(src).then(function(playlist) {
 			playlist.tracks.forEach(function (track) {
-				track.label = "<div>" +
+				track.tag = "<div>" +
 					"<button class='trackbtn' id='"+track.id+"'>" +
-					"<img src="+track.artwork_url+" style='float: left'>" +
-					"<span style='float: left'>"+track.title+"</span>" +
-					"<span style='float: right'>"+track.genre+"</span>" +
-					"<span style='float: right'>"+formatSecondsAsTime(Math.floor(track.duration / 1000))+"</span>" +
+					"<a href='"+track.permalink_url+"'><img src="+track.artwork_url+" style='float: left'>" +
+                    "<span style='float: left'>"+track.label_name+":</span>" +
+					"<span style='float: left'>"+track.title+"</span></a>" +
+                    "<span style='float: right'>"+formatSecondsAsTime(Math.floor(track.duration / 1000))+"</span>" +
+                    "<span style='float: right'>"+track.genre+"</span>" +
+                    "<span style='float: right'>"+track.release_day+"/"+track.release_month+"/"+track.release_year+"\n</span>" +
 					"</button>" +
 					"</div>";
-				self.add(track);
+				self.queue.push(track);
 			});
-			self.play();
+            self.displayCurrent();
 		});
 		function search() {
 			SC.get(`/tracks`,{q: self.search_bar.val()}).then(function (tracks) {
@@ -91,14 +93,16 @@ function Jukebox(src) {
 				}else {
 					self.search_results = [];
 					tracks.forEach(function (track) {
-						track.label = "<div>" +
-							"<button class='trackbtn' id='"+track.id+"'>" +
-							"<img src="+track.artwork_url+" style='float: left'>" +
-							"<span style='float: left'>"+track.title+"</span>" +
-							"<span style='float: right'>"+track.genre+"</span>" +
-							"<span style='float: right'>"+formatSecondsAsTime(Math.floor(track.duration / 1000))+"</span>" +
-							"</button>" +
-							"</div>";
+                        track.tag = "<div>" +
+                            "<button class='trackbtn' id='"+track.id+"'>" +
+                            "<a href='"+track.permalink_url+"'><img src="+track.artwork_url+" style='float: left'></a>" +
+                            "<span style='float: left'>"+track.title+"</span>" +
+                            "<span style='float: left'>"+track.label_name+"</span></a>" +
+                            "<span style='float: right'>"+track.release_day+"/"+track.release_month+"/"+track.release_year+"</span>" +
+                            "<span style='float: right'>"+track.genre+"</span>" +
+                            "<span style='float: right'>"+formatSecondsAsTime(Math.floor(track.duration / 1000))+"</span>" +
+                            "</button>" +
+                            "</div>";
 						self.search_results.push(track);
 					});
 					self.displaySearchResults();
@@ -121,20 +125,31 @@ function Jukebox(src) {
 		this.displaySearchResults = function () {
 			$('#tracks').empty();
 			for(i = 0; i<self.search_results.length; i++){
-				$('#tracks').append(self.search_results[i].label);
-				// $('#' + self.search_results[i].id).click(self.player.changeSrc(track));
+                let current = self.search_results[i];
+                $('#tracks').append(current.tag);
+                $('#' + current.id).click(function(){
+                    console.log(current);
+                    self.player.changeSrc(current);
+                    $('#current').html("<a href='"+current.permalink_url+"'><img src="+current.artwork_url+" style='float: left'>" +
+                        "<span style='float: left'>"+current.label_name+":</span>" +
+                        "<span style='float: left'>"+current.title+"</span></a>"+
+						"<p>"+current.description+"</p>");
+                });
 			}
 		};
 		this.displayCurrent = function () {
 			$('#tracks').empty();
 			for(i = 0; i<self.queue.length; i++){
-				$('#tracks').append(self.queue[i].label);
-				// $('#' + self.queue[i].id).click(self.player.changeSrc(track));
-			}
-		};
-		this.add = function () {
-			for (i = 0; i < arguments.length; i++) {
-				this.queue.push(arguments[i]);
+				let current = self.queue[i];
+				$('#tracks').append(current.tag);
+				$('#' + current.id).click(function(){
+                    console.log(current);
+					self.player.changeSrc(current);
+                    $('#current').html("<a href='"+current.permalink_url+"'><img src="+current.artwork_url+" style='float: left'>" +
+                        "<span style='float: left'>"+current.label_name+":</span>" +
+                        "<span style='float: left'>"+current.title+"</span></a>"+
+                        "<p>"+current.description+"</p>");
+				});
 			}
 		};
 		function previous() {
