@@ -134,6 +134,9 @@ function Jukebox(src) {
                         "<span style='float: left'>"+current.label_name+":</span>" +
                         "<span style='float: left'>"+current.title+"</span></a>"+
 						"<p>"+current.description+"</p>");
+                    self.search_bar.val("");
+                    self.queue.push(current);
+                    self.displayCurrent();
                 });
 			}
 		};
