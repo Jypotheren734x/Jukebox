@@ -110,9 +110,6 @@ function Jukebox(src) {
                 track.tag += "<div class='card-image'><img class='responsive-img activator' src=\""+track.artwork_url+"\"></div>";
             }
             track.tag += "<div class='card-stacked'><div class='card-content'>";
-            if(track.label_name != null){
-                track.tag += "<div>Label: "+track.label_name+":</div>";
-            }
             if(track.release_day != null && track.release_month != null && track.release_year != null){
                 track.tag += "<div >Release date: "+track.release_day+"/"+track.release_month+"/"+track.release_year+"</div>";
             }
