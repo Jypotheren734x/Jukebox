@@ -105,22 +105,22 @@ function Jukebox(src) {
 			});
 		}
         function track_str(track) {
-            track.tag = "<div class='card horizontal'>";
+            track.tag = "<div class='card horizontal small'>";
             if(track.artwork_url != null){
                 track.tag += "<div class='card-image'><img class='responsive-img activator' src=\""+track.artwork_url+"\"></div>";
             }
             track.tag += "<div class='card-stacked'><div class='card-content'>";
             if(track.label_name != null){
-                track.tag += "<span >"+track.label_name+":</span>";
+                track.tag += "<div>Label: "+track.label_name+":</div>";
             }
             if(track.release_day != null && track.release_month != null && track.release_year != null){
-                track.tag += "<span >"+track.release_day+"/"+track.release_month+"/"+track.release_year+"</span>";
+                track.tag += "<div >Release date: "+track.release_day+"/"+track.release_month+"/"+track.release_year+"</div>";
             }
             if(track.genre != null){
-                track.tag += "<span >"+track.genre+"</span>";
+                track.tag += "<div >Genre: "+track.genre+"</div>";
             }
             if(track.title != null){
-                track.tag += "<span >"+track.title+"</span>";
+                track.tag += "<div >Title: "+track.title+"</div>";
             }
             track.tag += "</div>";
             track.tag += "<div class='card-action'>";
@@ -208,20 +208,16 @@ function Jukebox(src) {
 		function info_str(track){
             let info_str = ""
             if(track.artwork_url != null){
-                info_str += "<img class='responsive-img' src=\""+track.artwork_url+"\" style='float: left'>";
+                info_str += "<div class='card-image'><img class='responsive-img' src=\""+track.artwork_url+"\"></div>";
             }
-            if(track.permalink_url != null){
-                info_str += "<a class='btn-flat waves-effect' href='"+track.permalink_url + "'>View on SoundCloud</a>";
-            }
+            info_str += "<div class='card-stacked'><div class='card-content'><div>";
             if(track.label_name != null){
-                info_str += "<span style='float: left'>"+track.label_name+":</span>";
+                info_str += track.label_name+": ";
             }
             if(track.title != null){
-                info_str += "<span style='float: left'>"+track.title+"</span>";
+                info_str += track.title;
             }
-            if(track.description != null){
-                info_str += "<p>"+track.description+"</p>";
-            }
+            info_str += "</div></div></div>";
             return info_str
 
 		}
