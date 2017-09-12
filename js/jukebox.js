@@ -5,21 +5,28 @@ function Player(){
 	this.init = function(){
 		this.playbtn = $('#playbtn');
 		this.stopbtn = $('#stopbtn');
-		this.indicator = $('#indicator');
-		this.timeline = $('#timeline');
+		this.indicator = $('#indicator')[0];
+		noUiSlider.create(this.indicator, {
+            start: 0,
+			animate: false,
+            connect: [true, false],
+			step: 0.000000000000000000000001,
+            range: {
+                'min': 0,
+                'max': 100
+            }
+        });
 		this.duration_indicator = $('#duration');
 		this.current_track = undefined;
 		this.audio = undefined;
 		let self = this;
-		this.timelineWidth = this.timeline.outerWidth() - this.indicator.outerWidth();
 		this.playbtn.click(play);
 		this.stopbtn.click(stop);
 		this.paused = false;
 		function timeUpdate() {
 			let percent = (self.audio.currentTime()/self.current_track.duration) * 100;
 			self.duration_indicator.html(""+formatSecondsAsTime(Math.floor(self.audio.currentTime() / 1000)) +"/"+ formatSecondsAsTime(Math.floor(self.current_track.duration / 1000)));
-			console.log(percent);
-			self.indicator.val(percent);
+			self.indicator.noUiSlider.set(percent);
 		}
 		function play() {
             setInterval(timeUpdate, 1000);
@@ -115,15 +122,15 @@ function Jukebox(src) {
             if(track.title != null){
                 track.tag += "<span >"+track.title+"</span>";
             }
-            if(track.duration != null){
-                track.tag += "<span >"+formatSecondsAsTime(Math.floor(track.duration / 1000))+"</span>";
-            }
             track.tag += "</div>";
             track.tag += "<div class='card-action'>";
-            if(track.permalink_url != null){
-                track.tag += "<a class='btn btn-flat waves-effect' href='"+track.permalink_url + "'>View on SoundCloud</a>";
+            if(track.duration != null){
+                track.tag += "<span class='right'>"+formatSecondsAsTime(Math.floor(track.duration / 1000))+"</span>";
             }
-            track.tag += "<button class='btn btn-flat waves-effect' id='"+track.id+"'>Play</button></div></div>";
+            if(track.permalink_url != null){
+                track.tag += "<a class='btn-flat waves-effect' href='"+track.permalink_url + "'>View on SoundCloud</a>";
+            }
+            track.tag += "<button class='btn-flat waves-effect right' id='"+track.id+"'>Play</button></div></div>";
             if(track.description != null){
                 track.tag += "<div class='card-reveal'><span class=\"card-title grey-text text-darken-4\">"+track.title+"<i class=\"material-icons right\">close</i></span><p>"+track.description+"</p></div>";
             }
@@ -204,7 +211,7 @@ function Jukebox(src) {
                 info_str += "<img class='responsive-img' src=\""+track.artwork_url+"\" style='float: left'>";
             }
             if(track.permalink_url != null){
-                info_str += "<a href='"+track.permalink_url + "'>View on SoundCloud</a>";
+                info_str += "<a class='btn-flat waves-effect' href='"+track.permalink_url + "'>View on SoundCloud</a>";
             }
             if(track.label_name != null){
                 info_str += "<span style='float: left'>"+track.label_name+":</span>";

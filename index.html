@@ -11,25 +11,22 @@
     <script src="js/jukebox.js"></script>
     <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="css/nouislider.min.css">
 
     <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="js/nouislider.min.js"></script>
 
 </head>
 <body id="drop-zone">
 <header>
-    <nav class="nav-extended grey">
-        <div class="nav-wrapper">
-            <input type="search" id="search-bar" placeholder="Search">
-        </div>
-    </nav>
 </header>
 <main>
     <div id="controls" class="card-panel">
-        <div id="current"></div>
-        <input type="range" id="indicator" min="0" max="100" value="0" step="0.00000000000000000001" />
-        <div class="center">
+        <div id="current" class="card-panel z-depth-0"></div>
+        <div class="center" class="card-panel z-depth-0">
+            <div id="indicator"></div>
             <a id="previousbtn" class="btn-flat waves-effect"><i class="material-icons">skip_previous</i></a>
             <a id="playbtn" class="btn-flat waves-effect"><i class="material-icons">play_arrow</i></a>
             <a id="shufflebtn" class="btn-flat waves-effect"><i class="material-icons">shuffle</i></a>
@@ -40,7 +37,13 @@
     <audio id="music">
         <source id="mp3" type="audio/mp3">
     </audio>
-    <div class="container"><div id="tracks" class="row"></div></div>
+    <div class="container">
+        <div class="input-field">
+            <i class="material-icons prefix">search</i>
+            <input type="search" id="search-bar" placeholder="Search">
+        </div>
+        <div id="tracks" class="row">
+    </div></div>
 </main>
 <script src="js/script.js"></script>
 </body>
