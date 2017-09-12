@@ -77,16 +77,7 @@ function Jukebox(src) {
         })
 		SC.get(src).then(function(playlist) {
 			playlist.tracks.forEach(function (track) {
-				track.tag = "<div>" +
-					"<button class='trackbtn' id='"+track.id+"'>" +
-					"<a href='"+track.permalink_url+"'><img src="+track.artwork_url+" style='float: left'>" +
-                    "<span style='float: left'>"+track.label_name+":</span>" +
-					"<span style='float: left'>"+track.title+"</span></a>" +
-                    "<span style='float: right'>"+formatSecondsAsTime(Math.floor(track.duration / 1000))+"</span>" +
-                    "<span style='float: right'>"+track.genre+"</span>" +
-                    "<span style='float: right'>"+track.release_day+"/"+track.release_month+"/"+track.release_year+"\n</span>" +
-					"</button>" +
-					"</div>";
+                track_str(track);
 				self.queue.push(track);
 			});
             self.displayCurrent();
@@ -98,22 +89,38 @@ function Jukebox(src) {
 				}else {
 					self.search_results = [];
 					tracks.forEach(function (track) {
-                        track.tag = "<div>" +
-                            "<button class='trackbtn' id='"+track.id+"'>" +
-                            "<a href='"+track.permalink_url+"'><img src="+track.artwork_url+" style='float: left'></a>" +
-                            "<span style='float: left'>"+track.title+"</span>" +
-                            "<span style='float: left'>"+track.label_name+"</span></a>" +
-                            "<span style='float: right'>"+track.release_day+"/"+track.release_month+"/"+track.release_year+"</span>" +
-                            "<span style='float: right'>"+track.genre+"</span>" +
-                            "<span style='float: right'>"+formatSecondsAsTime(Math.floor(track.duration / 1000))+"</span>" +
-                            "</button>" +
-                            "</div>";
+						track_str(track);
 						self.search_results.push(track);
 					});
 					self.displaySearchResults();
 				}
 			});
 		}
+        function track_str(track) {
+            track.tag = "<div><button class='trackbtn waves-effect' id='"+track.id+"'>";
+            if(track.artwork_url != null){
+                track.tag += "<img src=\""+track.artwork_url+"\" style='float: left'>";
+            }
+            if(track.permalink_url != null){
+                track.tag += "<a style='float: left' href='"+track.permalink_url + "'>View on SoundCloud</a>";
+            }
+            if(track.label_name != null){
+                track.tag += "<span style='float: left'>"+track.label_name+":</span>";
+            }
+            if(track.release_day != null && track.release_month != null && track.release_year != null){
+                track.tag += "<span style='float: right'>"+track.release_day+"/"+track.release_month+"/"+track.release_year+"</span>";
+            }
+            if(track.genre != null){
+                track.tag += "<span style='float: right'>"+track.genre+"</span>";
+            }
+            if(track.title != null){
+                track.tag += "<span style='float: left'>"+track.title+"</span>";
+            }
+            if(track.duration != null){
+                track.tag += "<span style='float: right'>"+formatSecondsAsTime(Math.floor(track.duration / 1000))+"</span>";
+            }
+            track.tag += "</button></div>";
+        }
 		this.shufflebtn.click(function () {
 			let curr = self.queue[self.current_track];
 			shuffle(self.queue);
@@ -135,10 +142,7 @@ function Jukebox(src) {
                 $('#' + current.id).click(function(){
                     console.log(current);
                     self.player.changeSrc(current);
-                    $('#current').html("<a href='"+current.permalink_url+"'><img src="+current.artwork_url+" style='float: left'>" +
-                        "<span style='float: left'>"+current.label_name+":</span>" +
-                        "<span style='float: left'>"+current.title+"</span></a>"+
-						"<p>"+current.description+"</p>");
+                    $('#current').html(info_str(current));
                     self.search_bar.val("");
                     self.queue.unshift(current);
                     self.displayCurrent();
@@ -153,10 +157,7 @@ function Jukebox(src) {
 				$('#' + current.id).click(function(){
                     console.log(current);
 					self.player.changeSrc(current);
-                    $('#current').html("<a href='"+current.permalink_url+"'><img src="+current.artwork_url+" style='float: left'>" +
-                        "<span style='float: left'>"+current.label_name+":</span>" +
-                        "<span style='float: left'>"+current.title+"</span></a>"+
-                        "<p>"+current.description+"</p>");
+                    $('#current').html(info_str(current));
 				});
 			}
 		};
@@ -167,10 +168,7 @@ function Jukebox(src) {
 			}
 			let current = self.queue[self.current_track];
 			self.player.changeSrc(current);
-            $('#current').html("<a href='"+current.permalink_url+"'><img src="+current.artwork_url+" style='float: left'>" +
-                "<span style='float: left'>"+current.label_name+":</span>" +
-                "<span style='float: left'>"+current.title+"</span></a>"+
-                "<p>"+current.description+"</p>");
+            $('#current').html(info_str(current));
 			self.player.audio.on('finish', function(){
 				self.next()
 			});
@@ -187,13 +185,30 @@ function Jukebox(src) {
 			}
 			let current = self.queue[self.current_track];
 			self.player.changeSrc(current);
-            $('#current').html("<a href='"+current.permalink_url+"'><img src="+current.artwork_url+" style='float: left'>" +
-                "<span style='float: left'>"+current.label_name+":</span>" +
-                "<span style='float: left'>"+current.title+"</span></a>"+
-                "<p>"+current.description+"</p>");
+            $('#current').html(info_str(current));
 			self.player.audio.on('finish', function(){
 				current();
 			});
+		}
+		function info_str(track){
+            let info_str = ""
+            if(track.artwork_url != null){
+                info_str += "<img src=\""+track.artwork_url+"\" style='float: left'>";
+            }
+            if(track.permalink_url != null){
+                info_str += "<a href='"+track.permalink_url + "'>View on SoundCloud</a>";
+            }
+            if(track.label_name != null){
+                info_str += "<span style='float: left'>"+track.label_name+":</span>";
+            }
+            if(track.title != null){
+                info_str += "<span style='float: left'>"+track.title+"</span>";
+            }
+            if(track.description != null){
+                info_str += "<p>"+track.description+"</p>";
+            }
+            return info_str
+
 		}
 	};
 }
