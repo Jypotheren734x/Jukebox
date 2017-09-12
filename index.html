@@ -1,39 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<title>Jukebox</title>
-		<link rel="stylesheet" href="css/stylesheet.css">
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-		<script src="https://connect.soundcloud.com/sdk/sdk-3.1.2.js"></script>
-		<script src="https://code.jquery.com/jquery-2.x-git.min.js"></script>
-		<script src="js/main.js"></script>
-		<script src="js/jukebox.js"></script>
-		<!-- Compiled and minified CSS -->
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+<head>
+    <meta charset="UTF-8">
+    <title>Jukebox</title>
+    <link rel="stylesheet" href="css/stylesheet.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://connect.soundcloud.com/sdk/sdk-3.1.2.js"></script>
+    <script src="https://code.jquery.com/jquery-2.x-git.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/jukebox.js"></script>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
 
-		<!-- Compiled and minified JavaScript -->
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-	</head>
-	<body id="drop-zone">
-		<div id="current"></div>
-		<input type="search" id="search-bar" placeholder="Search">
-		<div id="tracks"></div>
-		<footer>
-			<audio id="music">
-				<source id="mp3" type="audio/mp3">
-			</audio>
-			<div id="player">
-				<button id="previousbtn" class="fa fa-step-backward"></button>
-				<button id="playbtn" class="fa fa-play"></button>
-				<button id="shufflebtn" class="fa fa-random"></button>
-				<button id="nextbtn" class="fa fa-step-forward"></button>
-				<div id="timeline"><div id="indicator"></div>
-				</div>
-				<div id="duration">0:00/0:00</div>.
-			</div>
-		</footer>
-		<script src="js/script.js"></script>
-	</body>
+</head>
+<body id="drop-zone">
+<header>
+    <nav class="nav-extended grey">
+        <div class="nav-wrapper">
+            <input type="search" id="search-bar" placeholder="Search">
+        </div>
+    </nav>
+</header>
+<main>
+    <div id="controls" class="card-panel">
+        <div id="current"></div>
+        <input type="range" id="indicator" min="0" max="100" value="0" step="0.00000000000000000001" />
+        <div class="center">
+            <a id="previousbtn" class="btn-flat waves-effect"><i class="material-icons">skip_previous</i></a>
+            <a id="playbtn" class="btn-flat waves-effect"><i class="material-icons">play_arrow</i></a>
+            <a id="shufflebtn" class="btn-flat waves-effect"><i class="material-icons">shuffle</i></a>
+            <a id="nextbtn" class="btn-flat waves-effect"><i class="material-icons">skip_next</i></a>
+            <div id="duration" class="right">0:00/0:00</div>
+        </div>
+    </div>
+    <audio id="music">
+        <source id="mp3" type="audio/mp3">
+    </audio>
+    <div class="container"><div id="tracks" class="row"></div></div>
+</main>
+<script src="js/script.js"></script>
+</body>
 </html>

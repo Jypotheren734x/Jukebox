@@ -16,27 +16,27 @@ function Player(){
 		this.stopbtn.click(stop);
 		this.paused = false;
 		function timeUpdate() {
-			let percent = self.timelineWidth * (self.audio.currentTime()/self.current_track.duration);
+			let percent = (self.audio.currentTime()/self.current_track.duration) * 100;
 			self.duration_indicator.html(""+formatSecondsAsTime(Math.floor(self.audio.currentTime() / 1000)) +"/"+ formatSecondsAsTime(Math.floor(self.current_track.duration / 1000)));
-			self.indicator.css('margin-left', percent + 'px');
+			console.log(percent);
+			self.indicator.val(percent);
 		}
 		function play() {
             setInterval(timeUpdate, 1000);
 			if(self.paused===true) {
 				self.audio.pause();
 				self.paused = false;
-				self.playbtn.setClass("fa fa-play");
+                self.playbtn.html('<i class="material-icons">play_arrow</i>');
 			}
 			else if (self.paused === false) {
 				self.audio.play();
 				self.paused = true;
-				self.playbtn.setClass("fa fa-pause");
+                self.playbtn.html('<i class="material-icons">pause</i>');
 			}
 		}
 		function stop() {
 			self.audio.stop();
-			self.playbtn.className = "";
-			self.playbtn.className = "fa fa-play";
+            self.playbtn.html('<i class="material-icons">play_arrow</i>');
 		}
 		function getPosition(el) {
 			return el.getBoundingClientRect().left;
@@ -73,8 +73,9 @@ function Jukebox(src) {
 		this.search_results = [];
 		$('#shufflebtn').click(function () {
 			self.shuffle = !self.shuffle;
+            $('#shufflebtn').toggleClass('orange-text');
 			self.displayCurrent();
-        })
+        });
 		SC.get(src).then(function(playlist) {
 			playlist.tracks.forEach(function (track) {
                 track_str(track);
@@ -97,29 +98,36 @@ function Jukebox(src) {
 			});
 		}
         function track_str(track) {
-            track.tag = "<div><button class='trackbtn waves-effect' id='"+track.id+"'>";
+            track.tag = "<div class='card horizontal'>";
             if(track.artwork_url != null){
-                track.tag += "<img src=\""+track.artwork_url+"\" style='float: left'>";
+                track.tag += "<div class='card-image'><img class='responsive-img activator' src=\""+track.artwork_url+"\"></div>";
             }
-            if(track.permalink_url != null){
-                track.tag += "<a style='float: left' href='"+track.permalink_url + "'>View on SoundCloud</a>";
-            }
+            track.tag += "<div class='card-stacked'><div class='card-content'>";
             if(track.label_name != null){
-                track.tag += "<span style='float: left'>"+track.label_name+":</span>";
+                track.tag += "<span >"+track.label_name+":</span>";
             }
             if(track.release_day != null && track.release_month != null && track.release_year != null){
-                track.tag += "<span style='float: right'>"+track.release_day+"/"+track.release_month+"/"+track.release_year+"</span>";
+                track.tag += "<span >"+track.release_day+"/"+track.release_month+"/"+track.release_year+"</span>";
             }
             if(track.genre != null){
-                track.tag += "<span style='float: right'>"+track.genre+"</span>";
+                track.tag += "<span >"+track.genre+"</span>";
             }
             if(track.title != null){
-                track.tag += "<span style='float: left'>"+track.title+"</span>";
+                track.tag += "<span >"+track.title+"</span>";
             }
             if(track.duration != null){
-                track.tag += "<span style='float: right'>"+formatSecondsAsTime(Math.floor(track.duration / 1000))+"</span>";
+                track.tag += "<span >"+formatSecondsAsTime(Math.floor(track.duration / 1000))+"</span>";
             }
-            track.tag += "</button></div>";
+            track.tag += "</div>";
+            track.tag += "<div class='card-action'>";
+            if(track.permalink_url != null){
+                track.tag += "<a class='btn btn-flat waves-effect' href='"+track.permalink_url + "'>View on SoundCloud</a>";
+            }
+            track.tag += "<button class='btn btn-flat waves-effect' id='"+track.id+"'>Play</button></div></div>";
+            if(track.description != null){
+                track.tag += "<div class='card-reveal'><span class=\"card-title grey-text text-darken-4\">"+track.title+"<i class=\"material-icons right\">close</i></span><p>"+track.description+"</p></div>";
+            }
+            track.tag += "</div>"
         }
 		this.shufflebtn.click(function () {
 			let curr = self.queue[self.current_track];
@@ -193,7 +201,7 @@ function Jukebox(src) {
 		function info_str(track){
             let info_str = ""
             if(track.artwork_url != null){
-                info_str += "<img src=\""+track.artwork_url+"\" style='float: left'>";
+                info_str += "<img class='responsive-img' src=\""+track.artwork_url+"\" style='float: left'>";
             }
             if(track.permalink_url != null){
                 info_str += "<a href='"+track.permalink_url + "'>View on SoundCloud</a>";
