@@ -128,9 +128,9 @@ function Jukebox(src) {
                 track.tag += "<span class='right'>"+formatSecondsAsTime(Math.floor(track.duration / 1000))+"</span>";
             }
             if(track.permalink_url != null){
-                track.tag += "<a class='btn-flat waves-effect' href='"+track.permalink_url + "'>View on SoundCloud</a>";
+                track.tag += "<a class='btn-flat waves-effect right' href='"+track.permalink_url + "'>View on SoundCloud</a>";
             }
-            track.tag += "<button class='btn-flat waves-effect right' id='"+track.id+"'>Play</button></div></div>";
+            track.tag += "<button class='btn-flat waves-effect' id='"+track.id+"'>Play</button></div></div>";
             if(track.description != null){
                 track.tag += "<div class='card-reveal'><span class=\"card-title grey-text text-darken-4\">"+track.title+"<i class=\"material-icons right\">close</i></span><p>"+track.description+"</p></div>";
             }
