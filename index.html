@@ -10,35 +10,42 @@
     <script src="js/main.js"></script>
     <script src="js/jukebox.js"></script>
     <!-- Compiled and minified CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    <link rel="stylesheet" href="css/materialize.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="css/nouislider.min.css">
 
     <!-- Compiled and minified JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <script src="js/materialize.js"></script>
     <script src="js/nouislider.min.js"></script>
 
 </head>
 <body id="drop-zone">
 <main>
     <div class="row">
-        <div id="controls" class="card-panel col s12" style="z-index: 999;">
-            <div id="current" class="card horizontal z-depth-0"></div>
-            <div id="indicator"></div>
-            <a id="previousbtn" class="btn-flat waves-effect"><i class="material-icons">skip_previous</i></a>
-            <a id="playbtn" class="btn-flat waves-effect"><i class="material-icons">play_arrow</i></a>
-            <a id="shufflebtn" class="btn-flat waves-effect"><i class="material-icons">shuffle</i></a>
-            <a id="nextbtn" class="btn-flat waves-effect"><i class="material-icons">skip_next</i></a>
-            <div id="duration" class="right">0:00/0:00</div>
+        <div id="controls" class="card col s12" style="z-index: 999;">
+            <div class="card-stacked">
+                <div class="card-content row">
+                    <div id="indicator"></div>
+                    <div id="now_playing" class="left">Now Playing: <span id="current"></span></div>
+                    <div id="duration" class="right">0:00/0:00</div>
+                    <div class="container center">
+                        <a id="previousbtn" class="btn-flat waves-effect hoverable"><i class="material-icons">skip_previous</i></a>
+                        <a id="playbtn" class="btn-flat waves-effect hoverable"><i class="material-icons">play_arrow</i></a>
+                        <a id="shufflebtn" class="btn-flat waves-effect hoverable"><i class="material-icons">shuffle</i></a>
+                        <a id="nextbtn" class="btn-flat waves-effect hoverable"><i class="material-icons">skip_next</i></a>
+                        <i class="material-icons"><input id="vol-control" type="range" min="0" max="1" step=".001" value="100"></i>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="row">
         <div class="col s12">
             <div class="input-field">
                 <i class="material-icons prefix">search</i>
-                <input type="search" id="search-bar" placeholder="Search">
+                <input type="search" id="search-bar" placeholder="Find a Song">
             </div>
-            <div id="tracks" class="row" style="margin-bottom: 40px;">
+            <div id="tracks" class="row" style="margin-bottom: 50px;">
             </div>
         </div>
     </div>
@@ -48,7 +55,7 @@
 </main>
 <script src="js/script.js"></script>
 <script>
-    $('#controls').pushpin({offset: window.innerHeight-80});
+//    $('#controls').pushpin({offset: window.innerHeight - 100});
 </script>
 </body>
 </html>

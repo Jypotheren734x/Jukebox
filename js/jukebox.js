@@ -2,8 +2,8 @@
  * Created by komar on 6/7/2017.
  */
 var queue = [];
-var track_number = 0;
 var shuffle = false;
+var track_number = 0;
 function Player(){
 	this.init = function(){
 		this.playbtn = $('#playbtn');
@@ -18,6 +18,10 @@ function Player(){
                 'min': 0,
                 'max': 100
             }
+        });
+        this.volume_slider = $('#vol-control');
+        this.volume_slider.on('change', function () {
+            self.audio.setVolume($(this).val());
         });
 		this.duration_indicator = $('#duration');
 		this.current_track = undefined;
@@ -41,6 +45,7 @@ function Player(){
 				self.changeSrc(queue[0]);
 			}
             setInterval(timeUpdate, 1000);
+			self.volume_slider.val(self.audio.getVolume());
 			if(self.paused===true) {
 				self.audio.pause();
 				self.paused = false;
@@ -72,17 +77,14 @@ function Player(){
 				self.audio = player;
 				self.paused = false;
                 self.audio.on('finish', function(){
-                    if(shuffle){
-                        track_number = Math.floor(Math.random() * queue.length)
-                    }else{
-                        track_number++;
-                    }
+					track_number++;
                     if(track_number === queue.length){
                         track_number = 0;
                     }
                 	self.changeSrc(queue[track_number]);
                 });
                 $('#card'+self.current_track.id).toggleClass('grey');
+                $('#current').html(info_str(self.current_track));
 				play();
 			});
 		}
@@ -104,11 +106,6 @@ function Jukebox(src) {
 		this.search_bar = $('#search-bar');
 		this.search_bar.keyup(search);
 		this.search_results = [];
-		$('#shufflebtn').click(function () {
-			self.shuffle = !self.shuffle;
-            $('#shufflebtn').toggleClass('orange-text');
-			self.displayCurrent();
-        });
 		SC.get(src).then(function(playlist) {
 			playlist.tracks.forEach(function (track) {
                 track_str(track);
@@ -123,62 +120,45 @@ function Jukebox(src) {
 				}else {
 					self.search_results = [];
 					tracks.forEach(function (track) {
-						track_str(track);
+						search_str(track);
 						self.search_results.push(track);
 					});
 					self.displaySearchResults();
 				}
 			});
 		}
-        function track_str(track) {
-            track.tag = "<div class='card horizontal' id='card"+track.id+"'>";
-            if(track.artwork_url != null){
-                track.tag += "<div class='card-image'><img class='responsive-img activator' src=\""+track.artwork_url+"\"></div>";
-            }
-            track.tag += "<div class='card-stacked'><div class='card-content'>";
-            if(track.release_day != null && track.release_month != null && track.release_year != null){
-                track.tag += "<div >Release date: "+track.release_day+"/"+track.release_month+"/"+track.release_year+"</div>";
-            }
-            if(track.genre != null){
-                track.tag += "<div >Genre: "+track.genre+"</div>";
-            }
-            if(track.title != null){
-                track.tag += "<div >Title: "+track.title+"</div>";
-            }
-            track.tag += "</div>";
-            track.tag += "<div class='card-action'>";
-            if(track.duration != null){
-                track.tag += "<span class='right'>"+formatSecondsAsTime(Math.floor(track.duration / 1000))+"</span>";
-            }
-            if(track.permalink_url != null){
-                track.tag += "<a class='btn-flat waves-effect right' href='"+track.permalink_url + "'>View on SoundCloud</a>";
-            }
-            track.tag += "<button class='btn-flat waves-effect' id='"+track.id+"'>Play</button></div></div>";
-            if(track.description != null){
-                track.tag += "<div class='card-reveal'><span class=\"card-title grey-text text-darken-4\">"+track.title+"<i class=\"material-icons right\">close</i></span><p>"+track.description+"</p></div>";
-            }
-            track.tag += "</div>"
-        }
 		this.shufflebtn.click(function () {
-			let curr = queue[track_number];
-			shuffle_array(queue);
+            $(this).toggleClass('orange-text');
+            shuffle = !shuffle;
 			self.displayCurrent();
-			track_number =  findWithAttr(queue, 'id', curr.id);
-		}, false);
+		});
 		this.play = function () {
+            this.volume_slider.val(self.player.audio.getVolume());
 			self.player.changeSrc(queue[track_number]);
 			self.displayCurrent();
 		};
 		this.displaySearchResults = function () {
 			$('#tracks').empty();
+			$('#tracks').append('<button id="back">Go to Playlist</button>');
+			$('#back').click(function () {
+				self.displayCurrent();
+            });
 			for(i = 0; i<self.search_results.length; i++){
                 let current = self.search_results[i];
                 $('#tracks').append(current.tag);
                 $('#' + current.id).click(function(){
-                    self.player.changeSrc(current);
+                	$(this).toggleClass('grey');
+                    track_str(current);
                     self.search_bar.val("");
-                    queue.unshift(current);
-                    self.displayCurrent();
+                    if(!queue.includes(current)) {
+                        queue.push(current);
+                        Materialize.toast('Added to Playlist',4000);
+                        $(this).text('Remove from playlist');
+                    }else{
+                    	queue.remove(current);
+                        Materialize.toast('Removed from Playlist',4000);
+                        $(this).text('Add to playlist');
+					}
                 });
 			}
 		};
@@ -187,10 +167,14 @@ function Jukebox(src) {
 			for(i = 0; i<queue.length; i++){
                 let current = queue[i];
 				$('#tracks').append(current.tag);
-				$('#' + current.id).click(function(){
-                    console.log(current);
-					self.player.changeSrc(current);
-				});
+                $('#' + current.id).click(function(){
+                    self.player.changeSrc(current);
+                });
+                $('#remove' + current.id).click(function(){
+                    queue.remove(current);
+                    $('#card'+current.id).remove();
+                    Materialize.toast('Removed from Playlist',4000);
+                });
 			}
 		};
 		function previous() {
@@ -200,38 +184,93 @@ function Jukebox(src) {
 			}
 			let current = queue[track_number];
 			self.player.changeSrc(current);
-
 			self.player.audio.on('finish', function(){
 				self.next()
 			});
 		}
 		function next(){
-			if(shuffle){
-				track_number = Math.floor(Math.random() * queue.length)
-			}else{
-                track_number++;
-			}
+			track_number++;
 			if(track_number === queue.length){
 				track_number = 0;
 			}
 			current = queue[track_number];
 			self.player.changeSrc(current);
 		}
-		function info_str(track){
-            let info_str = ""
-            if(track.artwork_url != null){
-                info_str += "<div class='card-image'><img class='responsive-img' src=\""+track.artwork_url+"\"></div>";
-            }
-            info_str += "<div class='card-stacked'><div class='card-content'><div>";
-            if(track.label_name != null){
-                info_str += track.label_name+": ";
-            }
-            if(track.title != null){
-                info_str += track.title;
-            }
-            info_str += "</div></div></div>";
-            return info_str
-
-		}
 	};
 }
+function track_str(track) {
+    track.tag = "<div class='card horizontal' id='card"+track.id+"'>";
+    if(track.artwork_url != null){
+        track.tag += "<div class='card-image'><img class='responsive-img activator' src=\""+track.artwork_url+"\"/></div>";
+    }
+    track.tag += "<div class='card-stacked'><div class='card-content'>";
+    if(track.release_day != null && track.release_month != null && track.release_year != null){
+        track.tag += "<div >Release date: "+track.release_day+"/"+track.release_month+"/"+track.release_year+"</div>";
+    }
+    if(track.genre != null){
+        track.tag += "<div >Genre: "+track.genre+"</div>";
+    }
+    if(track.title != null){
+        track.tag += "<div >Title: "+track.title+"</div>";
+    }
+    track.tag += "</div>";
+    track.tag += "<div class='card-action'>";
+    if(track.duration != null){
+        track.tag += "<span class='right'>"+formatSecondsAsTime(Math.floor(track.duration / 1000))+"</span>";
+    }
+    if(track.permalink_url != null){
+        track.tag += "<a class='btn-flat waves-effect right' href='"+track.permalink_url + "'>View on SoundCloud</a>";
+    }
+    track.tag += "<button class='btn-flat waves-effect' id='"+track.id+"'>Play</button><button class='btn-flat waves-effect' id='remove"+track.id+"'>Remove</button></div></div>";
+    if(track.description != null){
+        track.tag += "<div class='card-reveal'><span class=\"card-title grey-text text-darken-4\">"+track.title+"<i class=\"material-icons right\">close</i></span><p>"+track.description+"</p></div>";
+    }
+    track.tag += "</div>"
+}
+function search_str(track) {
+    track.tag = "<div class='card horizontal' id='card"+track.id+"'>";
+    if(track.artwork_url != null){
+        track.tag += "<div class='card-image'><img class='responsive-img activator' src=\""+track.artwork_url+"\"/></div>";
+    }
+    track.tag += "<div class='card-stacked'><div class='card-content'>";
+    if(track.release_day != null && track.release_month != null && track.release_year != null){
+        track.tag += "<div >Release date: "+track.release_day+"/"+track.release_month+"/"+track.release_year+"</div>";
+    }
+    if(track.genre != null){
+        track.tag += "<div >Genre: "+track.genre+"</div>";
+    }
+    if(track.title != null){
+        track.tag += "<div >Title: "+track.title+"</div>";
+    }
+    track.tag += "</div>";
+    track.tag += "<div class='card-action'>";
+    if(track.duration != null){
+        track.tag += "<span class='right'>"+formatSecondsAsTime(Math.floor(track.duration / 1000))+"</span>";
+    }
+    if(track.permalink_url != null){
+        track.tag += "<a class='btn-flat waves-effect right' href='"+track.permalink_url + "'>View on SoundCloud</a>";
+    }
+    track.tag += "<button class='btn-flat waves-effect' id='"+track.id+"'>Add to Playlist</button></div></div>";
+    if(track.description != null){
+        track.tag += "<div class='card-reveal'><span class=\"card-title grey-text text-darken-4\">"+track.title+"<i class=\"material-icons right\">close</i></span><p>"+track.description+"</p></div>";
+    }
+    track.tag += "</div>"
+}
+function info_str(track){
+    let info_str = "";
+    if(track.title != null){
+    	info_str += track.title;
+	}
+    return info_str;
+
+}
+Array.prototype.remove = function() {
+    var what, a = arguments, L = a.length, ax;
+    while (L && this.length) {
+        what = a[--L];
+        while ((ax = this.indexOf(what)) !== -1) {
+            this.splice(ax, 1);
+        }
+    }
+    return this;
+};
