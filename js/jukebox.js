@@ -24,7 +24,7 @@ function Player(){
 		this.volumebtn = $('#volbtn');
 		this.volumebtn.click(function () {
 			if(self.muted){
-				self.saved_volume = self.audio.getVolume();
+                self.saved_volume = self.volume_slider.val();
                 self.volumebtn.html('<i class="material-icons">volume_off</i>');
                 self.volume_slider.val(0);
                 if(self.audio != undefined){
@@ -49,6 +49,7 @@ function Player(){
         });
         this.volume_slider = $('#vol-control');
         this.volume_slider.on('input', function () {
+            self.saved_volume = self.volume_slider.val();
             if($(this).val() <= 0.01){
                 self.volumebtn.html('<i class="material-icons">volume_off</i>')
             }
@@ -58,7 +59,9 @@ function Player(){
             if($(this).val() > 0.5){
                 self.volumebtn.html('<i class="material-icons">volume_up</i>')
             }
+            if(self.audio != undefined){
             self.audio.setVolume($(this).val());
+            }
         });
 		this.duration_indicator = $('#duration');
 		this.current_track = undefined;
@@ -82,7 +85,7 @@ function Player(){
 				self.changeSrc(queue[0]);
 			}
             setInterval(timeUpdate, 1000);
-			self.volume_slider.val(self.audio.getVolume());
+			self.audio.setVolume(self.volume_slider.val());
 			if(self.paused===true) {
 				self.audio.pause();
 				self.paused = false;
