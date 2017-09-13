@@ -2,6 +2,8 @@
  * Created by komar on 6/7/2017.
  */
 var queue = [];
+var track_number = 0;
+var shuffle = false;
 function Player(){
 	this.init = function(){
 		this.playbtn = $('#playbtn');
@@ -25,9 +27,9 @@ function Player(){
 		this.stopbtn.click(stop);
 		this.paused = false;
 		this.indicator.noUiSlider.on('change', function () {
-			play();
 			self.audio.seek((self.current_track.duration * this.get())/100);
-			play();
+            self.audio.play();
+            self.paused = true;
         });
 		function timeUpdate() {
 			let percent = (self.audio.currentTime()/self.current_track.duration) * 100;
@@ -70,6 +72,17 @@ function Player(){
 			SC.stream(`/tracks/`+src.id).then(function (player) {
 				self.audio = player;
 				self.paused = false;
+                self.audio.on('finish', function(){
+                    if(shuffle){
+                        track_number = Math.floor(Math.random() * queue.length)
+                    }else{
+                        track_number++;
+                    }
+                    if(track_number === queue.length){
+                        track_number = 0;
+                    }
+                	self.changeSrc(queue[track_number]);
+                });
 				play();
 			});
 		}
@@ -83,13 +96,11 @@ function Jukebox(src) {
 		client_id: 'DoPASlLzDUFjxJHRDESP267TmnAjyrza'
 	});
 	this.init = function () {
-		this.shuffle = false;
 		this.shufflebtn = $('#shufflebtn');
 		this.nextbtn = $('#nextbtn');
 		this.previousbtn = $('#previousbtn');
 		this.nextbtn.click(next);
 		this.previousbtn.click(previous);
-		this.current_track = 0;
 		this.search_bar = $('#search-bar');
 		this.search_bar.keyup(search);
 		this.search_results = [];
@@ -149,17 +160,14 @@ function Jukebox(src) {
             track.tag += "</div>"
         }
 		this.shufflebtn.click(function () {
-			let curr = queue[self.current_track];
-			shuffle(queue);
+			let curr = queue[track_number];
+			shuffle_array(queue);
 			self.displayCurrent();
-			self.current_track =  findWithAttr(queue, 'id', curr.id);
+			track_number =  findWithAttr(queue, 'id', curr.id);
 		}, false);
 		this.play = function () {
-			self.player.changeSrc(queue[self.current_track]);
+			self.player.changeSrc(queue[track_number]);
 			self.displayCurrent();
-			self.player.audio.on('finish', function(){
-				self.player.changeSrc(queue[self.current_track++]);
-			});
 		};
 		this.displaySearchResults = function () {
 			$('#tracks').empty();
@@ -188,11 +196,11 @@ function Jukebox(src) {
 			}
 		};
 		function previous() {
-			self.current_track--;
-			if(self.current_track < 0){
-				self.current_track = queue.length-1;
+			track_number--;
+			if(track_number < 0){
+				track_number = queue.length-1;
 			}
-			let current = queue[self.current_track];
+			let current = queue[track_number];
 			self.player.changeSrc(current);
 
 			self.player.audio.on('finish', function(){
@@ -200,19 +208,16 @@ function Jukebox(src) {
 			});
 		}
 		function next(){
-			if(self.shuffle){
-				self.current_track = Math.floor(Math.random() * queue.length)
+			if(shuffle){
+				track_number = Math.floor(Math.random() * queue.length)
 			}else{
-                self.current_track++;
+                track_number++;
 			}
-			if(self.current_track === queue.length){
-				self.current_track = 0;
+			if(track_number === queue.length){
+				track_number = 0;
 			}
-			current = queue[self.current_track];
+			current = queue[track_number];
 			self.player.changeSrc(current);
-			self.player.audio.on('finish', function(){
-				current();
-			});
 		}
 		function info_str(track){
             let info_str = ""
