@@ -1,6 +1,7 @@
 /**
  * Created by komar on 6/7/2017.
  */
+var queue = [];
 function Player(){
 	this.init = function(){
 		this.playbtn = $('#playbtn');
@@ -23,12 +24,20 @@ function Player(){
 		this.playbtn.click(play);
 		this.stopbtn.click(stop);
 		this.paused = false;
+		this.indicator.noUiSlider.on('change', function () {
+			play();
+			self.audio.seek((self.current_track.duration * this.get())/100);
+			play();
+        });
 		function timeUpdate() {
 			let percent = (self.audio.currentTime()/self.current_track.duration) * 100;
 			self.duration_indicator.html(""+formatSecondsAsTime(Math.floor(self.audio.currentTime() / 1000)) +"/"+ formatSecondsAsTime(Math.floor(self.current_track.duration / 1000)));
 			self.indicator.noUiSlider.set(percent);
 		}
 		function play() {
+			if(self.audio === undefined){
+				self.changeSrc(queue[0]);
+			}
             setInterval(timeUpdate, 1000);
 			if(self.paused===true) {
 				self.audio.pause();
@@ -42,13 +51,16 @@ function Player(){
 			}
 		}
 		function stop() {
-			self.audio.stop();
+			self.audio.seek(0);
             self.playbtn.html('<i class="material-icons">play_arrow</i>');
 		}
 		function getPosition(el) {
 			return el.getBoundingClientRect().left;
 		}
 		this.changeSrc = function(src) {
+			if(self.audio != undefined){
+				stop();
+			}
 			if(self.current_track != null){
                 $('#card'+self.current_track.id).toggleClass('grey');
             }
@@ -80,7 +92,6 @@ function Jukebox(src) {
 		this.current_track = 0;
 		this.search_bar = $('#search-bar');
 		this.search_bar.keyup(search);
-		this.queue = [];
 		this.search_results = [];
 		$('#shufflebtn').click(function () {
 			self.shuffle = !self.shuffle;
@@ -90,7 +101,7 @@ function Jukebox(src) {
 		SC.get(src).then(function(playlist) {
 			playlist.tracks.forEach(function (track) {
                 track_str(track);
-				self.queue.push(track);
+				queue.push(track);
 			});
             self.displayCurrent();
 		});
@@ -138,16 +149,16 @@ function Jukebox(src) {
             track.tag += "</div>"
         }
 		this.shufflebtn.click(function () {
-			let curr = self.queue[self.current_track];
-			shuffle(self.queue);
+			let curr = queue[self.current_track];
+			shuffle(queue);
 			self.displayCurrent();
-			self.current_track =  findWithAttr(self.queue, 'id', curr.id);
+			self.current_track =  findWithAttr(queue, 'id', curr.id);
 		}, false);
 		this.play = function () {
-			self.player.changeSrc(self.queue[self.current_track]);
+			self.player.changeSrc(queue[self.current_track]);
 			self.displayCurrent();
 			self.player.audio.on('finish', function(){
-				self.player.changeSrc(self.queue[self.current_track++]);
+				self.player.changeSrc(queue[self.current_track++]);
 			});
 		};
 		this.displaySearchResults = function () {
@@ -160,15 +171,15 @@ function Jukebox(src) {
                     self.player.changeSrc(current);
                     $('#current').html(info_str(current));
                     self.search_bar.val("");
-                    self.queue.unshift(current);
+                    queue.unshift(current);
                     self.displayCurrent();
                 });
 			}
 		};
 		this.displayCurrent = function () {
 			$('#tracks').empty();
-			for(i = 0; i<self.queue.length; i++){
-                let current = self.queue[i];
+			for(i = 0; i<queue.length; i++){
+                let current = queue[i];
 				$('#tracks').append(current.tag);
 				$('#' + current.id).click(function(){
                     console.log(current);
@@ -179,9 +190,9 @@ function Jukebox(src) {
 		function previous() {
 			self.current_track--;
 			if(self.current_track < 0){
-				self.current_track = self.queue.length-1;
+				self.current_track = queue.length-1;
 			}
-			let current = self.queue[self.current_track];
+			let current = queue[self.current_track];
 			self.player.changeSrc(current);
 
 			self.player.audio.on('finish', function(){
@@ -190,15 +201,14 @@ function Jukebox(src) {
 		}
 		function next(){
 			if(self.shuffle){
-				self.current_track = Math.floor(Math.random() * self.queue.length)
+				self.current_track = Math.floor(Math.random() * queue.length)
 			}else{
                 self.current_track++;
 			}
-			console.log("Next");
-			if(self.current_track === self.queue.length){
+			if(self.current_track === queue.length){
 				self.current_track = 0;
 			}
-			current = self.queue[self.current_track];
+			current = queue[self.current_track];
 			self.player.changeSrc(current);
 			self.player.audio.on('finish', function(){
 				current();
