@@ -19,8 +19,18 @@ function Player(){
                 'max': 100
             }
         });
+		this.volumebtn = $('#volbtn');
         this.volume_slider = $('#vol-control');
         this.volume_slider.on('change', function () {
+            if($(this).val() <= 0.01){
+                self.volumebtn.html('<i class="material-icons">volume_off</i>')
+            }
+            if($(this).val() > 0 && $(this).val() < 0.5){
+                self.volumebtn.html('<i class="material-icons">volume_down</i>')
+            }
+            if($(this).val() > 0.5){
+                self.volumebtn.html('<i class="material-icons">volume_up</i>')
+            }
             self.audio.setVolume($(this).val());
         });
 		this.duration_indicator = $('#duration');
@@ -139,7 +149,7 @@ function Jukebox(src) {
 		};
 		this.displaySearchResults = function () {
 			$('#tracks').empty();
-			$('#tracks').append('<button id="back">Go to Playlist</button>');
+			$('#tracks').append('<button id="back" class="btn">Go to Playlist</button>');
 			$('#back').click(function () {
 				self.displayCurrent();
             });
