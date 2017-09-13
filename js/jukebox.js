@@ -9,6 +9,8 @@ function Player(){
 		this.playbtn = $('#playbtn');
 		this.stopbtn = $('#stopbtn');
 		this.indicator = $('#indicator')[0];
+		this.saved_volume = 100;
+		this.muted = false;
 		noUiSlider.create(this.indicator, {
             start: 0,
 			animate: false,
@@ -20,8 +22,33 @@ function Player(){
             }
         });
 		this.volumebtn = $('#volbtn');
+		this.volumebtn.click(function () {
+			if(self.muted){
+				self.saved_volume = self.audio.getVolume();
+                self.volumebtn.html('<i class="material-icons">volume_off</i>');
+                self.volume_slider.val(0);
+                if(self.audio != undefined){
+                self.audio.setVolume(0);
+				}
+			}else{
+                if(self.saved_volume <= 0.01){
+                    self.volumebtn.html('<i class="material-icons">volume_off</i>')
+                }
+                if(self.saved_volume > 0 && self.saved_volume < 0.5){
+                    self.volumebtn.html('<i class="material-icons">volume_down</i>')
+                }
+                if(self.saved_volume > 0.5){
+                    self.volumebtn.html('<i class="material-icons">volume_up</i>')
+                }
+                self.volume_slider.val(self.saved_volume);
+                if(self.audio != undefined){
+                    self.audio.setVolume(self.saved_volume);
+                }
+			}
+            self.muted = !self.muted;
+        });
         this.volume_slider = $('#vol-control');
-        this.volume_slider.on('change', function () {
+        this.volume_slider.on('input', function () {
             if($(this).val() <= 0.01){
                 self.volumebtn.html('<i class="material-icons">volume_off</i>')
             }
