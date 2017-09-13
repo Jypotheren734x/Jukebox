@@ -67,7 +67,6 @@ function Player(){
                 $('#card'+self.current_track.id).toggleClass('grey');
             }
 			self.current_track = src;
-            $('#card'+self.current_track.id).toggleClass('grey');
 			console.log("Playing: "+src.title);
 			SC.stream(`/tracks/`+src.id).then(function (player) {
 				self.audio = player;
@@ -83,6 +82,7 @@ function Player(){
                     }
                 	self.changeSrc(queue[track_number]);
                 });
+                $('#card'+self.current_track.id).toggleClass('grey');
 				play();
 			});
 		}
@@ -175,9 +175,7 @@ function Jukebox(src) {
                 let current = self.search_results[i];
                 $('#tracks').append(current.tag);
                 $('#' + current.id).click(function(){
-                    console.log(current);
                     self.player.changeSrc(current);
-                    $('#current').html(info_str(current));
                     self.search_bar.val("");
                     queue.unshift(current);
                     self.displayCurrent();

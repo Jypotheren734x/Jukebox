@@ -20,29 +20,35 @@
 
 </head>
 <body id="drop-zone">
-<header>
-</header>
 <main>
-    <div id="controls" class="card-panel">
-        <div id="current" class="card horizontal z-depth-0"></div>
-        <div id="indicator"></div>
-        <a id="previousbtn" class="btn-flat waves-effect"><i class="material-icons">skip_previous</i></a>
-        <a id="playbtn" class="btn-flat waves-effect"><i class="material-icons">play_arrow</i></a>
-        <a id="shufflebtn" class="btn-flat waves-effect"><i class="material-icons">shuffle</i></a>
-        <a id="nextbtn" class="btn-flat waves-effect"><i class="material-icons">skip_next</i></a>
-        <div id="duration" class="right">0:00/0:00</div>
+    <div class="row">
+        <div id="controls" class="card-panel col s12" style="z-index: 999;">
+            <div id="current" class="card horizontal z-depth-0"></div>
+            <div id="indicator"></div>
+            <a id="previousbtn" class="btn-flat waves-effect"><i class="material-icons">skip_previous</i></a>
+            <a id="playbtn" class="btn-flat waves-effect"><i class="material-icons">play_arrow</i></a>
+            <a id="shufflebtn" class="btn-flat waves-effect"><i class="material-icons">shuffle</i></a>
+            <a id="nextbtn" class="btn-flat waves-effect"><i class="material-icons">skip_next</i></a>
+            <div id="duration" class="right">0:00/0:00</div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12">
+            <div class="input-field">
+                <i class="material-icons prefix">search</i>
+                <input type="search" id="search-bar" placeholder="Search">
+            </div>
+            <div id="tracks" class="row" style="margin-bottom: 40px;">
+            </div>
+        </div>
     </div>
     <audio id="music">
         <source id="mp3" type="audio/mp3">
     </audio>
-    <div class="container">
-        <div class="input-field">
-            <i class="material-icons prefix">search</i>
-            <input type="search" id="search-bar" placeholder="Search">
-        </div>
-        <div id="tracks" class="row">
-    </div></div>
 </main>
 <script src="js/script.js"></script>
+<script>
+    $('#controls').pushpin({offset: window.innerHeight-80});
+</script>
 </body>
 </html>
