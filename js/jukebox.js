@@ -49,7 +49,11 @@ function Player(){
 			return el.getBoundingClientRect().left;
 		}
 		this.changeSrc = function(src) {
+			if(self.current_track != null){
+                $('#card'+self.current_track.id).toggleClass('grey');
+            }
 			self.current_track = src;
+            $('#card'+self.current_track.id).toggleClass('grey');
 			console.log("Playing: "+src.title);
 			SC.stream(`/tracks/`+src.id).then(function (player) {
 				self.audio = player;
@@ -105,7 +109,7 @@ function Jukebox(src) {
 			});
 		}
         function track_str(track) {
-            track.tag = "<div class='card horizontal small'>";
+            track.tag = "<div class='card horizontal' id='card"+track.id+"'>";
             if(track.artwork_url != null){
                 track.tag += "<div class='card-image'><img class='responsive-img activator' src=\""+track.artwork_url+"\"></div>";
             }
@@ -164,12 +168,11 @@ function Jukebox(src) {
 		this.displayCurrent = function () {
 			$('#tracks').empty();
 			for(i = 0; i<self.queue.length; i++){
-				let current = self.queue[i];
+                let current = self.queue[i];
 				$('#tracks').append(current.tag);
 				$('#' + current.id).click(function(){
                     console.log(current);
 					self.player.changeSrc(current);
-                    $('#current').html(info_str(current));
 				});
 			}
 		};
@@ -180,7 +183,7 @@ function Jukebox(src) {
 			}
 			let current = self.queue[self.current_track];
 			self.player.changeSrc(current);
-            $('#current').html(info_str(current));
+
 			self.player.audio.on('finish', function(){
 				self.next()
 			});
@@ -195,9 +198,8 @@ function Jukebox(src) {
 			if(self.current_track === self.queue.length){
 				self.current_track = 0;
 			}
-			let current = self.queue[self.current_track];
+			current = self.queue[self.current_track];
 			self.player.changeSrc(current);
-            $('#current').html(info_str(current));
 			self.player.audio.on('finish', function(){
 				current();
 			});
