@@ -250,7 +250,7 @@ function track_str(track) {
     }
     track.tag += "<div class='card-stacked'><div class='card-content'>";
     if(track.release_day != null && track.release_month != null && track.release_year != null){
-        track.tag += "<div >Release date: "+track.release_day+"/"+track.release_month+"/"+track.release_year+"</div>";
+        track.tag += "<div >Release date: "+track.release_month+"/"+track.release_day+"/"+track.release_year+"</div>";
     }
     if(track.genre != null){
         track.tag += "<div >Genre: "+track.genre+"</div>";
@@ -279,7 +279,7 @@ function search_str(track) {
     }
     track.tag += "<div class='card-stacked'><div class='card-content'>";
     if(track.release_day != null && track.release_month != null && track.release_year != null){
-        track.tag += "<div >Release date: "+track.release_day+"/"+track.release_month+"/"+track.release_year+"</div>";
+        track.tag += "<div >Release date: "+track.release_month+"/"+track.release_day+"/"+track.release_year+"</div>";
     }
     if(track.genre != null){
         track.tag += "<div >Genre: "+track.genre+"</div>";
