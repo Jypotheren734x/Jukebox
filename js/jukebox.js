@@ -204,6 +204,7 @@ function Jukebox(src) {
 		};
 		this.displayCurrent = function () {
 			$('#tracks').empty();
+			$('#tracks').append("<h1>Playlist</h1>");
 			for(i = 0; i<queue.length; i++){
                 let current = queue[i];
 				$('#tracks').append(current.tag);
