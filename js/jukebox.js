@@ -186,7 +186,11 @@ function Jukebox(src) {
 			for(i = 0; i<self.search_results.length; i++){
                 let current = self.search_results[i];
                 $('#tracks').append(current.tag);
-                $('#' + current.id).click(function(){
+                $('#'+current.id).click(function () {
+                    track_str(current);
+                    self.player.changeSrc(current);
+                });
+                $('#add' + current.id).click(function(){
                 	$(this).toggleClass('grey');
                     track_str(current);
                     self.search_bar.val("");
@@ -242,7 +246,7 @@ function Jukebox(src) {
 function track_str(track) {
     track.tag = "<div class='card horizontal' id='card"+track.id+"'>";
     if(track.artwork_url != null){
-        track.tag += "<div class='card-image'><img class='responsive-img activator' src=\""+track.artwork_url+"\"/></div>";
+        track.tag += "<div class='card-image'><button class='btn transparent z-depth-0'><img class='responsive-img activator' src=\""+track.artwork_url+"\"/></button></div>";
     }
     track.tag += "<div class='card-stacked'><div class='card-content'>";
     if(track.release_day != null && track.release_month != null && track.release_year != null){
@@ -271,7 +275,7 @@ function track_str(track) {
 function search_str(track) {
     track.tag = "<div class='card horizontal' id='card"+track.id+"'>";
     if(track.artwork_url != null){
-        track.tag += "<div class='card-image'><img class='responsive-img activator' src=\""+track.artwork_url+"\"/></div>";
+        track.tag += "<div class='card-image'><button class='btn transparent z-depth-0'><img class='responsive-img activator' src=\""+track.artwork_url+"\"/></button></div>";
     }
     track.tag += "<div class='card-stacked'><div class='card-content'>";
     if(track.release_day != null && track.release_month != null && track.release_year != null){
@@ -291,7 +295,7 @@ function search_str(track) {
     if(track.permalink_url != null){
         track.tag += "<a class='btn-flat waves-effect right' href='"+track.permalink_url + "'>View on SoundCloud</a>";
     }
-    track.tag += "<button class='btn-flat waves-effect' id='"+track.id+"'>Add to Playlist</button></div></div>";
+    track.tag += "<button class='btn-flat waves-effect' id='"+track.id+"'>Play</button><button class='btn-flat waves-effect' id='add"+track.id+"'>Add to Playlist</button></div></div>";
     if(track.description != null){
         track.tag += "<div class='card-reveal'><span class=\"card-title grey-text text-darken-4\">"+track.title+"<i class=\"material-icons right\">close</i></span><p>"+track.description+"</p></div>";
     }
