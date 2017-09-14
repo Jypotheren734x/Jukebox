@@ -20,6 +20,20 @@
 
 </head>
 <body id="drop-zone">
+<div class="navbar-fixed">
+<nav class="nav-extended white z-depth-0">
+    <div class="nav-wrapper" id="nav">
+        <div class="brand-logo black-text">Jukebox</div>
+        <button id="back" class="btn-flat right hiddendiv">Now Playing</button>
+    </div>
+    <div class="nav-content">
+        <div class="input-field black-text">
+            <i class="material-icons prefix">search</i>
+            <input id="search-bar" type="text" class="validate">
+            <label for="search-bar" class="black-text">Search by artist,title,genre,etc.</label>
+        </div>
+    </div>
+</nav></div>
 <main>
     <div class="row">
         <div id="controls" class="card col s12" style="z-index: 999;">
@@ -42,11 +56,7 @@
     </div>
     <div class="row">
         <div class="col s12">
-            <div class="input-field">
-                <i class="material-icons prefix">search</i>
-                <input type="search" id="search-bar" placeholder="Find a Song by artist, title, genre, etc.">
-            </div>
-            <div id="tracks" class="row" style="margin-bottom: 50px;"></div>
+            <div id="tracks" class="row"></div>
         </div>
     </div>
     <audio id="music">
