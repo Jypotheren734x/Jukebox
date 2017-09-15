@@ -24,7 +24,7 @@
 <nav class="nav-extended white z-depth-0">
     <div class="nav-wrapper" id="nav">
         <div class="brand-logo black-text">Jukebox</div>
-        <button id="back" class="btn-flat right">Now Playing</button>
+        <button id="back" class="btn-flat right">Now Playing List</button>
     </div>
     <div class="nav-content">
         <div class="input-field black-text">
@@ -37,12 +37,12 @@
 <main>
     <div class="row">
         <div id="controls" class="card col s12" style="z-index: 999;">
-            <div class="card-stacked">
                 <div class="card-content row">
                     <div id="indicator"></div>
-                    <div id="now_playing" class="left">Now Playing: <span id="current"></span></div>
-                    <div id="duration" class="right">0:00/0:00</div>
-                    <div class="container center">
+                    <div class="col s3">
+                        <div id="now_playing" class="left">Now Playing: <span id="current"></span></div>
+                    </div>
+                    <div class="container col s6">
                         <a id="previousbtn" class="btn-flat waves-effect"><i class="material-icons">skip_previous</i></a>
                         <a id="playbtn" class="btn-flat waves-effect"><i class="material-icons">play_arrow</i></a>
                         <a id="shufflebtn" class="btn-flat waves-effect"><i class="material-icons">shuffle</i></a>
@@ -50,8 +50,12 @@
                         <a id="volbtn" class="btn-flat waves-effect"><i class="material-icons">volume_up</i></a>
                         <i class="material-icons"><input id="vol-control" type="range" min="0" max="1" step=".001" value="100"></i>
                     </div>
+                    <div class="col s3">
+                    <div id="duration" class="right">0:00/0:00</div>
+                    </div>
                 </div>
-            </div>
+                <div class="card-action">
+                </div>
         </div>
     </div>
     <div class="row">
@@ -64,8 +68,5 @@
     </audio>
 </main>
 <script src="js/script.js"></script>
-<script>
-    $('#controls').pushpin({offset: window.innerHeight - 100});
-</script>
 </body>
 </html>

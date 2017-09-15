@@ -1,11 +1,13 @@
 /**
  * Created by komar on 6/7/2017.
  */
-function Player(){
+function Jukebox(src){
+    SC.initialize({
+        client_id: 'DoPASlLzDUFjxJHRDESP267TmnAjyrza'
+    });
 	this.init = function(){
         this.queue = [];
         this.shuffle = false;
-        this.tracks = $('#tracks');
         this.track_number = 0;
 		this.playbtn = $('#playbtn');
 		this.stopbtn = $('#stopbtn');
@@ -22,7 +24,7 @@ function Player(){
 			step: 0.000000000000000000000001,
             range: {
                 'min': 0,
-                'max': 100
+                'max': 1
             }
         });
 		this.volumebtn = $('#volbtn');
@@ -73,6 +75,53 @@ function Player(){
 		let self = this;
 		this.stopbtn.click(stop);
 		this.paused = true;
+        this.search_bar = $('#search-bar');
+        this.search_bar.keyup(search);
+        this.search_results = [];
+        this.tracks = $('#tracks');
+        setInterval(timeUpdate, 500);
+        SC.get(src).then(function(playlist) {
+            playlist.tracks.forEach(function (track) {
+                track_str(track);
+                queue.push(track);
+            });
+            self.displayCurrent();
+        });
+        function search() {
+            SC.get(`/tracks`,{q: self.search_bar.val()}).then(function (tracks) {
+                self.search_results = [];
+                tracks.forEach(function (track) {
+                    search_str(track);
+                    self.search_results.push(track);
+                });
+                self.displaySearchResults();
+            });
+        }
+        this.displaySearchResults = function () {
+            self.tracks.empty();
+            for(i = 0; i<self.search_results.length; i++){
+                let current = self.search_results[i];
+                self.tracks.append(current.tag);
+                $('#'+current.id).click(function () {
+                    playing_search_str(current);
+                    self.changeSrc(current);
+                    self.displaySearchResults();
+                });
+                $('#add' + current.id).click(function(){
+                    $(this).toggleClass('grey');
+                    track_str(current);
+                    if(!self.queue.includes(current)) {
+                        self.queue.push(current);
+                        Materialize.toast('Added to Playlist',4000);
+                        $(this).text('Remove from playlist');
+                    }else{
+                        self.queue.remove(current);
+                        Materialize.toast('Removed from Playlist',4000);
+                        $(this).text('Add to playlist');
+                    }
+                });
+            }
+        };
 		this.indicator.noUiSlider.on('change', function () {
 			self.audio.seek((self.current_track.duration * this.get())/100);
             self.audio.play();
@@ -83,15 +132,16 @@ function Player(){
             self.shuffle = !self.shuffle;
         });
 		function timeUpdate() {
-			let percent = (self.audio.currentTime()/self.current_track.duration) * 100;
-			self.duration_indicator.html(""+formatSecondsAsTime(Math.floor(self.audio.currentTime() / 1000)) +"/"+ formatSecondsAsTime(Math.floor(self.current_track.duration / 1000)));
-			self.indicator.noUiSlider.set(percent);
+		    if(self.audio != undefined) {
+                let percent = (self.audio.currentTime() / self.current_track.duration);
+                self.duration_indicator.html("" + formatSecondsAsTime(Math.floor(self.audio.currentTime() / 1000)) + "/" + formatSecondsAsTime(Math.floor(self.current_track.duration / 1000)));
+                self.indicator.noUiSlider.set(percent);
+            }
 		}
 		function play() {
 			if(self.audio === undefined){
 				self.changeSrc(queue[0]);
 			}
-			self.audio.setVolume(self.volume_slider.val());
 			if(self.paused) {
                 self.audio.play();
                 self.paused = false;
@@ -102,7 +152,7 @@ function Player(){
                 self.paused = true;
                 self.playbtn.html('<i class="material-icons">play_arrow</i>');
 			}
-		};
+		}
 		function stop() {
 			self.audio.seek(0);
             self.playbtn.html('<i class="material-icons">play_arrow</i>');
@@ -131,6 +181,7 @@ function Player(){
                 track_str(self.current_track);
             }
 			self.current_track = src;
+			self.track_number = self.queue.indexOf(self.current_track);
 			console.log("Playing: "+src.title);
 			SC.stream(`/tracks/`+src.id).then(function (player) {
 				self.audio = player;
@@ -140,6 +191,7 @@ function Player(){
                         self.track_number = 0;
                     }
                 	self.changeSrc(self.queue[self.track_number]);
+                    play();
                 });
                 playing_str(self.current_track);
                 $('html, body').animate({
@@ -147,7 +199,7 @@ function Player(){
                 }, 1000);
                 $('#current').html(info_str(self.current_track));
 				play();
-                setInterval(timeUpdate, 1000);
+                self.displayCurrent();
 			});
 		}
         function previous() {
@@ -155,8 +207,8 @@ function Player(){
             if(self.track_number < 0){
                 self.track_number = self.queue.length-1;
             }
-            let current = self.player.queue[self.track_number];
-            self.player.changeSrc(current);
+            self.changeSrc(self.queue[self.track_number]);
+            play();
             self.displayCurrent();
         }
         function next(){
@@ -164,8 +216,8 @@ function Player(){
             if(self.track_number === self.queue.length){
                 self.track_number = 0;
             }
-            let current = self.queue[self.track_number];
-            self.player.changeSrc(current);
+            self.changeSrc(self.queue[self.track_number]);
+            play();
             self.displayCurrent();
         }
         this.playbtn.click(play);
@@ -174,192 +226,131 @@ function Player(){
         $('#back').click(function () {
             self.displayCurrent();
         });
-	}
-}
-function Jukebox(src) {
-	let self = this;
-	this.player = new Player();
-	this.player.init();
-	SC.initialize({
-		client_id: 'DoPASlLzDUFjxJHRDESP267TmnAjyrza'
-	});
-	this.init = function () {
-		this.search_bar = $('#search-bar');
-		this.search_bar.keyup(search);
-		this.search_results = [];
-		this.tracks = $('#tracks');
-		SC.get(src).then(function(playlist) {
-			playlist.tracks.forEach(function (track) {
-                track_str(track);
-				queue.push(track);
-			});
-            self.displayCurrent();
-		});
-		function search() {
-			SC.get(`/tracks`,{q: self.search_bar.val()}).then(function (tracks) {
-				if(self.search_bar.val() === ""){
-					self.displayCurrent();
-				}else {
-					self.search_results = [];
-					tracks.forEach(function (track) {
-						search_str(track);
-						self.search_results.push(track);
-					});
-					self.displaySearchResults();
-				}
-			});
-		}
-		this.displaySearchResults = function () {
-            self.tracks.empty();
-			for(i = 0; i<self.search_results.length; i++){
-                let current = self.search_results[i];
-                self.tracks.append(current.tag);
-                $('#'+current.id).click(function () {
-                    playing_search_str(current);
-                    self.player.changeSrc(current);
-                    self.displaySearchResults();
-                });
-                $('#add' + current.id).click(function(){
-                	$(this).toggleClass('grey');
-                    track_str(current);
-                    self.search_bar.val("");
-                    if(!self.player.queue.includes(current)) {
-                        self.player.queue.push(current);
-                        Materialize.toast('Added to Playlist',4000);
-                        $(this).text('Remove from playlist');
-                    }else{
-                        self.player.queue.remove(current);
-                        Materialize.toast('Removed from Playlist',4000);
-                        $(this).text('Add to playlist');
-					}
-                });
-			}
-		};
 	};
-}
-function track_str(track) {
-    track.tag = "<div class='card horizontal' id='card"+track.id+"'>";
-    if(track.artwork_url != null){
-        track.tag += "<div class='card-image'><button class='btn transparent z-depth-0'><img class='responsive-img activator' src=\""+track.artwork_url+"\"/></button></div>";
+    function track_str(track) {
+        track.tag = "<div class='card horizontal' id='card"+track.id+"'>";
+        if(track.artwork_url != null){
+            track.tag += "<div class='card-image'><button class='btn transparent z-depth-0'><img class='responsive-img activator' src=\""+track.artwork_url+"\"/></button></div>";
+        }
+        track.tag += "<div class='card-stacked'><div class='card-content'>";
+        if(track.release_day != null && track.release_month != null && track.release_year != null){
+            track.tag += "<div >Release date: "+track.release_month+"/"+track.release_day+"/"+track.release_year+"</div>";
+        }
+        if(track.genre != null){
+            track.tag += "<div >Genre: "+track.genre+"</div>";
+        }
+        if(track.title != null){
+            track.tag += "<div >Title: "+track.title+"</div>";
+        }
+        track.tag += "</div>";
+        track.tag += "<div class='card-action'>";
+        if(track.duration != null){
+            track.tag += "<span class='right'>"+formatSecondsAsTime(Math.floor(track.duration / 1000))+"</span>";
+        }
+        if(track.permalink_url != null){
+            track.tag += "<a class='btn-flat waves-effect right' href='"+track.permalink_url + "'>View on SoundCloud</a>";
+        }
+        track.tag += "<button class='btn-flat waves-effect' id='"+track.id+"'>Play</button><button class='btn-flat waves-effect' id='remove"+track.id+"'>Remove</button></div></div>";
+        if(track.description != null){
+            track.tag += "<div class='card-reveal'><span class=\"card-title grey-text text-darken-4\">"+track.title+"<i class=\"material-icons right\">close</i></span><p>"+track.description+"</p></div>";
+        }
+        track.tag += "</div>"
     }
-    track.tag += "<div class='card-stacked'><div class='card-content'>";
-    if(track.release_day != null && track.release_month != null && track.release_year != null){
-        track.tag += "<div >Release date: "+track.release_month+"/"+track.release_day+"/"+track.release_year+"</div>";
+    function playing_str(track) {
+        track.tag = "<div class='card horizontal grey' id='card"+track.id+"'>";
+        if(track.artwork_url != null){
+            track.tag += "<div class='card-image'><button class='btn transparent z-depth-0'><img class='responsive-img activator' src=\""+track.artwork_url+"\"/></button></div>";
+        }
+        track.tag += "<div class='card-stacked'><div class='card-content'>";
+        if(track.release_day != null && track.release_month != null && track.release_year != null){
+            track.tag += "<div >Release date: "+track.release_month+"/"+track.release_day+"/"+track.release_year+"</div>";
+        }
+        if(track.genre != null){
+            track.tag += "<div >Genre: "+track.genre+"</div>";
+        }
+        if(track.title != null){
+            track.tag += "<div >Title: "+track.title+"</div>";
+        }
+        track.tag += "</div>";
+        track.tag += "<div class='card-action'>";
+        if(track.duration != null){
+            track.tag += "<span class='right'>"+formatSecondsAsTime(Math.floor(track.duration / 1000))+"</span>";
+        }
+        if(track.permalink_url != null){
+            track.tag += "<a class='btn-flat waves-effect right' href='"+track.permalink_url + "'>View on SoundCloud</a>";
+        }
+        track.tag += "<button class='btn-flat waves-effect disabled' id='"+track.id+"'>Playing</button><button class='btn-flat waves-effect' id='remove"+track.id+"'>Remove</button></div></div>";
+        if(track.description != null){
+            track.tag += "<div class='card-reveal'><span class=\"card-title grey-text text-darken-4\">"+track.title+"<i class=\"material-icons right\">close</i></span><p>"+track.description+"</p></div>";
+        }
+        track.tag += "</div>"
     }
-    if(track.genre != null){
-        track.tag += "<div >Genre: "+track.genre+"</div>";
+    function playing_search_str(track) {
+        track.tag = "<div class='card horizontal grey' id='card"+track.id+"'>";
+        if(track.artwork_url != null){
+            track.tag += "<div class='card-image'><button class='btn transparent z-depth-0'><img class='responsive-img activator' src=\""+track.artwork_url+"\"/></button></div>";
+        }
+        track.tag += "<div class='card-stacked'><div class='card-content'>";
+        if(track.release_day != null && track.release_month != null && track.release_year != null){
+            track.tag += "<div >Release date: "+track.release_month+"/"+track.release_day+"/"+track.release_year+"</div>";
+        }
+        if(track.genre != null){
+            track.tag += "<div >Genre: "+track.genre+"</div>";
+        }
+        if(track.title != null){
+            track.tag += "<div >Title: "+track.title+"</div>";
+        }
+        track.tag += "</div>";
+        track.tag += "<div class='card-action'>";
+        if(track.duration != null){
+            track.tag += "<span class='right'>"+formatSecondsAsTime(Math.floor(track.duration / 1000))+"</span>";
+        }
+        if(track.permalink_url != null){
+            track.tag += "<a class='btn-flat waves-effect right' href='"+track.permalink_url + "'>View on SoundCloud</a>";
+        }
+        track.tag += "<button class='btn-flat waves-effect disabled' id='"+track.id+"'>Playing</button><button class='btn-flat waves-effect' id='add"+track.id+"'>Add to playlist</button></div></div>";
+        if(track.description != null){
+            track.tag += "<div class='card-reveal'><span class=\"card-title grey-text text-darken-4\">"+track.title+"<i class=\"material-icons right\">close</i></span><p>"+track.description+"</p></div>";
+        }
+        track.tag += "</div>"
     }
-    if(track.title != null){
-        track.tag += "<div >Title: "+track.title+"</div>";
+    function search_str(track) {
+        track.tag = "<div class='card horizontal' id='card"+track.id+"'>";
+        if(track.artwork_url != null){
+            track.tag += "<div class='card-image'><button class='btn transparent z-depth-0'><img class='responsive-img activator' src=\""+track.artwork_url+"\"/></button></div>";
+        }
+        track.tag += "<div class='card-stacked'><div class='card-content'>";
+        if(track.release_day != null && track.release_month != null && track.release_year != null){
+            track.tag += "<div >Release date: "+track.release_month+"/"+track.release_day+"/"+track.release_year+"</div>";
+        }
+        if(track.genre != null){
+            track.tag += "<div >Genre: "+track.genre+"</div>";
+        }
+        if(track.title != null){
+            track.tag += "<div >Title: "+track.title+"</div>";
+        }
+        track.tag += "</div>";
+        track.tag += "<div class='card-action'>";
+        if(track.duration != null){
+            track.tag += "<span class='right'>"+formatSecondsAsTime(Math.floor(track.duration / 1000))+"</span>";
+        }
+        if(track.permalink_url != null){
+            track.tag += "<a class='btn-flat waves-effect right' href='"+track.permalink_url + "'>View on SoundCloud</a>";
+        }
+        track.tag += "<button class='btn-flat waves-effect' id='"+track.id+"'>Play</button><button class='btn-flat waves-effect' id='add"+track.id+"'>Add to Playlist</button></div></div>";
+        if(track.description != null){
+            track.tag += "<div class='card-reveal'><span class=\"card-title grey-text text-darken-4\">"+track.title+"<i class=\"material-icons right\">close</i></span><p>"+track.description+"</p></div>";
+        }
+        track.tag += "</div>"
     }
-    track.tag += "</div>";
-    track.tag += "<div class='card-action'>";
-    if(track.duration != null){
-        track.tag += "<span class='right'>"+formatSecondsAsTime(Math.floor(track.duration / 1000))+"</span>";
-    }
-    if(track.permalink_url != null){
-        track.tag += "<a class='btn-flat waves-effect right' href='"+track.permalink_url + "'>View on SoundCloud</a>";
-    }
-    track.tag += "<button class='btn-flat waves-effect' id='"+track.id+"'>Play</button><button class='btn-flat waves-effect' id='remove"+track.id+"'>Remove</button></div></div>";
-    if(track.description != null){
-        track.tag += "<div class='card-reveal'><span class=\"card-title grey-text text-darken-4\">"+track.title+"<i class=\"material-icons right\">close</i></span><p>"+track.description+"</p></div>";
-    }
-    track.tag += "</div>"
-}
-function playing_str(track) {
-    track.tag = "<div class='card horizontal grey' id='card"+track.id+"'>";
-    if(track.artwork_url != null){
-        track.tag += "<div class='card-image'><button class='btn transparent z-depth-0'><img class='responsive-img activator' src=\""+track.artwork_url+"\"/></button></div>";
-    }
-    track.tag += "<div class='card-stacked'><div class='card-content'>";
-    if(track.release_day != null && track.release_month != null && track.release_year != null){
-        track.tag += "<div >Release date: "+track.release_month+"/"+track.release_day+"/"+track.release_year+"</div>";
-    }
-    if(track.genre != null){
-        track.tag += "<div >Genre: "+track.genre+"</div>";
-    }
-    if(track.title != null){
-        track.tag += "<div >Title: "+track.title+"</div>";
-    }
-    track.tag += "</div>";
-    track.tag += "<div class='card-action'>";
-    if(track.duration != null){
-        track.tag += "<span class='right'>"+formatSecondsAsTime(Math.floor(track.duration / 1000))+"</span>";
-    }
-    if(track.permalink_url != null){
-        track.tag += "<a class='btn-flat waves-effect right' href='"+track.permalink_url + "'>View on SoundCloud</a>";
-    }
-    track.tag += "<button class='btn-flat waves-effect disabled' id='"+track.id+"'>Playing</button><button class='btn-flat waves-effect' id='remove"+track.id+"'>Remove</button></div></div>";
-    if(track.description != null){
-        track.tag += "<div class='card-reveal'><span class=\"card-title grey-text text-darken-4\">"+track.title+"<i class=\"material-icons right\">close</i></span><p>"+track.description+"</p></div>";
-    }
-    track.tag += "</div>"
-}
-function playing_search_str(track) {
-    track.tag = "<div class='card horizontal grey' id='card"+track.id+"'>";
-    if(track.artwork_url != null){
-        track.tag += "<div class='card-image'><button class='btn transparent z-depth-0'><img class='responsive-img activator' src=\""+track.artwork_url+"\"/></button></div>";
-    }
-    track.tag += "<div class='card-stacked'><div class='card-content'>";
-    if(track.release_day != null && track.release_month != null && track.release_year != null){
-        track.tag += "<div >Release date: "+track.release_month+"/"+track.release_day+"/"+track.release_year+"</div>";
-    }
-    if(track.genre != null){
-        track.tag += "<div >Genre: "+track.genre+"</div>";
-    }
-    if(track.title != null){
-        track.tag += "<div >Title: "+track.title+"</div>";
-    }
-    track.tag += "</div>";
-    track.tag += "<div class='card-action'>";
-    if(track.duration != null){
-        track.tag += "<span class='right'>"+formatSecondsAsTime(Math.floor(track.duration / 1000))+"</span>";
-    }
-    if(track.permalink_url != null){
-        track.tag += "<a class='btn-flat waves-effect right' href='"+track.permalink_url + "'>View on SoundCloud</a>";
-    }
-    track.tag += "<button class='btn-flat waves-effect disabled' id='"+track.id+"'>Playing</button><button class='btn-flat waves-effect' id='add"+track.id+"'>Add to playlist</button></div></div>";
-    if(track.description != null){
-        track.tag += "<div class='card-reveal'><span class=\"card-title grey-text text-darken-4\">"+track.title+"<i class=\"material-icons right\">close</i></span><p>"+track.description+"</p></div>";
-    }
-    track.tag += "</div>"
-}
-function search_str(track) {
-    track.tag = "<div class='card horizontal' id='card"+track.id+"'>";
-    if(track.artwork_url != null){
-        track.tag += "<div class='card-image'><button class='btn transparent z-depth-0'><img class='responsive-img activator' src=\""+track.artwork_url+"\"/></button></div>";
-    }
-    track.tag += "<div class='card-stacked'><div class='card-content'>";
-    if(track.release_day != null && track.release_month != null && track.release_year != null){
-        track.tag += "<div >Release date: "+track.release_month+"/"+track.release_day+"/"+track.release_year+"</div>";
-    }
-    if(track.genre != null){
-        track.tag += "<div >Genre: "+track.genre+"</div>";
-    }
-    if(track.title != null){
-        track.tag += "<div >Title: "+track.title+"</div>";
-    }
-    track.tag += "</div>";
-    track.tag += "<div class='card-action'>";
-    if(track.duration != null){
-        track.tag += "<span class='right'>"+formatSecondsAsTime(Math.floor(track.duration / 1000))+"</span>";
-    }
-    if(track.permalink_url != null){
-        track.tag += "<a class='btn-flat waves-effect right' href='"+track.permalink_url + "'>View on SoundCloud</a>";
-    }
-    track.tag += "<button class='btn-flat waves-effect' id='"+track.id+"'>Play</button><button class='btn-flat waves-effect' id='add"+track.id+"'>Add to Playlist</button></div></div>";
-    if(track.description != null){
-        track.tag += "<div class='card-reveal'><span class=\"card-title grey-text text-darken-4\">"+track.title+"<i class=\"material-icons right\">close</i></span><p>"+track.description+"</p></div>";
-    }
-    track.tag += "</div>"
-}
-function info_str(track){
-    let info_str = "";
-    if(track.title != null){
-    	info_str += track.title;
-	}
-    return info_str;
+    function info_str(track){
+        let info_str = "";
+        if(track.title != null){
+            info_str += track.title;
+        }
+        return info_str;
 
+    }
 }
 Array.prototype.remove = function() {
     var what, a = arguments, L = a.length, ax;
