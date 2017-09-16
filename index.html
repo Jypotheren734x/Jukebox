@@ -8,7 +8,7 @@
     <script src="https://connect.soundcloud.com/sdk/sdk-3.1.2.js"></script>
     <script src="https://code.jquery.com/jquery-2.x-git.min.js"></script>
     <script src="js/main.js"></script>
-    <script src="js/jukebox.js"></script>
+    <script src="js/Jukebox.js"></script>
     <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="css/materialize.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -21,46 +21,52 @@
 </head>
 <body id="drop-zone">
 <div class="navbar-fixed">
-<nav class="nav-extended white z-depth-0">
+<nav class="white z-depth-0">
     <div class="nav-wrapper" id="nav">
         <div class="brand-logo black-text">Jukebox</div>
-        <button id="back" class="btn-flat right">Now Playing List</button>
-    </div>
-    <div class="nav-content">
-        <div class="input-field black-text">
-            <i class="material-icons prefix">search</i>
-            <input id="search-bar" type="text" class="validate">
-            <label for="search-bar" class="black-text">Search by artist,title,genre,etc.</label>
-        </div>
     </div>
 </nav></div>
 <main>
     <div class="row">
-        <div id="controls" class="card col s12" style="z-index: 999;">
-                <div class="card-content row">
-                    <div id="indicator"></div>
-                    <div class="col s3">
-                        <div id="now_playing" class="left">Now Playing: <span id="current"></span></div>
-                    </div>
-                    <div class="container col s6">
-                        <a id="previousbtn" class="btn-flat waves-effect"><i class="material-icons">skip_previous</i></a>
-                        <a id="playbtn" class="btn-flat waves-effect"><i class="material-icons">play_arrow</i></a>
-                        <a id="shufflebtn" class="btn-flat waves-effect"><i class="material-icons">shuffle</i></a>
-                        <a id="nextbtn" class="btn-flat waves-effect"><i class="material-icons">skip_next</i></a>
-                        <a id="volbtn" class="btn-flat waves-effect"><i class="material-icons">volume_up</i></a>
-                        <i class="material-icons"><input id="vol-control" type="range" min="0" max="1" step=".001" value="100"></i>
-                    </div>
-                    <div class="col s3">
-                    <div id="duration" class="right">0:00/0:00</div>
-                    </div>
-                </div>
-                <div class="card-action">
-                </div>
+        <div class="col s2">
+            <div class="card">
+            <div class="card-content">
+            </div>
+            </div>
+        </div>
+        <div class="col s10">
+        <div class="input-field black-text">
+            <i class="material-icons prefix">search</i>
+            <input id="search-bar" type="text" class="validate" />
+            <label for="search-bar" class="black-text">Search by artist,title,genre,etc.</label>
+        </div>
+        <div id="tracks"></div>
         </div>
     </div>
     <div class="row">
-        <div class="col s12">
-            <div id="tracks" class="row"></div>
+        <div id="controls" class="card col s12" style="z-index: 999;">
+            <div class="card-content row">
+                <div class="col s6">
+                    <div class="row">
+                        <div class="col s9">
+                    <a id="previousbtn" class="btn-flat waves-effect"><i class="material-icons">skip_previous</i></a>
+                    <a id="playbtn" class="btn-flat waves-effect"><i class="material-icons">play_arrow</i></a>
+                    <a id="shufflebtn" class="btn-flat waves-effect"><i class="material-icons">shuffle</i></a>
+                    <a id="nextbtn" class="btn-flat waves-effect"><i class="material-icons">skip_next</i></a>
+                    <a id="volbtn" class="btn-flat waves-effect"><i class="material-icons">volume_up</i></a>
+                    <i class="material-icons"><input id="vol-control" type="range" min="0" max="1" step=".001" value="100"></i>
+                        </div>
+                    <div id="current" class="col s3">
+                    </div>
+                    </div>
+                </div>
+                <div class="col s5">
+                    <div id="indicator"></div>
+                </div>
+                <div class="col s1">
+                    <div id="duration" class="right">0:00/0:00</div>
+                </div>
+            </div>
         </div>
     </div>
     <audio id="music">
