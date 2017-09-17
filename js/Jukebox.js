@@ -9,13 +9,13 @@ class Jukebox {
         this.player = new Player();
         this.player.init();
         let self = this;
-        if(localStorage.getItem('my_tracks') === null || localStorage.getItem('my_tracks') === undefined) {
+        if (localStorage.getItem('my_tracks') === null || localStorage.getItem('my_tracks') === undefined) {
             this.my_tracks = [];
-        }else{
+        } else {
             this.my_tracks = JSON.parse(localStorage.getItem('my_tracks'));
             let temp = [];
             this.my_tracks.forEach(function (track) {
-                let curr = SC.get('/tracks/' +track.id).then(function (result) {
+                let curr = SC.get('/tracks/' + track.id).then(function (result) {
                     temp.push(new Track(result));
                 });
             });
@@ -27,19 +27,19 @@ class Jukebox {
             self.display_my_tracks();
             self.search_bar.val('');
         });
-        this.search_bar.keypress(function(key){
-            if(key.which == 13) {
+        this.search_bar.keypress(function (key) {
+            if (key.which == 13) {
                 self.search()
             }
         });
     }
 
-    display_my_tracks(){
+    display_my_tracks() {
         let self = this;
         self.tracks_container.empty();
         this.my_tracks.forEach(function (track) {
             let current = track;
-            if(self.player.current_track != current) {
+            if (self.player.current_track != current) {
                 current.show();
             }
             self.tracks_container.append(current.tag);
@@ -51,29 +51,35 @@ class Jukebox {
     search() {
         let self = this;
         self.tracks_container.empty();
-        if(self.search_bar.val() != '') {
-            SC.get(`/tracks`, {q: self.search_bar.val(), limit:20}).then(function (tracks) {
+        if (self.search_bar.val() != '') {
+            SC.get(`/tracks`, {q: self.search_bar.val(), limit: 20}).then(function (tracks) {
                 self.search_results = [];
                 tracks.forEach(function (track) {
                     let current = new Track(track);
-                    if(findWithAttr(self.my_tracks, "id", current.id ) > 0) {
+                    if (current.id === self.player.current_track.id) {
+                        current.playing();
+                    }
+                    else if (findWithAttr(self.my_tracks, "id", current.id) > 0) {
                         current.show();
-                    }else{
+                    } else {
                         current.search();
                     }
                     self.search_results.push(current);
                     self.tracks_container.append(current.tag);
-                    $('#'+track.id).click(function () {
+                    $('#' + track.id).click(function () {
                         self.player.addToQueue(current);
                         self.player.changeSrc(current);
                     });
-                    $('#add' + track.id).click(function(){self.add_to_my_tracks(current)});
+                    $('#add' + track.id).click(function () {
+                        self.add_to_my_tracks(current)
+                    });
                 });
             });
         }
     };
-    add_to_my_tracks(track){
-        if(!this.my_tracks.includes(track)) {
+
+    add_to_my_tracks(track) {
+        if (!this.my_tracks.includes(track)) {
             let self = this;
             self.my_tracks.push(track);
             Materialize.toast(track.title + 'has been added to your tracks', 4000);
@@ -114,6 +120,7 @@ class Track {
         this.src_url = track.permalink_url;
         this.description = track.description;
     }
+
     search() {
         this.tag = "<div class='card horizontal' id='card" + this.id + "'>";
         if (this.artwork != null) {
@@ -121,7 +128,7 @@ class Track {
         }
         this.tag += "<div class='card-stacked'><div class='card-content'>";
         if (this.release != null) {
-            this.tag += "<div >Release date: "+this.release+" </div>";
+            this.tag += "<div >Release date: " + this.release + " </div>";
         }
         if (this.genre != null) {
             this.tag += "<div >Genre: " + this.genre + "</div>";
@@ -144,68 +151,68 @@ class Track {
         this.tag += "</div>"
     }
 
-    show(){
-        this.tag = "<div class='card horizontal' id='card"+this.id+"'>";
-        if(this.artwork != null){
-            this.tag += "<div class='card-image'><button class='btn transparent z-depth-0'><img class='responsive-img activator' src=\""+this.artwork+"\"/></button></div>";
+    show() {
+        this.tag = "<div class='card horizontal' id='card" + this.id + "'>";
+        if (this.artwork != null) {
+            this.tag += "<div class='card-image'><button class='btn transparent z-depth-0'><img class='responsive-img activator' src=\"" + this.artwork + "\"/></button></div>";
         }
         this.tag += "<div class='card-stacked'><div class='card-content'>";
-        if(this.release != null){
-            this.tag += "<div>Release date: "+this.release+"</div>";
+        if (this.release != null) {
+            this.tag += "<div>Release date: " + this.release + "</div>";
         }
-        if(this.genre != null){
-            this.tag += "<div >Genre: "+this.genre+"</div>";
+        if (this.genre != null) {
+            this.tag += "<div >Genre: " + this.genre + "</div>";
         }
-        if(this.title != null){
-            this.tag += "<div >Title: "+this.title+"</div>";
+        if (this.title != null) {
+            this.tag += "<div >Title: " + this.title + "</div>";
         }
         this.tag += "</div>";
         this.tag += "<div class='card-action'>";
-        if(this.duration != null){
-            this.tag += "<span class='right'>"+formatSecondsAsTime(Math.floor(this.duration / 1000))+"</span>";
+        if (this.duration != null) {
+            this.tag += "<span class='right'>" + formatSecondsAsTime(Math.floor(this.duration / 1000)) + "</span>";
         }
-        if(this.src_url != null){
-            this.tag += "<a class='btn-flat waves-effect right' href='"+this.src_url + "'>View on SoundCloud</a>";
+        if (this.src_url != null) {
+            this.tag += "<a class='btn-flat waves-effect right' href='" + this.src_url + "'>View on SoundCloud</a>";
         }
-        this.tag += "<button class='btn-flat waves-effect' id='"+this.id+"'>Play</button><button class='btn-flat waves-effect' id='remove"+this.id+"'>Remove from your Tracks</button></div></div>";
-        if(this.description != null){
-            this.tag += "<div class='card-reveal'><span class=\"card-title grey-text text-darken-4\">"+this.title+"<i class=\"material-icons right\">close</i></span><p>"+this.description+"</p></div>";
+        this.tag += "<button class='btn-flat waves-effect' id='" + this.id + "'>Play</button><button class='btn-flat waves-effect' id='remove" + this.id + "'>Remove from your Tracks</button></div></div>";
+        if (this.description != null) {
+            this.tag += "<div class='card-reveal'><span class=\"card-title grey-text text-darken-4\">" + this.title + "<i class=\"material-icons right\">close</i></span><p>" + this.description + "</p></div>";
         }
         this.tag += "</div>"
     }
 
-    playing(){
-        this.tag = "<div class='card horizontal grey' id='card"+this.id+"'>";
+    playing() {
+        this.tag = "<div class='card horizontal grey' id='card" + this.id + "'>";
         this.tag += '<div class="card-image">'
-        if(this.artwork != null){
-            this.tag += '<img src="'+this.artwork+'" class="activator responsive-img">';
+        if (this.artwork != null) {
+            this.tag += '<img src="' + this.artwork + '" class="activator responsive-img">';
         }
         this.tag += '<div id="bars" style="margin-top: 2px;margin-left: -10px; margin-bottom: -1px;">';
-        for(var i=0;i<10;i++) {
+        for (var i = 0; i < 10; i++) {
             this.tag += '<div class="playing"></div>';
         }
         this.tag += '</div></img></div>';
         this.tag += "<div class='card-stacked'><div class='card-content'>";
-        if(this.release != null){
-            this.tag += "<div>Release date: "+this.release+"</div>";
+        if (this.release != null) {
+            this.tag += "<div>Release date: " + this.release + "</div>";
         }
-        if(this.genre != null){
-            this.tag += "<div >Genre: "+this.genre+"</div>";
+        if (this.genre != null) {
+            this.tag += "<div >Genre: " + this.genre + "</div>";
         }
-        if(this.title != null){
-            this.tag += "<div >Title: "+this.title+"</div>";
+        if (this.title != null) {
+            this.tag += "<div >Title: " + this.title + "</div>";
         }
         this.tag += "</div>";
         this.tag += "<div class='card-action'>";
-        if(this.duration != null){
-            this.tag += "<span class='right'>"+formatSecondsAsTime(Math.floor(this.duration / 1000))+"</span>";
+        if (this.duration != null) {
+            this.tag += "<span class='right'>" + formatSecondsAsTime(Math.floor(this.duration / 1000)) + "</span>";
         }
-        if(this.src_url != null){
-            this.tag += "<a class='btn-flat waves-effect right' href='"+this.src_url + "'>View on SoundCloud</a>";
+        if (this.src_url != null) {
+            this.tag += "<a class='btn-flat waves-effect right' href='" + this.src_url + "'>View on SoundCloud</a>";
         }
-        this.tag += "<button class='btn-flat waves-effect' id='"+this.id+"' disabled>Playing</button><button class='btn-flat waves-effect' id='remove"+this.id+"'>Remove from your Tracks</button></div></div>";
-        if(this.description != null){
-            this.tag += "<div class='card-reveal'><span class=\"card-title grey-text text-darken-4\">"+this.title+"<i class=\"material-icons right\">close</i></span><p>"+this.description+"</p></div>";
+        this.tag += "<button class='btn-flat waves-effect' id='" + this.id + "' disabled>Playing</button><button class='btn-flat waves-effect' id='remove" + this.id + "'>Remove from your Tracks</button></div></div>";
+        if (this.description != null) {
+            this.tag += "<div class='card-reveal'><span class=\"card-title grey-text text-darken-4\">" + this.title + "<i class=\"material-icons right\">close</i></span><p>" + this.description + "</p></div>";
         }
         this.tag += "</div>"
 
@@ -213,14 +220,14 @@ class Track {
 
     now_playing() {
         let tag = '<div id="bars" style="margin-left: -100px;margin-top: 50px;">';
-        for(var i = 0; i<24; i++){
+        for (var i = 0; i < 24; i++) {
             tag += '<div class="now_playing"></div>';
         }
-        if(this.artwork != null){
-            tag += '<img src="'+this.artwork+'" width="50px" height="50px"/>';
+        if (this.artwork != null) {
+            tag += '<img src="' + this.artwork + '" width="50px" height="50px"/>';
         }
         tag += '</div>';
-        if(this.title != null) {
+        if (this.title != null) {
             tag += this.title;
         }
         return tag;
@@ -257,7 +264,9 @@ class Player {
         this.previousbtn.click(function () {
             self.previous();
         });
-        setInterval(function(){self.timeUpdate()}, 1);
+        setInterval(function () {
+            self.timeUpdate()
+        }, 1);
         noUiSlider.create(self.indicator, {
             start: 0,
             animate: false,
@@ -276,26 +285,27 @@ class Player {
 
         this.volumebtn.click(function () {
             self.muted = !self.muted;
-            if(self.muted){
+            if (self.muted) {
                 self.saved_volume = self.volume_slider.val();
                 self.volumebtn.html('<i class="material-icons">volume_off</i>');
                 self.volume_slider.val(0);
-                if(self.audio != undefined){
+                if (self.audio != undefined) {
                     self.audio.setVolume(0);
                 }
-            }else{
-                if(self.saved_volume <= 0.01){
+            } else {
+                if (self.saved_volume <= 0.01) {
                     self.volumebtn.html('<i class="material-icons">volume_off</i>')
                 }
-                if(self.saved_volume > 0 && self.saved_volume < 0.5){
+                if (self.saved_volume > 0 && self.saved_volume < 0.5) {
                     self.volumebtn.html('<i class="material-icons">volume_down</i>')
                 }
-                if(self.saved_volume > 0.5){
+                if (self.saved_volume > 0.5) {
                     self.volumebtn.html('<i class="material-icons">volume_up</i>')
                 }
                 self.volume_slider.val(self.saved_volume);
-                if(self.audio != undefined){
-                    self.audio.setVolume(self.saved_volume);x
+                if (self.audio != undefined) {
+                    self.audio.setVolume(self.saved_volume);
+                    x
                 }
             }
             self.muted = !self.muted;
@@ -303,16 +313,16 @@ class Player {
         this.volume_slider.on('input', function () {
             self.muted = false;
             self.saved_volume = self.volume_slider.val();
-            if($(this).val() <= 0.01){
+            if ($(this).val() <= 0.01) {
                 self.volumebtn.html('<i class="material-icons">volume_off</i>')
             }
-            if($(this).val() > 0 && $(this).val() < 0.5){
+            if ($(this).val() > 0 && $(this).val() < 0.5) {
                 self.volumebtn.html('<i class="material-icons">volume_down</i>')
             }
-            if($(this).val() > 0.5){
+            if ($(this).val() > 0.5) {
                 self.volumebtn.html('<i class="material-icons">volume_up</i>')
             }
-            if(self.audio != undefined){
+            if (self.audio != undefined) {
                 self.audio.setVolume($(this).val());
             }
         });
@@ -336,7 +346,7 @@ class Player {
             }
             this.changeSrc(this.queue[this.track_number]);
             $('html, body').animate({
-                scrollTop: $('#card'+this.current_track.id).offset().top - $('nav').height()
+                scrollTop: $('#card' + this.current_track.id).offset().top - $('nav').height()
             }, 1000);
         }
     }
@@ -349,13 +359,13 @@ class Player {
             }
             this.changeSrc(this.queue[this.track_number]);
             $('html, body').animate({
-                scrollTop: $('#card'+this.current_track.id).offset().top - $('nav').height()
+                scrollTop: $('#card' + this.current_track.id).offset().top - $('nav').height()
             }, 1000);
         }
     }
 
     play() {
-        if(this.audio != undefined) {
+        if (this.audio != undefined) {
             if (this.paused) {
                 this.audio.play();
                 this.paused = false;
@@ -382,7 +392,7 @@ class Player {
         if (this.audio != undefined) {
             this.stop();
         }
-        if(this.current_track != undefined) {
+        if (this.current_track != undefined) {
             this.current_track.show();
             $('#card' + this.current_track.id).replaceWith(this.current_track.tag);
             addListeners(this.current_track);
@@ -393,7 +403,7 @@ class Player {
         this.track_number = this.queue.indexOf(this.current_track);
         $('#current').html(this.current_track.now_playing());
         this.current_track.playing();
-        $('#card'+this.current_track.id).replaceWith(this.current_track.tag);
+        $('#card' + this.current_track.id).replaceWith(this.current_track.tag);
         SC.stream(`/tracks/` + src.id).then(function (player) {
             self.audio = player;
             self.audio.on('finish', function () {
@@ -402,9 +412,10 @@ class Player {
             self.play();
         });
     }
+
     timeUpdate() {
         let self = this;
-        if(self.audio != undefined) {
+        if (self.audio != undefined) {
             let percent = (self.audio.currentTime() / self.current_track.duration);
             self.duration_indicator.html("" + formatSecondsAsTime(Math.floor(self.audio.currentTime() / 1000)) + "/" + formatSecondsAsTime(Math.floor(self.current_track.duration / 1000)));
             self.indicator.noUiSlider.set(percent);
@@ -412,7 +423,7 @@ class Player {
     }
 }
 
-Array.prototype.remove = function() {
+Array.prototype.remove = function () {
     var what, a = arguments, L = a.length, ax;
     while (L && this.length) {
         what = a[--L];
@@ -423,16 +434,16 @@ Array.prototype.remove = function() {
     return this;
 };
 
-function addListeners(current){
-    $('#'+current.id).click(function () {
+function addListeners(current) {
+    $('#' + current.id).click(function () {
         jukebox.player.changeSrc(current);
     });
-    $('#remove'+current.id).click(function () {
+    $('#remove' + current.id).click(function () {
         jukebox.my_tracks.remove(current);
         jukebox.player.queue.remove(current);
         Materialize.toast(current.title + 'has been removed from your tracks', 4000);
         current.search();
-        $('#card'+current.id).remove();
+        $('#card' + current.id).remove();
         localStorage.setItem('my_tracks', JSON.stringify(jukebox.my_tracks));
     });
 }
