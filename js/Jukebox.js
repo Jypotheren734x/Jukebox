@@ -57,11 +57,10 @@ class Jukebox {
         let self = this;
         self.tracks_container.empty();
         if(self.search_bar.val() != '') {
-            SC.get(`/tracks`, {q: self.search_bar.val()}).then(function (tracks) {
+            SC.get(`/tracks`, {q: self.search_bar.val(), limit:50}).then(function (tracks) {
                 self.search_results = [];
                 tracks.forEach(function (track) {
                     let current = new Track(track);
-                    console.log(self.my_tracks);
                     if(findWithAttr(self.my_tracks, "id", current.id ) > 0) {
                         current.show();
                     }else{
