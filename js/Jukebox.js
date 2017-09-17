@@ -61,7 +61,11 @@ class Jukebox {
                 self.search_results = [];
                 tracks.forEach(function (track) {
                     let current = new Track(track);
-                    current.search();
+                    if(findWithAttr(self.my_tracks, "id", current.id )) {
+                        current.show();
+                    }else{
+                        current.search();
+                    }
                     self.search_results.push(current);
                     self.tracks_container.append(current.tag);
                     $('#'+track.id).click(function () {
@@ -371,13 +375,15 @@ class Player {
                 this.audio.play();
                 this.paused = false;
                 this.playbtn.html('<i class="material-icons">pause</i>');
-                $('.bar').animationPlayState = "running";
+                $('.bar').css("height", "3px");
+                $('.bar').css("animation-play-state", "running");
             }
             else {
                 this.audio.pause();
                 this.paused = true;
                 this.playbtn.html('<i class="material-icons">play_arrow</i>');
-                $('.bar').animationPlayState = "paused";
+                $('.bar').css("height", "0px");
+                $('.bar').css("animation-play-state", "paused");
             }
         }
     }

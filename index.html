@@ -24,18 +24,18 @@
 <nav class="white z-depth-0">
     <div class="nav-wrapper" id="nav">
         <div class="brand-logo black-text">Jukebox</div>
-        <button class="btn-flat waves-effect right" id="my_tracks">My Tracks</button>
+        <div class="container">
+            <div class="input-field black-text">
+                <i class="material-icons prefix">search</i>
+                <input id="search-bar" type="text" class="validate" />
+                <label for="search-bar" class="black-text">Search by artist,title,genre,etc.</label>
+            </div>
+        </div>
+        <button class="btn-flat waves-effect right-align" id="my_tracks">My Tracks</button>
     </div>
 </nav></div>
 <main>
-    <div class="container">
-    <div class="input-field black-text">
-        <i class="material-icons prefix">search</i>
-        <input id="search-bar" type="text" class="validate" />
-        <label for="search-bar" class="black-text">Search by artist,title,genre,etc.</label>
-    </div>
-    <div id="tracks"></div>
-    </div>
+    <div id="tracks" class="container"></div>
     <div class="row">
         <div id="controls" class="card col s12" style="z-index: 999;">
             <div class="card-content row">
