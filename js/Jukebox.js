@@ -67,7 +67,6 @@ class Jukebox {
                     self.search_results.push(current);
                     self.tracks_container.append(current.tag);
                     $('#' + track.id).click(function () {
-                        self.player.addToQueue(current);
                         self.player.changeSrc(current);
                     });
                     $('#add' + track.id).click(function () {
