@@ -34,19 +34,20 @@ class Jukebox {
         let self = this;
         self.tracks_container.empty();
         this.my_tracks.forEach(function (track) {
-            if(self.player.current_track != track) {
-                track.show();
+            let current = track;
+            if(self.player.current_track != current) {
+                current.show();
             }
-            self.tracks_container.append(track.tag);
-            self.player.addToQueue(track);
-            $('#'+track.id).click(function () {
-                self.player.changeSrc(track);
+            self.tracks_container.append(current.tag);
+            self.player.addToQueue(current);
+            $('#'+current.id).click(function () {
+                self.player.changeSrc(current);
             });
-            $('#remove'+track.id).click(function () {
-                this.my_tracks.remove(track);
-                Materialize.toast(track.title + 'has been removed from your tracks', 4000);
-                track.search();
-                $('#card'+track.id).remove();
+            $('#remove'+current.id).click(function () {
+                self.my_tracks.remove(current);
+                Materialize.toast(current.title + 'has been removed from your tracks', 4000);
+                current.search();
+                $('#card'+current.id).remove();
                 localStorage.setItem('my_tracks', JSON.stringify(this.my_tracks));
             });
         });
