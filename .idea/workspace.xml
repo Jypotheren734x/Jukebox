@@ -1,16 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ddb699af-9be3-46ab-9d75-e8e319e9586a" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/css/materialize.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/css/materialize.min.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/materialize.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/materialize.min.js" />
+    <list default="true" id="ddb699af-9be3-46ab-9d75-e8e319e9586a" name="Default" comment="Shuffle works">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Music/Nightcore - How To Be A Heartbreaker ♥ (HD).mp3" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/index.js" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/watcherTasks.xml" afterPath="$PROJECT_DIR$/.idea/watcherTasks.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/css/stylesheet.css" afterPath="$PROJECT_DIR$/css/stylesheet.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/jukebox.js" afterPath="$PROJECT_DIR$/js/jukebox.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/script.js" afterPath="$PROJECT_DIR$/js/script.js" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/public/callback.html" afterPath="$PROJECT_DIR$/callback.html" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/public/css/materialize.css" afterPath="$PROJECT_DIR$/css/materialize.css" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/public/css/materialize.min.css" afterPath="$PROJECT_DIR$/css/materialize.min.css" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/public/css/nouislider.css" afterPath="$PROJECT_DIR$/css/nouislider.css" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/public/css/nouislider.min.css" afterPath="$PROJECT_DIR$/css/nouislider.min.css" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/public/css/stylesheet.css" afterPath="$PROJECT_DIR$/css/stylesheet.css" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/public/css/stylesheet.scss" afterPath="$PROJECT_DIR$/css/stylesheet.scss" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/public/img/pauseBtn.png" afterPath="$PROJECT_DIR$/img/pauseBtn.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/public/img/play-btn.png" afterPath="$PROJECT_DIR$/img/play-btn.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/public/img/stop-btn.png" afterPath="$PROJECT_DIR$/img/stop-btn.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/public/index.html" afterPath="$PROJECT_DIR$/index.html" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/public/js/Jukebox.js" afterPath="$PROJECT_DIR$/js/Jukebox.js" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/public/js/main.js" afterPath="$PROJECT_DIR$/js/main.js" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/public/js/materialize.js" afterPath="$PROJECT_DIR$/js/materialize.js" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/public/js/materialize.min.js" afterPath="$PROJECT_DIR$/js/materialize.min.js" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/public/js/nouislider.js" afterPath="$PROJECT_DIR$/js/nouislider.js" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/public/js/nouislider.min.js" afterPath="$PROJECT_DIR$/js/nouislider.min.js" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/public/js/script.js" afterPath="$PROJECT_DIR$/js/script.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -31,15 +44,29 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/index.html">
+      <file leaf-file-name="Jukebox.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/js/Jukebox.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="207">
-              <caret line="27" column="46" lean-forward="true" selection-start-line="27" selection-start-column="46" selection-end-line="27" selection-end-column="46" />
+            <state relative-caret-position="368">
+              <caret line="69" column="43" lean-forward="true" selection-start-line="69" selection-start-column="43" selection-end-line="69" selection-end-column="43" />
               <folding>
-                <element signature="n#style#0;n#div#0;n#div#0;n#main#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#1;n#div#0;n#div#1;n#main#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#Track#0" expanded="false" />
+                <element signature="n#!!block;n#show#0;n#Track#0" expanded="false" />
+                <element signature="n#!!block;n#playing#0;n#Track#0" expanded="false" />
+                <element signature="n#!!block;n#now_playing#0;n#Track#0" expanded="false" />
+                <marker date="1505709304191" expanded="true" signature="8491:8547" ph="..." />
+                <marker date="1505709304191" expanded="true" signature="10090:10127" ph="..." />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="main.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/js/main.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="667">
+              <caret line="29" column="14" lean-forward="false" selection-start-line="29" selection-start-column="14" selection-end-line="29" selection-end-column="14" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -47,9 +74,25 @@
       <file leaf-file-name="stylesheet.css" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/css/stylesheet.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="678">
-              <caret line="41" column="1" lean-forward="false" selection-start-line="41" selection-start-column="1" selection-end-line="41" selection-end-column="1" />
-              <folding />
+            <state relative-caret-position="1127">
+              <caret line="49" column="14" lean-forward="false" selection-start-line="49" selection-start-column="14" selection-end-line="49" selection-end-column="14" />
+              <folding>
+                <marker date="1505627492017" expanded="true" signature="5:9" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/index.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="759">
+              <caret line="33" column="54" lean-forward="false" selection-start-line="33" selection-start-column="54" selection-end-line="33" selection-end-column="54" />
+              <folding>
+                <element signature="n#style#0;n#div#0;n#div#1;n#main#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <marker date="1505686997407" expanded="true" signature="1621:1626" ph="..." />
+                <marker date="1505686997407" expanded="true" signature="1621:3373" ph="..." />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -57,39 +100,10 @@
       <file leaf-file-name="script.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/script.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="46">
-              <caret line="2" column="3" lean-forward="false" selection-start-line="2" selection-start-column="3" selection-end-line="2" selection-end-column="3" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="jukebox.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/js/jukebox.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="586">
-              <caret line="47" column="59" lean-forward="false" selection-start-line="47" selection-start-column="59" selection-end-line="47" selection-end-column="59" />
+            <state relative-caret-position="69">
+              <caret line="3" column="4" lean-forward="false" selection-start-line="3" selection-start-column="4" selection-end-line="3" selection-end-column="4" />
               <folding>
-                <element signature="e#0#40#0" expanded="false" />
-                <element signature="e#418#486#0" expanded="false" />
-                <element signature="e#917#1059#0" expanded="false" />
-                <element signature="e#1086#1389#0" expanded="false" />
-                <element signature="e#1918#2021#0" expanded="false" />
-                <element signature="e#2049#2097#0" expanded="false" />
-                <element signature="e#2131#2900#0" expanded="false" />
-                <element signature="e#2163#2181#0" expanded="false" />
-                <element signature="e#2215#2300#0" expanded="false" />
-                <element signature="e#2424#2894#0" expanded="false" />
-                <element signature="e#2526#2739#0" expanded="false" />
-                <element signature="e#2602#2667#0" expanded="false" />
-                <element signature="e#3013#3065#0" expanded="false" />
-                <element signature="e#6050#6072#0" expanded="false" />
-                <element signature="e#6692#6818#0" expanded="false" />
-                <element signature="e#8270#8396#0" expanded="false" />
-                <element signature="e#9426#9460#0" expanded="false" />
-                <element signature="e#9521#9741#0" expanded="false" />
-                <element signature="e#9599#9722#0" expanded="false" />
-                <element signature="e#9673#9716#0" expanded="false" />
+                <marker date="1505539588937" expanded="true" signature="121:189" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -103,6 +117,7 @@
         <option value="HTML File" />
         <option value="CSS File" />
         <option value="JavaScript File" />
+        <option value="SCSS File" />
       </list>
     </option>
   </component>
@@ -123,6 +138,10 @@
       <find>RangeBubble</find>
       <find>input[type=range]::-ms-fill-lower</find>
       <find>input[type=range]</find>
+      <find>play</find>
+      <find>track_number</find>
+      <find>back</find>
+      <find>self.player</find>
     </findStrings>
     <replaceStrings>
       <replace>,</replace>
@@ -133,6 +152,8 @@
       <replace>queue</replace>
       <replace>self.track_number</replace>
       <replace>track_number</replace>
+      <replace>this.track_number</replace>
+      <replace>self</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -147,12 +168,18 @@
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/readme.md" />
         <option value="$PROJECT_DIR$/js/main.js" />
-        <option value="$PROJECT_DIR$/css/stylesheet.css" />
-        <option value="$PROJECT_DIR$/js/script.js" />
         <option value="$PROJECT_DIR$/js/materialize.js" />
         <option value="$PROJECT_DIR$/css/materialize.css" />
+        <option value="$PROJECT_DIR$/../../../reactjukebox/public/js/jukebox.js" />
+        <option value="$PROJECT_DIR$/js/script.js" />
         <option value="$PROJECT_DIR$/js/jukebox.js" />
+        <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch.html" />
+        <option value="$PROJECT_DIR$/css/stylesheet.css" />
+        <option value="$PROJECT_DIR$/css/stylesheet.scss" />
+        <option value="$PROJECT_DIR$/js/Jukebox.js" />
         <option value="$PROJECT_DIR$/index.html" />
+        <option value="$PROJECT_DIR$/public/index.html" />
+        <option value="$PROJECT_DIR$/public/js/Jukebox.js" />
       </list>
     </option>
   </component>
@@ -192,16 +219,6 @@
               <item name="Jukebox" type="b2602c69:ProjectViewProjectNode" />
               <item name="Jukebox" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="Jukebox" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Jukebox" type="462c0819:PsiDirectoryNode" />
-              <item name="css" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Jukebox" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Jukebox" type="462c0819:PsiDirectoryNode" />
-              <item name="js" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
@@ -211,22 +228,28 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="settings.editor.selected.configurable" value="vcs.Git" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/index.js" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="HbShouldOpenHtmlAsHb" value="" />
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
-    <property name="list.type.of.created.stylesheet" value="CSS" />
+    <property name="list.type.of.created.stylesheet" value="SCSS" />
     <property name="nodejs_interpreter_path" value="C:/Program Files/nodejs/node" />
     <property name="ignore_missing_gitignore" value="true" />
+    <property name="jsx.switch.disabled" value="true" />
+    <property name="com.intellij.ide.scratch.LRUPopupBuilder$2/Languages" value="HTML" />
+    <property name="nodejs.mocha.mocha_node_package_dir" value="" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="D:\Documents\GitHub\Web\Jukebox" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\Documents\GitHub\Web\Jukebox" />
+      <recent name="$PROJECT_DIR$/public" />
       <recent name="E:\Documents\GitHub\Web\Jukebox\js" />
       <recent name="E:\Documents\GitHub\Web\Jukebox\css" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="D:\Documents\GitHub\Web\Jukebox" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -241,7 +264,30 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="JavaScript Debug.index.html">
+  <component name="RunManager" selected="Node.js.Jukebox">
+    <configuration name="Jukebox" type="NodeJSConfigurationType" factoryName="Node.js" path-to-node="project" path-to-js-file="index.js" working-dir="$PROJECT_DIR$">
+      <EXTENSION ID="com.jetbrains.nodejs.remote.docker.NodeJSDockerRunConfigurationExtension">
+        <option name="envVars">
+          <list />
+        </option>
+        <option name="extraHosts">
+          <list />
+        </option>
+        <option name="links">
+          <list />
+        </option>
+        <option name="networkDisabled" value="false" />
+        <option name="networkMode" value="bridge" />
+        <option name="portBindings">
+          <list />
+        </option>
+        <option name="publishAllPorts" value="false" />
+        <option name="version" value="1" />
+        <option name="volumeBindings">
+          <list />
+        </option>
+      </EXTENSION>
+    </configuration>
     <configuration default="true" type="js.build_tools.gulp" factoryName="Gulp.js">
       <node-interpreter>project</node-interpreter>
       <node-options />
@@ -308,17 +354,21 @@
       <method />
     </configuration>
     <configuration name="index.html" type="JavascriptDebugType" factoryName="JavaScript Debug" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/Jukebox/index.html" />
-    <configuration name="jukebox.js" type="NodeJSConfigurationType" factoryName="Node.js" temporary="true" path-to-node="project" path-to-js-file="jukebox.js" working-dir="$PROJECT_DIR$/js" />
     <list size="2">
-      <item index="0" class="java.lang.String" itemvalue="JavaScript Debug.index.html" />
-      <item index="1" class="java.lang.String" itemvalue="Node.js.jukebox.js" />
+      <item index="0" class="java.lang.String" itemvalue="Node.js.Jukebox" />
+      <item index="1" class="java.lang.String" itemvalue="JavaScript Debug.index.html" />
     </list>
     <recent_temporary>
-      <list size="2">
+      <list size="1">
         <item index="0" class="java.lang.String" itemvalue="JavaScript Debug.index.html" />
-        <item index="1" class="java.lang.String" itemvalue="Node.js.jukebox.js" />
       </list>
     </recent_temporary>
+  </component>
+  <component name="SFStoredExecutionPersistentComponent">
+    <executions>
+      <execution name="Default" sourceToExecute="" />
+    </executions>
+    <lastSelectedExecutionName>Default</lastSelectedExecutionName>
   </component>
   <component name="ShelveChangesManager" show_recycled="false">
     <option name="remove_strategy" value="false" />
@@ -351,7 +401,35 @@
       <workItem from="1505266005256" duration="6147000" />
       <workItem from="1505322057994" duration="550000" />
       <workItem from="1505323028072" duration="3862000" />
-      <workItem from="1505327135548" duration="11509000" />
+      <workItem from="1505327135548" duration="12379000" />
+      <workItem from="1505339629723" duration="264000" />
+      <workItem from="1505374389800" duration="281000" />
+      <workItem from="1505375141720" duration="33000" />
+      <workItem from="1505375925158" duration="212000" />
+      <workItem from="1505376361416" duration="148000" />
+      <workItem from="1505412983046" duration="1486000" />
+      <workItem from="1505414670791" duration="10254000" />
+      <workItem from="1505430832843" duration="650000" />
+      <workItem from="1505431896124" duration="60000" />
+      <workItem from="1505432461810" duration="1503000" />
+      <workItem from="1505434265309" duration="3000" />
+      <workItem from="1505434298683" duration="680000" />
+      <workItem from="1505435443782" duration="3503000" />
+      <workItem from="1505442310331" duration="6484000" />
+      <workItem from="1505449282402" duration="16000" />
+      <workItem from="1505525689505" duration="263000" />
+      <workItem from="1505527949249" duration="1562000" />
+      <workItem from="1505530625941" duration="14663000" />
+      <workItem from="1505604029459" duration="1423000" />
+      <workItem from="1505584212875" duration="6311000" />
+      <workItem from="1505600851347" duration="12648000" />
+      <workItem from="1505625786630" duration="5858000" />
+      <workItem from="1505690333308" duration="307000" />
+      <workItem from="1505670586855" duration="4679000" />
+      <workItem from="1505686189194" duration="994000" />
+      <workItem from="1505708961420" duration="1840000" />
+      <workItem from="1505692380437" duration="11000" />
+      <workItem from="1505692457362" duration="78000" />
     </task>
     <task id="LOCAL-00001" summary="Updates">
       <created>1497396776763</created>
@@ -458,34 +536,223 @@
       <option name="project" value="LOCAL" />
       <updated>1505324470524</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="Shuffle works">
+      <created>1505338688970</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1505338688970</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Shuffle works">
+      <created>1505339036862</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1505339036862</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Shuffle works">
+      <created>1505339504610</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1505339504610</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Shuffle works">
+      <created>1505339873773</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1505339873773</updated>
+    </task>
+    <task id="LOCAL-00020" summary="Shuffle works">
+      <created>1505374660289</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1505374660289</updated>
+    </task>
+    <task id="LOCAL-00021" summary="Shuffle works">
+      <created>1505375167683</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1505375167683</updated>
+    </task>
+    <task id="LOCAL-00022" summary="Shuffle works">
+      <created>1505376059970</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1505376059970</updated>
+    </task>
+    <task id="LOCAL-00023" summary="Shuffle works">
+      <created>1505376498325</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1505376498325</updated>
+    </task>
+    <task id="LOCAL-00024" summary="Shuffle works">
+      <created>1505414278493</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1505414278494</updated>
+    </task>
+    <task id="LOCAL-00025" summary="Shuffle works">
+      <created>1505414345610</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1505414345610</updated>
+    </task>
+    <task id="LOCAL-00026" summary="Shuffle works">
+      <created>1505431910063</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1505431910063</updated>
+    </task>
+    <task id="LOCAL-00027" summary="Shuffle works">
+      <created>1505440842643</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1505440842643</updated>
+    </task>
+    <task id="LOCAL-00028" summary="Shuffle works">
+      <created>1505448577282</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1505448577282</updated>
+    </task>
+    <task id="LOCAL-00029" summary="Shuffle works">
+      <created>1505546174186</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1505546174186</updated>
+    </task>
+    <task id="LOCAL-00030" summary="Shuffle works">
+      <created>1505600390207</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1505600390207</updated>
+    </task>
+    <task id="LOCAL-00031" summary="Shuffle works">
+      <created>1505607476077</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1505607476077</updated>
+    </task>
+    <task id="LOCAL-00032" summary="Shuffle works">
+      <created>1505607962084</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1505607962084</updated>
+    </task>
+    <task id="LOCAL-00033" summary="Shuffle works">
+      <created>1505620591348</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1505620591348</updated>
+    </task>
+    <task id="LOCAL-00034" summary="Shuffle works">
+      <created>1505627868969</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1505627868969</updated>
+    </task>
+    <task id="LOCAL-00035" summary="Shuffle works">
+      <created>1505630482738</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1505630482738</updated>
+    </task>
+    <task id="LOCAL-00036" summary="Shuffle works">
+      <created>1505672126948</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1505672126948</updated>
+    </task>
+    <task id="LOCAL-00037" summary="Shuffle works">
+      <created>1505674259841</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1505674259841</updated>
+    </task>
+    <task id="LOCAL-00038" summary="Shuffle works">
+      <created>1505674753361</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1505674753361</updated>
+    </task>
+    <task id="LOCAL-00039" summary="Shuffle works">
+      <created>1505674957026</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1505674957026</updated>
+    </task>
+    <task id="LOCAL-00040" summary="Shuffle works">
+      <created>1505675235893</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1505675235893</updated>
+    </task>
+    <task id="LOCAL-00041" summary="Shuffle works">
+      <created>1505709235661</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1505709235662</updated>
+    </task>
+    <task id="LOCAL-00042" summary="Shuffle works">
+      <created>1505709321099</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1505709321099</updated>
+    </task>
+    <option name="localTasksCounter" value="43" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="109307000" />
+    <option name="totallyTimeSpent" value="186391000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="32" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.09641728" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.11064278" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Debug Logs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32972974" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32928178" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Execute Anonymous" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Execute Anonymous" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32928178" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32969433" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31589958" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31441048" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Salesforce" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3294979" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32928178" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -503,540 +770,108 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="46" />
+      <option name="time" value="80" />
     </breakpoint-manager>
-    <watches-manager>
-      <configuration name="JavascriptDebugType">
-        <watch expression="$('#tracks')" language="JavaScript" />
-        <watch expression="$('tracks')" language="JavaScript" />
-      </configuration>
-    </watches-manager>
+    <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/js/main.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="26">
-          <caret line="3" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/jukebox.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4732">
-          <caret line="184" column="57" lean-forward="true" selection-start-line="184" selection-start-column="57" selection-end-line="184" selection-end-column="57" />
-          <folding>
-            <element signature="e#0#40#0" expanded="false" />
-            <element signature="e#418#486#0" expanded="false" />
-            <element signature="e#917#1059#0" expanded="false" />
-            <element signature="e#1086#1389#0" expanded="false" />
-            <element signature="e#1918#2021#0" expanded="false" />
-            <element signature="e#2049#2097#0" expanded="false" />
-            <element signature="e#2131#2900#0" expanded="false" />
-            <element signature="e#2163#2181#0" expanded="false" />
-            <element signature="e#2215#2300#0" expanded="false" />
-            <element signature="e#2424#2894#0" expanded="false" />
-            <element signature="e#2526#2739#0" expanded="false" />
-            <element signature="e#2602#2667#0" expanded="false" />
-            <element signature="e#3013#3065#0" expanded="false" />
-            <element signature="e#6050#6072#0" expanded="false" />
-            <element signature="e#6692#6818#0" expanded="false" />
-            <element signature="e#8270#8396#0" expanded="false" />
-            <element signature="e#9426#9460#0" expanded="false" />
-            <element signature="e#9521#9741#0" expanded="false" />
-            <element signature="e#9599#9722#0" expanded="false" />
-            <element signature="e#9673#9716#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="572">
-          <caret line="22" column="65" lean-forward="false" selection-start-line="22" selection-start-column="65" selection-end-line="22" selection-end-column="65" />
-          <folding>
-            <element signature="n#style#0;n#div#0;n#div#0;n#main#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#div#0;n#div#1;n#main#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/css/stylesheet.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3380">
-          <caret line="130" column="25" lean-forward="true" selection-start-line="130" selection-start-column="25" selection-end-line="130" selection-end-column="25" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/script.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="156">
-          <caret line="6" column="3" lean-forward="false" selection-start-line="6" selection-start-column="3" selection-end-line="6" selection-end-column="3" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/main.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="26">
-          <caret line="3" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/jukebox.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4654">
-          <caret line="181" column="37" lean-forward="true" selection-start-line="181" selection-start-column="37" selection-end-line="181" selection-end-column="37" />
-          <folding>
-            <element signature="e#0#40#0" expanded="false" />
-            <element signature="e#418#486#0" expanded="false" />
-            <element signature="e#917#1059#0" expanded="false" />
-            <element signature="e#1086#1389#0" expanded="false" />
-            <element signature="e#1918#2021#0" expanded="false" />
-            <element signature="e#2049#2097#0" expanded="false" />
-            <element signature="e#2131#2900#0" expanded="false" />
-            <element signature="e#2163#2181#0" expanded="false" />
-            <element signature="e#2215#2300#0" expanded="false" />
-            <element signature="e#2424#2894#0" expanded="false" />
-            <element signature="e#2526#2739#0" expanded="false" />
-            <element signature="e#2602#2667#0" expanded="false" />
-            <element signature="e#3013#3065#0" expanded="false" />
-            <element signature="e#6050#6072#0" expanded="false" />
-            <element signature="e#6692#6818#0" expanded="false" />
-            <element signature="e#8270#8396#0" expanded="false" />
-            <element signature="e#9426#9460#0" expanded="false" />
-            <element signature="e#9521#9741#0" expanded="false" />
-            <element signature="e#9599#9722#0" expanded="false" />
-            <element signature="e#9673#9716#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="364">
-          <caret line="14" column="25" lean-forward="false" selection-start-line="14" selection-start-column="25" selection-end-line="14" selection-end-column="25" />
-          <folding>
-            <element signature="n#style#0;n#div#0;n#div#0;n#main#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#div#0;n#div#1;n#main#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/css/stylesheet.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2340">
-          <caret line="90" column="14" lean-forward="false" selection-start-line="90" selection-start-column="14" selection-end-line="90" selection-end-column="14" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/script.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="156">
-          <caret line="6" column="3" lean-forward="true" selection-start-line="6" selection-start-column="3" selection-end-line="6" selection-end-column="3" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/main.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="26">
-          <caret line="3" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/jukebox.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2990">
-          <caret line="117" column="69" lean-forward="false" selection-start-line="117" selection-start-column="69" selection-end-line="117" selection-end-column="69" />
-          <folding>
-            <element signature="e#0#40#0" expanded="false" />
-            <element signature="e#418#486#0" expanded="false" />
-            <element signature="e#917#1059#0" expanded="false" />
-            <element signature="e#1086#1389#0" expanded="false" />
-            <element signature="e#1918#2021#0" expanded="false" />
-            <element signature="e#2049#2097#0" expanded="false" />
-            <element signature="e#2131#2900#0" expanded="false" />
-            <element signature="e#2163#2181#0" expanded="false" />
-            <element signature="e#2215#2300#0" expanded="false" />
-            <element signature="e#2424#2894#0" expanded="false" />
-            <element signature="e#2526#2739#0" expanded="false" />
-            <element signature="e#2602#2667#0" expanded="false" />
-            <element signature="e#3013#3065#0" expanded="false" />
-            <element signature="e#6050#6072#0" expanded="false" />
-            <element signature="e#6692#6818#0" expanded="false" />
-            <element signature="e#8270#8396#0" expanded="false" />
-            <element signature="e#9426#9460#0" expanded="false" />
-            <element signature="e#9521#9741#0" expanded="false" />
-            <element signature="e#9599#9722#0" expanded="false" />
-            <element signature="e#9673#9716#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../reactjukebox/public/js/script.js" />
+    <entry file="file://$PROJECT_DIR$/../../../reactjukebox/public/js/main.js" />
+    <entry file="file://$PROJECT_DIR$/../../../reactjukebox/public/js/jukebox.js" />
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="238">
           <caret line="14" column="25" lean-forward="false" selection-start-line="14" selection-start-column="25" selection-end-line="14" selection-end-column="25" />
           <folding>
-            <element signature="n#style#0;n#div#0;n#div#0;n#main#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#div#0;n#div#1;n#main#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#1;n#main#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <marker date="1505686997407" expanded="true" signature="1621:1626" ph="..." />
+            <marker date="1505686997407" expanded="true" signature="1621:3373" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/css/stylesheet.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1530">
-          <caret line="90" column="14" lean-forward="false" selection-start-line="90" selection-start-column="14" selection-end-line="90" selection-end-column="14" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/script.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="19" lean-forward="true" selection-start-line="5" selection-start-column="19" selection-end-line="5" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/main.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="3" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/jukebox.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1972">
-          <caret line="118" column="10" lean-forward="true" selection-start-line="118" selection-start-column="10" selection-end-line="118" selection-end-column="10" />
-          <folding>
-            <element signature="e#0#40#0" expanded="false" />
-            <element signature="e#418#486#0" expanded="false" />
-            <element signature="e#917#1059#0" expanded="false" />
-            <element signature="e#1086#1389#0" expanded="false" />
-            <element signature="e#1918#2021#0" expanded="false" />
-            <element signature="e#2049#2097#0" expanded="false" />
-            <element signature="e#2131#2900#0" expanded="false" />
-            <element signature="e#2163#2181#0" expanded="false" />
-            <element signature="e#2215#2300#0" expanded="false" />
-            <element signature="e#2424#2894#0" expanded="false" />
-            <element signature="e#2526#2739#0" expanded="false" />
-            <element signature="e#2602#2667#0" expanded="false" />
-            <element signature="e#3013#3065#0" expanded="false" />
-            <element signature="e#6050#6072#0" expanded="false" />
-            <element signature="e#6692#6818#0" expanded="false" />
-            <element signature="e#8270#8396#0" expanded="false" />
-            <element signature="e#9426#9460#0" expanded="false" />
-            <element signature="e#9521#9741#0" expanded="false" />
-            <element signature="e#9599#9722#0" expanded="false" />
-            <element signature="e#9673#9716#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../reactjukebox/public/css/stylesheet.css" />
+    <entry file="file://$PROJECT_DIR$/../../../reactjukebox/public/js/script.js" />
+    <entry file="file://$PROJECT_DIR$/../../../reactjukebox/public/js/main.js" />
+    <entry file="file://$PROJECT_DIR$/../../../reactjukebox/public/js/jukebox.js" />
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="187">
           <caret line="11" column="11" lean-forward="true" selection-start-line="11" selection-start-column="11" selection-end-line="11" selection-end-column="11" />
           <folding>
-            <element signature="n#style#0;n#div#0;n#div#0;n#main#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#div#0;n#div#1;n#main#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#1;n#main#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <marker date="1505686997407" expanded="true" signature="1621:1626" ph="..." />
+            <marker date="1505686997407" expanded="true" signature="1621:3373" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/css/stylesheet.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2210">
-          <caret line="130" column="1" lean-forward="false" selection-start-line="130" selection-start-column="1" selection-end-line="130" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/script.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="11" column="42" lean-forward="false" selection-start-line="11" selection-start-column="42" selection-end-line="11" selection-end-column="42" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/main.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="3" column="0" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/jukebox.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1173">
-          <caret line="71" column="34" lean-forward="false" selection-start-line="71" selection-start-column="34" selection-end-line="71" selection-end-column="34" />
-          <folding>
-            <element signature="e#0#40#0" expanded="false" />
-            <element signature="e#418#486#0" expanded="false" />
-            <element signature="e#917#1059#0" expanded="false" />
-            <element signature="e#1086#1389#0" expanded="false" />
-            <element signature="e#1918#2021#0" expanded="false" />
-            <element signature="e#2049#2097#0" expanded="false" />
-            <element signature="e#2131#2900#0" expanded="false" />
-            <element signature="e#2163#2181#0" expanded="false" />
-            <element signature="e#2215#2300#0" expanded="false" />
-            <element signature="e#2424#2894#0" expanded="false" />
-            <element signature="e#2526#2739#0" expanded="false" />
-            <element signature="e#2602#2667#0" expanded="false" />
-            <element signature="e#3013#3065#0" expanded="false" />
-            <element signature="e#6050#6072#0" expanded="false" />
-            <element signature="e#6692#6818#0" expanded="false" />
-            <element signature="e#8270#8396#0" expanded="false" />
-            <element signature="e#9426#9460#0" expanded="false" />
-            <element signature="e#9521#9741#0" expanded="false" />
-            <element signature="e#9599#9722#0" expanded="false" />
-            <element signature="e#9673#9716#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../reactjukebox/public/css/stylesheet.css" />
+    <entry file="file://$PROJECT_DIR$/../../../reactjukebox/public/js/script.js" />
+    <entry file="file://$PROJECT_DIR$/../../../reactjukebox/public/js/main.js" />
+    <entry file="file://$PROJECT_DIR$/../../../reactjukebox/public/js/jukebox.js" />
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="n#style#0;n#div#0;n#div#0;n#main#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#div#0;n#div#1;n#main#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#1;n#main#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <marker date="1505686997407" expanded="true" signature="1621:1626" ph="..." />
+            <marker date="1505686997407" expanded="true" signature="1621:3373" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/css/stylesheet.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" column="21" lean-forward="false" selection-start-line="8" selection-start-column="21" selection-end-line="8" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/script.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="25" column="56" lean-forward="true" selection-start-line="25" selection-start-column="56" selection-end-line="25" selection-end-column="56" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/jukebox.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3179">
-          <caret line="189" column="37" lean-forward="true" selection-start-line="189" selection-start-column="37" selection-end-line="189" selection-end-column="37" />
-          <folding>
-            <element signature="e#0#40#0" expanded="false" />
-            <element signature="e#418#486#0" expanded="false" />
-            <element signature="e#917#1059#0" expanded="false" />
-            <element signature="e#1086#1389#0" expanded="false" />
-            <element signature="e#1918#2021#0" expanded="false" />
-            <element signature="e#2049#2097#0" expanded="false" />
-            <element signature="e#2131#2900#0" expanded="false" />
-            <element signature="e#2163#2181#0" expanded="false" />
-            <element signature="e#2215#2300#0" expanded="false" />
-            <element signature="e#2424#2894#0" expanded="false" />
-            <element signature="e#2526#2739#0" expanded="false" />
-            <element signature="e#2602#2667#0" expanded="false" />
-            <element signature="e#3013#3065#0" expanded="false" />
-            <element signature="e#6050#6072#0" expanded="false" />
-            <element signature="e#6692#6818#0" expanded="false" />
-            <element signature="e#8270#8396#0" expanded="false" />
-            <element signature="e#9426#9460#0" expanded="false" />
-            <element signature="e#9521#9741#0" expanded="false" />
-            <element signature="e#9599#9722#0" expanded="false" />
-            <element signature="e#9673#9716#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/main.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="646">
-          <caret line="40" column="1" lean-forward="false" selection-start-line="40" selection-start-column="1" selection-end-line="40" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../reactjukebox/public/css/stylesheet.css" />
+    <entry file="file://$PROJECT_DIR$/../../../reactjukebox/public/js/script.js" />
+    <entry file="file://$PROJECT_DIR$/../../../reactjukebox/public/js/jukebox.js" />
+    <entry file="file://$PROJECT_DIR$/../../../reactjukebox/public/js/main.js" />
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="221">
           <caret line="13" column="29" lean-forward="false" selection-start-line="13" selection-start-column="29" selection-end-line="13" selection-end-column="29" />
           <folding>
-            <element signature="n#style#0;n#div#0;n#div#0;n#main#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#div#0;n#div#1;n#main#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#1;n#main#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <marker date="1505686997407" expanded="true" signature="1621:1626" ph="..." />
+            <marker date="1505686997407" expanded="true" signature="1621:3373" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/css/stylesheet.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="782">
-          <caret line="46" column="13" lean-forward="false" selection-start-line="46" selection-start-column="13" selection-end-line="46" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/script.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="17" column="15" lean-forward="true" selection-start-line="17" selection-start-column="15" selection-end-line="17" selection-end-column="15" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/main.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="26" column="1" lean-forward="false" selection-start-line="26" selection-start-column="1" selection-end-line="26" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/jukebox.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2805">
-          <caret line="167" column="13" lean-forward="false" selection-start-line="167" selection-start-column="12" selection-end-line="167" selection-end-column="13" />
-          <folding>
-            <element signature="e#0#40#0" expanded="false" />
-            <element signature="e#418#486#0" expanded="false" />
-            <element signature="e#917#1059#0" expanded="false" />
-            <element signature="e#1086#1389#0" expanded="false" />
-            <element signature="e#1918#2021#0" expanded="false" />
-            <element signature="e#2049#2097#0" expanded="false" />
-            <element signature="e#2131#2900#0" expanded="false" />
-            <element signature="e#2163#2181#0" expanded="false" />
-            <element signature="e#2215#2300#0" expanded="false" />
-            <element signature="e#2424#2894#0" expanded="false" />
-            <element signature="e#2526#2739#0" expanded="false" />
-            <element signature="e#2602#2667#0" expanded="false" />
-            <element signature="e#3013#3065#0" expanded="false" />
-            <element signature="e#6050#6072#0" expanded="false" />
-            <element signature="e#6692#6818#0" expanded="false" />
-            <element signature="e#8270#8396#0" expanded="false" />
-            <element signature="e#9426#9460#0" expanded="false" />
-            <element signature="e#9521#9741#0" expanded="false" />
-            <element signature="e#9599#9722#0" expanded="false" />
-            <element signature="e#9673#9716#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../reactjukebox/public/css/stylesheet.css" />
+    <entry file="file://$PROJECT_DIR$/../../../reactjukebox/public/js/script.js" />
+    <entry file="file://$PROJECT_DIR$/../../../reactjukebox/public/js/main.js" />
+    <entry file="file://$PROJECT_DIR$/../../../reactjukebox/public/js/jukebox.js" />
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="n#style#0;n#div#0;n#div#0;n#main#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#div#0;n#div#1;n#main#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#1;n#main#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <marker date="1505686997407" expanded="true" signature="1621:1626" ph="..." />
+            <marker date="1505686997407" expanded="true" signature="1621:3373" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/css/stylesheet.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="816">
-          <caret line="48" column="23" lean-forward="false" selection-start-line="48" selection-start-column="23" selection-end-line="48" selection-end-column="23" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/main.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="26" column="1" lean-forward="false" selection-start-line="26" selection-start-column="1" selection-end-line="26" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/jukebox.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2584">
-          <caret line="154" column="1" lean-forward="false" selection-start-line="154" selection-start-column="1" selection-end-line="154" selection-end-column="1" />
-          <folding>
-            <element signature="e#0#40#0" expanded="false" />
-            <element signature="e#418#486#0" expanded="false" />
-            <element signature="e#917#1059#0" expanded="false" />
-            <element signature="e#1086#1389#0" expanded="false" />
-            <element signature="e#1918#2021#0" expanded="false" />
-            <element signature="e#2049#2097#0" expanded="false" />
-            <element signature="e#2131#2900#0" expanded="false" />
-            <element signature="e#2163#2181#0" expanded="false" />
-            <element signature="e#2215#2300#0" expanded="false" />
-            <element signature="e#2424#2894#0" expanded="false" />
-            <element signature="e#2526#2739#0" expanded="false" />
-            <element signature="e#2602#2667#0" expanded="false" />
-            <element signature="e#3013#3065#0" expanded="false" />
-            <element signature="e#6050#6072#0" expanded="false" />
-            <element signature="e#6692#6818#0" expanded="false" />
-            <element signature="e#8270#8396#0" expanded="false" />
-            <element signature="e#9426#9460#0" expanded="false" />
-            <element signature="e#9521#9741#0" expanded="false" />
-            <element signature="e#9599#9722#0" expanded="false" />
-            <element signature="e#9673#9716#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../reactjukebox/public/css/stylesheet.css" />
+    <entry file="file://$PROJECT_DIR$/../../../reactjukebox/public/js/main.js" />
+    <entry file="file://$PROJECT_DIR$/../../../reactjukebox/public/js/jukebox.js" />
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="187">
           <caret line="11" column="43" lean-forward="false" selection-start-line="11" selection-start-column="43" selection-end-line="11" selection-end-column="43" />
           <folding>
-            <element signature="n#style#0;n#div#0;n#div#0;n#main#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#div#0;n#div#1;n#main#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#1;n#main#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <marker date="1505686997407" expanded="true" signature="1621:1626" ph="..." />
+            <marker date="1505686997407" expanded="true" signature="1621:3373" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/css/stylesheet.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="816">
-          <caret line="48" column="23" lean-forward="true" selection-start-line="48" selection-start-column="23" selection-end-line="48" selection-end-column="23" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/main.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="2" column="3" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="2" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/jukebox.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="16" column="28" lean-forward="true" selection-start-line="16" selection-start-column="28" selection-end-line="16" selection-end-column="28" />
-          <folding>
-            <element signature="e#0#40#0" expanded="false" />
-            <element signature="e#418#486#0" expanded="false" />
-            <element signature="e#917#1059#0" expanded="false" />
-            <element signature="e#1086#1389#0" expanded="false" />
-            <element signature="e#1918#2021#0" expanded="false" />
-            <element signature="e#2049#2097#0" expanded="false" />
-            <element signature="e#2131#2900#0" expanded="false" />
-            <element signature="e#2163#2181#0" expanded="false" />
-            <element signature="e#2215#2300#0" expanded="false" />
-            <element signature="e#2424#2894#0" expanded="false" />
-            <element signature="e#2526#2739#0" expanded="false" />
-            <element signature="e#2602#2667#0" expanded="false" />
-            <element signature="e#3013#3065#0" expanded="false" />
-            <element signature="e#6050#6072#0" expanded="false" />
-            <element signature="e#6692#6818#0" expanded="false" />
-            <element signature="e#8270#8396#0" expanded="false" />
-            <element signature="e#9426#9460#0" expanded="false" />
-            <element signature="e#9521#9741#0" expanded="false" />
-            <element signature="e#9599#9722#0" expanded="false" />
-            <element signature="e#9673#9716#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../reactjukebox/public/css/stylesheet.css" />
+    <entry file="file://$PROJECT_DIR$/../../../reactjukebox/public/js/main.js" />
+    <entry file="file://$PROJECT_DIR$/../../../reactjukebox/public/js/jukebox.js" />
     <entry file="file://$PROJECT_DIR$/js/player.js" />
     <entry file="file://$PROJECT_DIR$/.gitattributes">
       <provider selected="true" editor-type-id="text-editor">
@@ -1045,108 +880,96 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
+    <entry file="file://$PROJECT_DIR$/.gitignore" />
+    <entry file="file://$PROJECT_DIR$/readme.md" />
+    <entry file="file://$PROJECT_DIR$/../../../reactjukebox/public/js/main.js" />
+    <entry file="file://$PROJECT_DIR$/../../../reactjukebox/src/materialize.css" />
+    <entry file="file://$PROJECT_DIR$/../../../reactjukebox/src/materialize.js" />
+    <entry file="file://$PROJECT_DIR$/../../../reactjukebox/public/css/stylesheet.css" />
+    <entry file="file://$PROJECT_DIR$/css/nouislider.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/readme.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="23">
-            <caret line="1" column="78" lean-forward="true" selection-start-line="1" selection-start-column="78" selection-end-line="1" selection-end-column="78" />
-            <folding />
-          </first_editor>
-          <second_editor>
-            <js_state>
-              <onLoadScroll type="JSON" value="{&quot;x&quot;:0,&quot;y&quot;:140.499999618}" />
-            </js_state>
-          </second_editor>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/main.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="17" column="16" lean-forward="false" selection-start-line="17" selection-start-column="16" selection-end-line="17" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/css/stylesheet.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="678">
-          <caret line="41" column="1" lean-forward="false" selection-start-line="41" selection-start-column="1" selection-end-line="41" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../reactjukebox/public/js/script.js" />
+    <entry file="file://$PROJECT_DIR$/../../../reactjukebox/public/js/jukebox.js" />
     <entry file="file://$PROJECT_DIR$/js/script.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="46">
-          <caret line="2" column="3" lean-forward="false" selection-start-line="2" selection-start-column="3" selection-end-line="2" selection-end-column="3" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/materialize.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="4618" column="9" lean-forward="true" selection-start-line="4618" selection-start-column="9" selection-end-line="4618" selection-end-column="9" />
+        <state relative-caret-position="69">
+          <caret line="3" column="4" lean-forward="false" selection-start-line="3" selection-start-column="4" selection-end-line="3" selection-end-column="4" />
           <folding>
-            <element signature="n#!!doc" expanded="true" />
-            <marker date="1505338248656" expanded="true" signature="197479:197486" ph="..." />
-            <marker date="1505338248656" expanded="true" signature="267144:267173" ph="..." />
-            <marker date="1505338248656" expanded="true" signature="267422:267432" ph="..." />
+            <marker date="1505539588937" expanded="true" signature="121:189" ph="{...}" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/css/materialize.css">
+    <entry file="file://$PROJECT_DIR$/js/Jukebox.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="414">
-          <caret line="3284" column="28" lean-forward="true" selection-start-line="3284" selection-start-column="28" selection-end-line="3284" selection-end-column="28" />
-          <folding />
+        <state relative-caret-position="1456">
+          <caret line="350" column="1" lean-forward="true" selection-start-line="350" selection-start-column="1" selection-end-line="350" selection-end-column="1" />
+          <folding>
+            <element signature="n#Track#0" expanded="false" />
+            <element signature="n#!!block;n#show#0;n#Track#0" expanded="false" />
+            <element signature="n#!!block;n#playing#0;n#Track#0" expanded="false" />
+            <element signature="n#!!block;n#now_playing#0;n#Track#0" expanded="false" />
+            <marker date="1505709304191" expanded="true" signature="8491:8547" ph="..." />
+            <marker date="1505709304191" expanded="true" signature="10090:10127" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/jukebox.js">
+    <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.html" />
+    <entry file="file://$PROJECT_DIR$/css/stylesheet.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="586">
-          <caret line="47" column="59" lean-forward="false" selection-start-line="47" selection-start-column="59" selection-end-line="47" selection-end-column="59" />
+        <state relative-caret-position="1127">
+          <caret line="49" column="14" lean-forward="false" selection-start-line="49" selection-start-column="14" selection-end-line="49" selection-end-column="14" />
           <folding>
-            <element signature="e#0#40#0" expanded="false" />
-            <element signature="e#418#486#0" expanded="false" />
-            <element signature="e#917#1059#0" expanded="false" />
-            <element signature="e#1086#1389#0" expanded="false" />
-            <element signature="e#1918#2021#0" expanded="false" />
-            <element signature="e#2049#2097#0" expanded="false" />
-            <element signature="e#2131#2900#0" expanded="false" />
-            <element signature="e#2163#2181#0" expanded="false" />
-            <element signature="e#2215#2300#0" expanded="false" />
-            <element signature="e#2424#2894#0" expanded="false" />
-            <element signature="e#2526#2739#0" expanded="false" />
-            <element signature="e#2602#2667#0" expanded="false" />
-            <element signature="e#3013#3065#0" expanded="false" />
-            <element signature="e#6050#6072#0" expanded="false" />
-            <element signature="e#6692#6818#0" expanded="false" />
-            <element signature="e#8270#8396#0" expanded="false" />
-            <element signature="e#9426#9460#0" expanded="false" />
-            <element signature="e#9521#9741#0" expanded="false" />
-            <element signature="e#9599#9722#0" expanded="false" />
-            <element signature="e#9673#9716#0" expanded="false" />
+            <marker date="1505627492017" expanded="true" signature="5:9" ph="{...}" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/css/stylesheet.scss" />
+    <entry file="file://$PROJECT_DIR$/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="207">
-          <caret line="27" column="46" lean-forward="true" selection-start-line="27" selection-start-column="46" selection-end-line="27" selection-end-column="46" />
+        <state relative-caret-position="759">
+          <caret line="33" column="54" lean-forward="false" selection-start-line="33" selection-start-column="54" selection-end-line="33" selection-end-column="54" />
           <folding>
-            <element signature="n#style#0;n#div#0;n#div#0;n#main#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#div#0;n#div#1;n#main#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#1;n#main#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <marker date="1505686997407" expanded="true" signature="1621:1626" ph="..." />
+            <marker date="1505686997407" expanded="true" signature="1621:3373" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/main.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="667">
+          <caret line="29" column="14" lean-forward="false" selection-start-line="29" selection-start-column="14" selection-end-line="29" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/Jukebox.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="368">
+          <caret line="69" column="43" lean-forward="true" selection-start-line="69" selection-start-column="43" selection-end-line="69" selection-end-column="43" />
+          <folding>
+            <element signature="n#Track#0" expanded="false" />
+            <element signature="n#!!block;n#show#0;n#Track#0" expanded="false" />
+            <element signature="n#!!block;n#playing#0;n#Track#0" expanded="false" />
+            <element signature="n#!!block;n#now_playing#0;n#Track#0" expanded="false" />
+            <marker date="1505709304191" expanded="true" signature="8491:8547" ph="..." />
+            <marker date="1505709304191" expanded="true" signature="10090:10127" ph="..." />
           </folding>
         </state>
       </provider>
