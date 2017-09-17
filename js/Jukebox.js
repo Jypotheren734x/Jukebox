@@ -9,7 +9,7 @@ class Jukebox {
         this.player = new Player();
         this.player.init();
         let self = this;
-        if(localStorage.getItem('my_tracks') === null) {
+        if(localStorage.getItem('my_tracks') === null || localStorage.getItem('my_tracks') === undefined) {
             this.my_tracks = [];
         }else{
             this.my_tracks = JSON.parse(localStorage.getItem('my_tracks'));
@@ -27,7 +27,11 @@ class Jukebox {
             self.display_my_tracks();
             self.search_bar.val('');
         });
-        this.search_bar.keyup(function(){self.search()});
+        this.search_bar.keypress(function(key){
+            if(key.which == 13) {
+                self.search()
+            }
+        });
     }
 
     display_my_tracks(){
@@ -45,6 +49,7 @@ class Jukebox {
             });
             $('#remove'+current.id).click(function () {
                 self.my_tracks.remove(current);
+                self.queue.remove(current);
                 Materialize.toast(current.title + 'has been removed from your tracks', 4000);
                 current.search();
                 $('#card'+current.id).remove();
@@ -57,7 +62,7 @@ class Jukebox {
         let self = this;
         self.tracks_container.empty();
         if(self.search_bar.val() != '') {
-            SC.get(`/tracks`, {q: self.search_bar.val(), limit:50}).then(function (tracks) {
+            SC.get(`/tracks`, {q: self.search_bar.val(), limit:20}).then(function (tracks) {
                 self.search_results = [];
                 tracks.forEach(function (track) {
                     let current = new Track(track);
@@ -235,7 +240,6 @@ class Track {
 class Player {
     constructor() {
         this.queue = [];
-        this.shuffle = false;
         this.playbtn = $('#playbtn');
         this.shufflebtn = $('#shufflebtn');
         this.nextbtn = $('#nextbtn');
@@ -250,6 +254,7 @@ class Player {
         this.paused = true;
         this.audio = undefined;
     }
+
 
     init() {
         let self = this;
@@ -320,6 +325,11 @@ class Player {
             if(self.audio != undefined){
                 self.audio.setVolume($(this).val());
             }
+        });
+        this.shufflebtn.click(function () {
+            $(this).toggleClass('orange-text');
+            shuffle_array(self.queue);
+            console.log(self.queue);
         });
     }
 
