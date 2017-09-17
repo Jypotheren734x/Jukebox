@@ -44,17 +44,7 @@ class Jukebox {
             }
             self.tracks_container.append(current.tag);
             self.player.addToQueue(current);
-            $('#'+current.id).click(function () {
-                self.player.changeSrc(current);
-            });
-            $('#remove'+current.id).click(function () {
-                self.my_tracks.remove(current);
-                self.queue.remove(current);
-                Materialize.toast(current.title + 'has been removed from your tracks', 4000);
-                current.search();
-                $('#card'+current.id).remove();
-                localStorage.setItem('my_tracks', JSON.stringify(this.my_tracks));
-            });
+            addListeners(current);
         });
     }
 
@@ -329,7 +319,6 @@ class Player {
         this.shufflebtn.click(function () {
             $(this).toggleClass('orange-text');
             shuffle_array(self.queue);
-            console.log(self.queue);
         });
     }
 
@@ -371,15 +360,15 @@ class Player {
                 this.audio.play();
                 this.paused = false;
                 this.playbtn.html('<i class="material-icons">pause</i>');
-                $('.bar').css("height", "3px");
-                $('.bar').css("animation-play-state", "running");
+                $('.playing').css("animation-play-state", "running");
+                $('.now_playing').css("animation-play-state", "running");
             }
             else {
                 this.audio.pause();
                 this.paused = true;
                 this.playbtn.html('<i class="material-icons">play_arrow</i>');
-                $('.bar').css("height", "0px");
-                $('.bar').css("animation-play-state", "paused");
+                $('.playing').css("animation-play-state", "paused");
+                $('.now_playing').css("animation-play-state", "paused");
             }
         }
     }
@@ -396,6 +385,7 @@ class Player {
         if(this.current_track != undefined) {
             this.current_track.show();
             $('#card' + this.current_track.id).replaceWith(this.current_track.tag);
+            addListeners(this.current_track);
         }
         this.paused = true;
         let self = this;
@@ -432,3 +422,17 @@ Array.prototype.remove = function() {
     }
     return this;
 };
+
+function addListeners(current){
+    $('#'+current.id).click(function () {
+        jukebox.player.changeSrc(current);
+    });
+    $('#remove'+current.id).click(function () {
+        jukebox.my_tracks.remove(current);
+        jukebox.player.queue.remove(current);
+        Materialize.toast(current.title + 'has been removed from your tracks', 4000);
+        current.search();
+        $('#card'+current.id).remove();
+        localStorage.setItem('my_tracks', JSON.stringify(jukebox.my_tracks));
+    });
+}
