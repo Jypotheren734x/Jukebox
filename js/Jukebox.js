@@ -61,7 +61,8 @@ class Jukebox {
                 self.search_results = [];
                 tracks.forEach(function (track) {
                     let current = new Track(track);
-                    if(findWithAttr(self.my_tracks, "id", current.id )) {
+                    console.log(self.my_tracks);
+                    if(findWithAttr(self.my_tracks, "id", current.id ) > 0) {
                         current.show();
                     }else{
                         current.search();
@@ -185,17 +186,10 @@ class Track {
         if(this.artwork != null){
             this.tag += '<img src="'+this.artwork+'" class="activator responsive-img">';
         }
-        this.tag += '<div id="bars" style="margin-top: -20px;margin-left: 20px;margin-right: -20px;margin-bottom: 20px;">';
-        this.tag += '<div class="bar"></div>';
-        this.tag += '<div class="bar"></div>';
-        this.tag += '<div class="bar"></div>';
-        this.tag += '<div class="bar"></div>';
-        this.tag += '<div class="bar"></div>';
-        this.tag += '<div class="bar"></div>';
-        this.tag += '<div class="bar"></div>';
-        this.tag += '<div class="bar"></div>';
-        this.tag += '<div class="bar"></div>';
-        this.tag += '<div class="bar"></div>';
+        this.tag += '<div id="bars" style="margin-top: 2px;margin-left: -10px; margin-bottom: -1px;">';
+        for(var i=0;i<10;i++) {
+            this.tag += '<div class="playing"></div>';
+        }
         this.tag += '</div></img></div>';
         this.tag += "<div class='card-stacked'><div class='card-content'>";
         if(this.release != null){
@@ -224,17 +218,10 @@ class Track {
     }
 
     now_playing() {
-        let tag = '<div id="bars">';
-        tag += '<div class="bar"></div>';
-        tag += '<div class="bar"></div>';
-        tag += '<div class="bar"></div>';
-        tag += '<div class="bar"></div>';
-        tag += '<div class="bar"></div>';
-        tag += '<div class="bar"></div>';
-        tag += '<div class="bar"></div>';
-        tag += '<div class="bar"></div>';
-        tag += '<div class="bar"></div>';
-        tag += '<div class="bar"></div>';
+        let tag = '<div id="bars" style="margin-left: -100px;margin-top: 50px;">';
+        for(var i = 0; i<24; i++){
+            tag += '<div class="now_playing"></div>';
+        }
         if(this.artwork != null){
             tag += '<img src="'+this.artwork+'" width="50px" height="50px"/>';
         }
