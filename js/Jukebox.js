@@ -305,10 +305,8 @@ class Player {
                 self.volume_slider.val(self.saved_volume);
                 if (self.audio != undefined) {
                     self.audio.setVolume(self.saved_volume);
-                    x
                 }
             }
-            self.muted = !self.muted;
         });
         this.volume_slider.on('input', function () {
             self.muted = false;
