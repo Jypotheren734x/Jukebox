@@ -60,20 +60,12 @@ input[type='range']::-webkit-slider-thumb {
 }
 
 .bar {
-    background: #393939;
+    background: #000000;
     bottom: 1px;
     height: 3px;
     position: inherit;
     width: 3px;
     animation: sound 0ms -800ms linear infinite alternate;
-}
-
-.bar-stop{
-    background: #393939;
-    bottom: 1px;
-    height: 3px;
-    position: inherit;
-    width: 3px;
 }
 
 @keyframes sound {

@@ -9,7 +9,19 @@ class Jukebox {
         this.player = new Player();
         this.player.init();
         let self = this;
-        this.my_tracks = [];
+        if(localStorage.getItem('my_tracks') === null) {
+            this.my_tracks = [];
+        }else{
+            this.my_tracks = JSON.parse(localStorage.getItem('my_tracks'));
+            let temp = [];
+            this.my_tracks.forEach(function (track) {
+                let curr = SC.get('/tracks/' +track.id).then(function (result) {
+                    temp.push(new Track(result));
+                });
+            });
+            this.my_tracks = temp;
+            self.display_my_tracks();
+        }
         this.mytracksbtn = $('#my_tracks');
         this.mytracksbtn.click(function () {
             self.display_my_tracks();
@@ -22,17 +34,20 @@ class Jukebox {
         let self = this;
         self.tracks_container.empty();
         this.my_tracks.forEach(function (track) {
-            track.show();
+            if(self.player.current_track != track) {
+                track.show();
+            }
             self.tracks_container.append(track.tag);
             self.player.addToQueue(track);
             $('#'+track.id).click(function () {
                 self.player.changeSrc(track);
             });
             $('#remove'+track.id).click(function () {
-                self.my_tracks.remove(track);
+                this.my_tracks.remove(track);
                 Materialize.toast(track.title + 'has been removed from your tracks', 4000);
                 track.search();
                 $('#card'+track.id).remove();
+                localStorage.setItem('my_tracks', JSON.stringify(this.my_tracks));
             });
         });
     }
@@ -81,6 +96,7 @@ class Jukebox {
                     self.add_to_my_tracks(track)
                 });
             });
+            localStorage.setItem('my_tracks', JSON.stringify(self.my_tracks));
         }
     }
 }
@@ -354,11 +370,13 @@ class Player {
                 this.audio.play();
                 this.paused = false;
                 this.playbtn.html('<i class="material-icons">pause</i>');
+                $('.bar').animationPlayState = "running";
             }
             else {
                 this.audio.pause();
                 this.paused = true;
                 this.playbtn.html('<i class="material-icons">play_arrow</i>');
+                $('.bar').animationPlayState = "paused";
             }
         }
     }
