@@ -60,11 +60,17 @@ class Jukebox {
                         if (current.id === self.player.current_track.id) {
                             current.playing();
                         }
-                    }
-                    else if (findWithAttr(self.my_tracks, "id", current.id) > 0) {
-                        current.show();
-                    } else {
-                        current.search();
+                        else if (findWithAttr(self.my_tracks, "id", current.id) > 0) {
+                            current.show();
+                        } else {
+                            current.search();
+                        }
+                    }else{
+                        if (findWithAttr(self.my_tracks, "id", current.id) > 0) {
+                            current.show();
+                        } else {
+                            current.search();
+                        }
                     }
                     self.search_results.push(current);
                     self.tracks_container.append(current.tag);
