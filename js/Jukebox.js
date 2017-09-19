@@ -69,7 +69,7 @@ class Jukebox {
         let self = this;
         if (!self.my_tracks.includes(track)) {
             self.my_tracks.push(track);
-            Materialize.toast(track.title + " has been added to your tracks");
+            Materialize.toast(track.title + " has been added to your tracks", 4000);
             track.inMyTracks = true;
             track.show();
             track.update();
@@ -81,7 +81,7 @@ class Jukebox {
         if (self.my_tracks.includes(track)) {
             self.my_tracks.remove(track);
             self.player.removeFromQueue(track);
-            Materialize.toast(track.title + " has been removed from your tracks");
+            Materialize.toast(track.title + " has been removed from your tracks", 4000);
             track.inMyTracks = false;
             track.show();
             if(self.searching){
