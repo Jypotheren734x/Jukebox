@@ -359,9 +359,6 @@ class Player {
                 this.track_number = 0;
             }
             this.changeSrc(this.queue[this.track_number]);
-            $('html, body').animate({
-                scrollTop: this.current_track.card().offset().top - $('nav').height()
-            }, 1000);
         }
     }
 
@@ -415,6 +412,9 @@ class Player {
                 self.next();
             });
             self.play();
+            $('html, body').animate({
+                scrollTop: self.current_track.card().offset().top - $('nav').height()
+            }, 1000);
         });
     }
 
