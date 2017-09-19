@@ -81,7 +81,7 @@ class Jukebox {
         if (self.my_tracks.includes(track)) {
             self.my_tracks.remove(track);
             self.player.removeFromQueue(track);
-            Materialize.toast(track.title + " has been added to your tracks");
+            Materialize.toast(track.title + " has been removed from your tracks");
             track.inMyTracks = false;
             track.show();
             if(self.searching){
@@ -410,6 +410,8 @@ class Player {
         SC.stream(`/tracks/` + src.id).then(function (player) {
             self.audio = player;
             self.audio.on('finish', function () {
+                $('.playing').css("animation-play-state", "paused");
+                $('.now_playing').css("animation-play-state", "paused");
                 self.next();
             });
             self.play();
