@@ -353,7 +353,7 @@ class Player {
             }
             this.changeSrc(this.queue[this.track_number]);
             $('html, body').animate({
-                scrollTop: $('#card' + this.current_track.id).offset().top - $('nav').height()
+                scrollTop: this.current_track.card().offset().top - $('nav').height()
             }, 1000);
         }
     }
