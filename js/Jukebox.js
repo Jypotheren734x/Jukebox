@@ -44,7 +44,7 @@ class Jukebox {
             }
             self.tracks_container.append(current.tag);
             self.player.addToQueue(current);
-            addListeners(current);
+            self.addListeners(current);
         });
     }
 
@@ -76,41 +76,64 @@ class Jukebox {
                     self.tracks_container.append(current.tag);
                     $('#' + track.id).click(function () {
                         self.player.changeSrc(current);
+                        current.search_playing();
+                        $('#card' + current.id).replaceWith(current.tag);
+                        $('#add' + track.id).click(function () {
+                            self.add_to_my_tracks(current);
+                        });
                     });
                     $('#add' + track.id).click(function () {
                         self.add_to_my_tracks(current)
+                    });
+                    $('#remove' + track.id).click(function () {
+                        self.remove_from_my_tracks(current)
                     });
                 });
             });
         }
     };
 
+    remove_from_my_tracks(track){
+        let self = this;
+        self.my_tracks.remove(track);
+        Materialize.toast(track.title + ' has been removed from your tracks', 4000);
+        if(self.player.current_track === track){
+            track.search_playing();
+        }else{
+            track.search();
+        }
+        $('#card' + track.id).replaceWith(track.tag);
+        self.addListeners(track);
+        localStorage.setItem('my_tracks', JSON.stringify(self.my_tracks));
+    }
+
     add_to_my_tracks(track) {
         if (!this.my_tracks.includes(track)) {
             let self = this;
             self.my_tracks.push(track);
-            Materialize.toast(track.title + 'has been added to your tracks', 4000);
-            track.show();
+            Materialize.toast(track.title + ' has been added to your tracks', 4000);
+            if(self.player.current_track === track){
+                track.playing();
+            }else{
+                track.show();
+            }
             $('#card' + track.id).replaceWith(track.tag);
-            $('#' + track.id).click(function () {
-                self.player.addToQueue(track);
-                self.player.changeSrc(track);
-            });
-            $('#remove' + track.id).click(function () {
-                self.my_tracks.remove(track);
-                Materialize.toast(track.title + 'has been removed from your tracks', 4000);
-                track.search();
-                $('#card' + track.id).replaceWith(track.tag);
-                $('#' + track.id).click(function () {
-                    self.player.addToQueue(track);
-                    self.player.changeSrc(track);
-                });
-                $('#add' + track.id).click(function () {
-                    self.add_to_my_tracks(track)
-                });
-            });
+            self.addListeners(track);
             localStorage.setItem('my_tracks', JSON.stringify(self.my_tracks));
         }
+    }
+
+    addListeners(current) {
+        let self = this;
+        $('#' + current.id).click(function () {
+            self.player.changeSrc(current);
+        });
+        $('#add' + current.id).click(function () {
+            self.add_to_my_tracks(current);
+        });
+        $('#remove' + current.id).click(function () {
+            self.remove_from_my_tracks(current);
+        });
     }
 }
 
@@ -132,6 +155,8 @@ class Track {
         this.tag = "<div class='card horizontal' id='card" + this.id + "'>";
         if (this.artwork != null) {
             this.tag += "<div class='card-image'><button class='btn transparent z-depth-0'><img class='responsive-img activator' src=\"" + this.artwork + "\"/></button></div>";
+        }else{
+            this.tag +='<div class="card-image"><img src="https://dummyimage.com/100x100/000/fff&text='+this.title+'" class="activator responsive-img"/></div>'
         }
         this.tag += "<div class='card-stacked'><div class='card-content'>";
         if (this.release != null) {
@@ -162,6 +187,8 @@ class Track {
         this.tag = "<div class='card horizontal' id='card" + this.id + "'>";
         if (this.artwork != null) {
             this.tag += "<div class='card-image'><button class='btn transparent z-depth-0'><img class='responsive-img activator' src=\"" + this.artwork + "\"/></button></div>";
+        }else{
+            this.tag +='<div class=\'card-image\'><img src="https://dummyimage.com/100x100/000/fff&text='+this.title+'" class="activator responsive-img"/></div>'
         }
         this.tag += "<div class='card-stacked'><div class='card-content'>";
         if (this.release != null) {
@@ -188,11 +215,51 @@ class Track {
         this.tag += "</div>"
     }
 
+    search_playing(){
+        this.tag = "<div class='card horizontal grey' id='card" + this.id + "'>";
+        this.tag += '<div class="card-image">';
+        if (this.artwork != null) {
+            this.tag += '<img src="' + this.artwork + '" class="activator responsive-img"/>';
+        }else{
+            this.tag +='<img src="https://dummyimage.com/100x100/000/fff&text='+this.title+'" class="activator responsive-img"/>'
+        }
+        this.tag += '<div id="bars" style="margin-top: 2px;margin-left: -10px; margin-bottom: -1px;">';
+        for (var i = 0; i < 10; i++) {
+            this.tag += '<div class="playing"></div>';
+        }
+        this.tag += '</div></img></div>';
+        this.tag += "<div class='card-stacked'><div class='card-content'>";
+        if (this.release != null) {
+            this.tag += "<div>Release date: " + this.release + "</div>";
+        }
+        if (this.genre != null) {
+            this.tag += "<div >Genre: " + this.genre + "</div>";
+        }
+        if (this.title != null) {
+            this.tag += "<div >Title: " + this.title + "</div>";
+        }
+        this.tag += "</div>";
+        this.tag += "<div class='card-action'>";
+        if (this.duration != null) {
+            this.tag += "<span class='right'>" + formatSecondsAsTime(Math.floor(this.duration / 1000)) + "</span>";
+        }
+        if (this.src_url != null) {
+            this.tag += "<a class='btn-flat waves-effect right' href='" + this.src_url + "'>View on SoundCloud</a>";
+        }
+        this.tag += "<button class='btn-flat waves-effect' id='" + this.id + "' disabled>Playing</button><button class='btn-flat waves-effect' id='add" + this.id + "'>Add to your Tracks</button></div></div>";
+        if (this.description != null) {
+            this.tag += "<div class='card-reveal'><span class=\"card-title grey-text text-darken-4\">" + this.title + "<i class=\"material-icons right\">close</i></span><p>" + this.description + "</p></div>";
+        }
+        this.tag += "</div>"
+    }
+
     playing() {
         this.tag = "<div class='card horizontal grey' id='card" + this.id + "'>";
         this.tag += '<div class="card-image">'
         if (this.artwork != null) {
-            this.tag += '<img src="' + this.artwork + '" class="activator responsive-img">';
+            this.tag += '<img src="' + this.artwork + '" class="activator responsive-img" />';
+        }else{
+            this.tag +='<img src="https://dummyimage.com/100x100/000/fff&text='+this.title+'" class="activator responsive-img"/>'
         }
         this.tag += '<div id="bars" style="margin-top: 2px;margin-left: -10px; margin-bottom: -1px;">';
         for (var i = 0; i < 10; i++) {
@@ -232,6 +299,8 @@ class Track {
         }
         if (this.artwork != null) {
             tag += '<img src="' + this.artwork + '" width="50px" height="50px"/>';
+        }else{
+            tag +='<img src="https://dummyimage.com/50x50/000/fff&text='+this.title+'"/>'
         }
         tag += '</div>';
         if (this.title != null) {
@@ -257,6 +326,7 @@ class Player {
         this.current_track = undefined;
         this.paused = true;
         this.audio = undefined;
+        this.shuffle = false;
     }
 
 
@@ -333,7 +403,7 @@ class Player {
         });
         this.shufflebtn.click(function () {
             $(this).toggleClass('orange-text');
-            shuffle_array(self.queue);
+            self.shuffle = !self.shuffle;
         });
     }
 
@@ -358,7 +428,15 @@ class Player {
 
     next() {
         if (this.queue.length > 0) {
-            this.track_number++;
+            if(this.shuffle){
+                let rand =  Math.floor(Math.random() * this.queue.length);
+                while(rand === this.track_number){
+                    rand =  Math.floor(Math.random() * this.queue.length);
+                }
+                this.track_number = rand;
+            }else{
+                this.track_number++;
+            }
             if (this.track_number === this.queue.length) {
                 this.track_number = 0;
             }
@@ -400,7 +478,6 @@ class Player {
         if (this.current_track != undefined) {
             this.current_track.show();
             $('#card' + this.current_track.id).replaceWith(this.current_track.tag);
-            addListeners(this.current_track);
         }
         this.paused = true;
         let self = this;
@@ -438,17 +515,3 @@ Array.prototype.remove = function () {
     }
     return this;
 };
-
-function addListeners(current) {
-    $('#' + current.id).click(function () {
-        jukebox.player.changeSrc(current);
-    });
-    $('#remove' + current.id).click(function () {
-        jukebox.my_tracks.remove(current);
-        jukebox.player.queue.remove(current);
-        Materialize.toast(current.title + 'has been removed from your tracks', 4000);
-        current.search();
-        $('#card' + current.id).remove();
-        localStorage.setItem('my_tracks', JSON.stringify(jukebox.my_tracks));
-    });
-}
