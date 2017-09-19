@@ -12,6 +12,7 @@ class Jukebox {
         });
         this.tracks_container = $('#tracks');
         this.search_results = [];
+        this.searching = false;
         this.player = new Player();
         this.player.init();
         let json = JSON.parse(localStorage.getItem('my_tracks'));
@@ -32,6 +33,7 @@ class Jukebox {
 
     search() {
         let self = this;
+        self.searching = true;
         self.tracks_container.empty();
         if (self.search_bar.val() != '') {
             SC.get(`/tracks`, {q: self.search_bar.val(), limit: 20}).then(function (tracks) {
@@ -78,10 +80,15 @@ class Jukebox {
         let self = this;
         if (self.my_tracks.includes(track)) {
             self.my_tracks.remove(track);
+            self.player.removeFromQueue(track);
             Materialize.toast(track.title + " has been added to your tracks");
             track.inMyTracks = false;
             track.show();
-            track.update();
+            if(self.searching){
+                track.update();
+            }else{
+                track.card().remove();
+            }
         }
     }
 }
@@ -418,3 +425,13 @@ class Player {
         }
     }
 }
+Array.prototype.remove = function () {
+    var what, a = arguments, L = a.length, ax;
+    while (L && this.length) {
+        what = a[--L];
+        while ((ax = this.indexOf(what)) !== -1) {
+            this.splice(ax, 1);
+        }
+    }
+    return this;
+};
