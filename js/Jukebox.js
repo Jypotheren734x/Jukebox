@@ -1,50 +1,32 @@
 class Jukebox {
     constructor() {
+        let self = this;
         SC.initialize({
             client_id: 'DoPASlLzDUFjxJHRDESP267TmnAjyrza'
         });
         this.search_bar = $('#search-bar');
-        this.tracks_container = $('#tracks');
-        this.search_results = [];
-        this.player = new Player();
-        this.player.init();
-        let self = this;
-        if (localStorage.getItem('my_tracks') === null || localStorage.getItem('my_tracks') === undefined) {
-            this.my_tracks = [];
-        } else {
-            this.my_tracks = JSON.parse(localStorage.getItem('my_tracks'));
-            let temp = [];
-            this.my_tracks.forEach(function (track) {
-                let curr = SC.get('/tracks/' + track.id).then(function (result) {
-                    temp.push(new Track(result));
-                });
-            });
-            this.my_tracks = temp;
-            self.display_my_tracks();
-        }
-        this.mytracksbtn = $('#my_tracks');
-        this.mytracksbtn.click(function () {
-            self.display_my_tracks();
-            self.search_bar.val('');
-        });
         this.search_bar.keypress(function (key) {
             if (key.which === 13) {
                 self.search()
             }
         });
-    }
-
-    display_my_tracks() {
-        let self = this;
-        self.tracks_container.empty();
-        this.my_tracks.forEach(function (track) {
-            let current = track;
-            if (self.player.current_track != current) {
-                current.show();
-            }
-            self.tracks_container.append(current.tag);
-            self.player.addToQueue(current);
-            self.addListeners(current);
+        this.tracks_container = $('#tracks');
+        this.search_results = [];
+        this.player = new Player();
+        this.player.init();
+        let json = JSON.parse(localStorage.getItem('my_tracks'));
+        this.my_tracks = [];
+        json.forEach(function (track) {
+            let curr = SC.get('/tracks/' + track.id).then(function (result) {
+                let t = new Track(self, result);
+                t.inMyTracks = true;
+                self.my_tracks.push(t);
+            });
+        });
+        this.mytracksbtn = $('#my_tracks');
+        this.mytracksbtn.click(function () {
+            self.display_my_tracks();
+            self.search_bar.val('');
         });
     }
 
@@ -55,90 +37,59 @@ class Jukebox {
             SC.get(`/tracks`, {q: self.search_bar.val(), limit: 20}).then(function (tracks) {
                 self.search_results = [];
                 tracks.forEach(function (track) {
-                    let current = new Track(track);
-                    if(self.player.current_track != undefined) {
-                        if (current.id === self.player.current_track.id) {
-                            current.playing();
-                        }
-                        else if (findWithAttr(self.my_tracks, "id", current.id) > 0) {
-                            current.show();
-                        } else {
-                            current.search();
-                        }
-                    }else{
-                        if (findWithAttr(self.my_tracks, "id", current.id) > 0) {
-                            current.show();
-                        } else {
-                            current.search();
-                        }
+                    let exists = findWithAttr(self.my_tracks, "id", track.id);
+                    let current = undefined;
+                    if(exists > 0){
+                        current = self.my_tracks[exists];
+                    }else {
+                        current = new Track(self, track);
                     }
-                    self.search_results.push(current);
-                    self.tracks_container.append(current.tag);
-                    $('#' + track.id).click(function () {
-                        self.player.changeSrc(current);
-                        current.search_playing();
-                        $('#card' + current.id).replaceWith(current.tag);
-                        $('#add' + track.id).click(function () {
-                            self.add_to_my_tracks(current);
-                        });
-                    });
-                    $('#add' + track.id).click(function () {
-                        self.add_to_my_tracks(current)
-                    });
-                    $('#remove' + track.id).click(function () {
-                        self.remove_from_my_tracks(current)
-                    });
+                    current.show();
+                    current.display(self.tracks_container);
+                    current.addListeners();
                 });
             });
         }
     };
 
-    remove_from_my_tracks(track){
+    display_my_tracks() {
         let self = this;
-        self.my_tracks.remove(track);
-        Materialize.toast(track.title + ' has been removed from your tracks', 4000);
-        if(self.player.current_track === track){
-            track.search_playing();
-        }else{
-            track.search();
-        }
-        $('#card' + track.id).replaceWith(track.tag);
-        self.addListeners(track);
-        localStorage.setItem('my_tracks', JSON.stringify(self.my_tracks));
+        self.tracks_container.empty();
+        this.my_tracks.forEach(function (track) {
+            track.show();
+            track.display(self.tracks_container);
+            track.addListeners();
+            self.player.addToQueue(track);
+        });
     }
 
     add_to_my_tracks(track) {
-        if (!this.my_tracks.includes(track)) {
-            let self = this;
+        let self = this;
+        if (!self.my_tracks.includes(track)) {
             self.my_tracks.push(track);
-            Materialize.toast(track.title + ' has been added to your tracks', 4000);
-            if(self.player.current_track === track){
-                track.playing();
-            }else{
-                track.show();
-            }
-            $('#card' + track.id).replaceWith(track.tag);
-            self.addListeners(track);
-            localStorage.setItem('my_tracks', JSON.stringify(self.my_tracks));
+            Materialize.toast(track.title + " has been added to your tracks");
+            track.inMyTracks = true;
+            track.show();
+            track.update();
         }
     }
 
-    addListeners(current) {
+    remove_from_my_tracks(track) {
         let self = this;
-        $('#' + current.id).click(function () {
-            self.player.changeSrc(current);
-        });
-        $('#add' + current.id).click(function () {
-            self.add_to_my_tracks(current);
-        });
-        $('#remove' + current.id).click(function () {
-            self.remove_from_my_tracks(current);
-        });
+        if (self.my_tracks.includes(track)) {
+            self.my_tracks.remove(track);
+            Materialize.toast(track.title + " has been added to your tracks");
+            track.inMyTracks = false;
+            track.show();
+            track.update();
+        }
     }
 }
 
 class Track {
-    constructor(track) {
+    constructor(jukebox, track) {
+        let self = this;
+        this.jukebox = jukebox;
         this.id = track.id;
         this.artwork = track.artwork_url;
         if (track.release_day != null && track.release_month != null && track.release_year != null) {
@@ -149,123 +100,64 @@ class Track {
         this.duration = track.duration;
         this.src_url = track.permalink_url;
         this.description = track.description;
+        this.playbtn = function () {
+            return $('#' + self.id);
+        };
+        this.addbtn = function () {
+            return $('#add' + self.id);
+        };
+        this.removebtn = function () {
+            return $('#remove' + self.id);
+        };
+        this.isPlaying = false;
+        this.inMyTracks = false;
+        this.card = function () {
+            return $('#card' + this.id);
+        };
     }
 
-    search() {
-        this.tag = "<div class='card horizontal' id='card" + this.id + "'>";
-        if (this.artwork != null) {
-            this.tag += "<div class='card-image'><button class='btn transparent z-depth-0'><img class='responsive-img activator' src=\"" + this.artwork + "\"/></button></div>";
-        }else{
-            this.tag +='<div class="card-image"><img src="https://dummyimage.com/100x100/000/fff&text='+this.title+'" class="activator responsive-img"/></div>'
-        }
-        this.tag += "<div class='card-stacked'><div class='card-content'>";
-        if (this.release != null) {
-            this.tag += "<div >Release date: " + this.release + " </div>";
-        }
-        if (this.genre != null) {
-            this.tag += "<div >Genre: " + this.genre + "</div>";
-        }
-        if (this.title != null) {
-            this.tag += "<div >Title: " + this.title + "</div>";
-        }
-        this.tag += "</div>";
-        this.tag += "<div class='card-action'>";
-        if (this.duration != null) {
-            this.tag += "<span class='right'>" + formatSecondsAsTime(Math.floor(this.duration / 1000)) + "</span>";
-        }
-        if (this.src_url != null) {
-            this.tag += "<a class='btn-flat waves-effect right' href='" + this.src_url + "'>View on SoundCloud</a>";
-        }
-        this.tag += "<button class='btn-flat waves-effect' id='" + this.id + "'>Play</button><button class='btn-flat waves-effect' id='add" + this.id + "'>Add to your Tracks</button></div></div>";
-        if (this.description != null) {
-            this.tag += "<div class='card-reveal'><span class=\"card-title grey-text text-darken-4\">" + this.title + "<i class=\"material-icons right\">close</i></span><p>" + this.description + "</p></div>";
-        }
-        this.tag += "</div>"
+    display(container) {
+        container.append(this.tag);
+    }
+
+    update() {
+        this.card().replaceWith(this.tag);
+        this.addListeners()
+    }
+
+    addListeners() {
+        let self = this;
+        this.playbtn().click(function () {
+            self.jukebox.player.changeSrc(self);
+        });
+        this.addbtn().click(function () {
+            self.jukebox.add_to_my_tracks(self);
+        });
+        this.removebtn().click(function () {
+            self.jukebox.remove_from_my_tracks(self);
+        });
     }
 
     show() {
-        this.tag = "<div class='card horizontal' id='card" + this.id + "'>";
-        if (this.artwork != null) {
-            this.tag += "<div class='card-image'><button class='btn transparent z-depth-0'><img class='responsive-img activator' src=\"" + this.artwork + "\"/></button></div>";
-        }else{
-            this.tag +='<div class=\'card-image\'><img src="https://dummyimage.com/100x100/000/fff&text='+this.title+'" class="activator responsive-img"/></div>'
+        if (this.isPlaying) {
+            this.tag = "<div class='card horizontal grey' id='card" + this.id + "'>";
+        } else {
+            this.tag = "<div class='card horizontal' id='card" + this.id + "'>";
         }
-        this.tag += "<div class='card-stacked'><div class='card-content'>";
-        if (this.release != null) {
-            this.tag += "<div>Release date: " + this.release + "</div>";
-        }
-        if (this.genre != null) {
-            this.tag += "<div >Genre: " + this.genre + "</div>";
-        }
-        if (this.title != null) {
-            this.tag += "<div >Title: " + this.title + "</div>";
-        }
-        this.tag += "</div>";
-        this.tag += "<div class='card-action'>";
-        if (this.duration != null) {
-            this.tag += "<span class='right'>" + formatSecondsAsTime(Math.floor(this.duration / 1000)) + "</span>";
-        }
-        if (this.src_url != null) {
-            this.tag += "<a class='btn-flat waves-effect right' href='" + this.src_url + "'>View on SoundCloud</a>";
-        }
-        this.tag += "<button class='btn-flat waves-effect' id='" + this.id + "'>Play</button><button class='btn-flat waves-effect' id='remove" + this.id + "'>Remove from your Tracks</button></div></div>";
-        if (this.description != null) {
-            this.tag += "<div class='card-reveal'><span class=\"card-title grey-text text-darken-4\">" + this.title + "<i class=\"material-icons right\">close</i></span><p>" + this.description + "</p></div>";
-        }
-        this.tag += "</div>"
-    }
-
-    search_playing(){
-        this.tag = "<div class='card horizontal grey' id='card" + this.id + "'>";
-        this.tag += '<div class="card-image">';
-        if (this.artwork != null) {
-            this.tag += '<img src="' + this.artwork + '" class="activator responsive-img"/>';
-        }else{
-            this.tag +='<img src="https://dummyimage.com/100x100/000/fff&text='+this.title+'" class="activator responsive-img"/>'
-        }
-        this.tag += '<div id="bars" style="margin-top: 2px;margin-left: -10px; margin-bottom: -1px;">';
-        for (var i = 0; i < 10; i++) {
-            this.tag += '<div class="playing"></div>';
-        }
-        this.tag += '</div></img></div>';
-        this.tag += "<div class='card-stacked'><div class='card-content'>";
-        if (this.release != null) {
-            this.tag += "<div>Release date: " + this.release + "</div>";
-        }
-        if (this.genre != null) {
-            this.tag += "<div >Genre: " + this.genre + "</div>";
-        }
-        if (this.title != null) {
-            this.tag += "<div >Title: " + this.title + "</div>";
-        }
-        this.tag += "</div>";
-        this.tag += "<div class='card-action'>";
-        if (this.duration != null) {
-            this.tag += "<span class='right'>" + formatSecondsAsTime(Math.floor(this.duration / 1000)) + "</span>";
-        }
-        if (this.src_url != null) {
-            this.tag += "<a class='btn-flat waves-effect right' href='" + this.src_url + "'>View on SoundCloud</a>";
-        }
-        this.tag += "<button class='btn-flat waves-effect' id='" + this.id + "' disabled>Playing</button><button class='btn-flat waves-effect' id='add" + this.id + "'>Add to your Tracks</button></div></div>";
-        if (this.description != null) {
-            this.tag += "<div class='card-reveal'><span class=\"card-title grey-text text-darken-4\">" + this.title + "<i class=\"material-icons right\">close</i></span><p>" + this.description + "</p></div>";
-        }
-        this.tag += "</div>"
-    }
-
-    playing() {
-        this.tag = "<div class='card horizontal grey' id='card" + this.id + "'>";
         this.tag += '<div class="card-image">'
         if (this.artwork != null) {
-            this.tag += '<img src="' + this.artwork + '" class="activator responsive-img" />';
-        }else{
-            this.tag +='<img src="https://dummyimage.com/100x100/000/fff&text='+this.title+'" class="activator responsive-img"/>'
+            this.tag += "<img class='responsive-img activator' src=\"" + this.artwork + "\"/>";
+        } else {
+            this.tag += '<img src="https://dummyimage.com/100x100/000/fff&text=' + this.title + '" class="activator responsive-img"/>'
         }
-        this.tag += '<div id="bars" style="margin-top: 2px;margin-left: -10px; margin-bottom: -1px;">';
-        for (var i = 0; i < 10; i++) {
-            this.tag += '<div class="playing"></div>';
+        if (this.isPlaying) {
+            this.tag += '<div id="bars" style="margin-top: 2px;margin-left: -10px; margin-bottom: -1px;">';
+            for (var i = 0; i < 10; i++) {
+                this.tag += '<div class="playing"></div>';
+            }
+            this.tag += "</div>"
         }
-        this.tag += '</div></img></div>';
+        this.tag += '</img></div>';
         this.tag += "<div class='card-stacked'><div class='card-content'>";
         if (this.release != null) {
             this.tag += "<div>Release date: " + this.release + "</div>";
@@ -284,12 +176,26 @@ class Track {
         if (this.src_url != null) {
             this.tag += "<a class='btn-flat waves-effect right' href='" + this.src_url + "'>View on SoundCloud</a>";
         }
-        this.tag += "<button class='btn-flat waves-effect' id='" + this.id + "' disabled>Playing</button><button class='btn-flat waves-effect' id='remove" + this.id + "'>Remove from your Tracks</button></div></div>";
+        if (this.inMyTracks) {
+            if (this.isPlaying) {
+                this.tag += "<button class='btn-flat waves-effect disabled' id='" + this.id + "'>Playing</button><button class='btn-flat waves-effect' id='remove" + this.id + "'>Remove from your Tracks</button></div></div>";
+            } else {
+                this.tag += "<button class='btn-flat waves-effect' id='" + this.id + "'>Play</button><button class='btn-flat waves-effect' id='remove" + this.id + "'>Remove from your Tracks</button></div></div>";
+            }
+        } else {
+            if (this.isPlaying) {
+                this.tag += "<button class='btn-flat waves-effect disabled' id='" + this.id + "'>Playing</button><button class='btn-flat waves-effect' id='add" + this.id + "'>Add to your Tracks</button></div></div>";
+            } else {
+                this.tag += "<button class='btn-flat waves-effect' id='" + this.id + "'>Play</button><button class='btn-flat waves-effect' id='add" + this.id + "'>Add to your Tracks</button></div></div>";
+            }
+        }
         if (this.description != null) {
             this.tag += "<div class='card-reveal'><span class=\"card-title grey-text text-darken-4\">" + this.title + "<i class=\"material-icons right\">close</i></span><p>" + this.description + "</p></div>";
         }
-        this.tag += "</div>"
-
+        this.tag += "</div>";
+        if (this.isPlaying) {
+            $('#current').html(this.now_playing());
+        }
     }
 
     now_playing() {
@@ -299,8 +205,8 @@ class Track {
         }
         if (this.artwork != null) {
             tag += '<img src="' + this.artwork + '" width="50px" height="50px"/>';
-        }else{
-            tag +='<img src="https://dummyimage.com/50x50/000/fff&text='+this.title+'"/>'
+        } else {
+            tag += '<img src="https://dummyimage.com/50x50/000/fff&text=' + this.title + '"/>'
         }
         tag += '</div>';
         if (this.title != null) {
@@ -328,7 +234,6 @@ class Player {
         this.audio = undefined;
         this.shuffle = false;
     }
-
 
     init() {
         let self = this;
@@ -408,8 +313,14 @@ class Player {
     }
 
     addToQueue(track) {
-        if (this.queue.includes(track) === false) {
+        if (!this.queue.includes(track)) {
             this.queue.push(track);
+        }
+    }
+
+    removeFromQueue(track) {
+        if (this.queue.includes(track)) {
+            this.queue.remove(track);
         }
     }
 
@@ -428,13 +339,13 @@ class Player {
 
     next() {
         if (this.queue.length > 0) {
-            if(this.shuffle){
-                let rand =  Math.floor(Math.random() * this.queue.length);
-                while(rand === this.track_number){
-                    rand =  Math.floor(Math.random() * this.queue.length);
+            if (this.shuffle) {
+                let rand = Math.floor(Math.random() * this.queue.length);
+                while (rand === this.track_number) {
+                    rand = Math.floor(Math.random() * this.queue.length);
                 }
                 this.track_number = rand;
-            }else{
+            } else {
                 this.track_number++;
             }
             if (this.track_number === this.queue.length) {
@@ -463,6 +374,8 @@ class Player {
                 $('.playing').css("animation-play-state", "paused");
                 $('.now_playing').css("animation-play-state", "paused");
             }
+        } else {
+            this.changeSrc(this.queue[0]);
         }
     }
 
@@ -476,16 +389,17 @@ class Player {
             this.stop();
         }
         if (this.current_track != undefined) {
+            this.current_track.isPlaying = false;
             this.current_track.show();
-            $('#card' + this.current_track.id).replaceWith(this.current_track.tag);
+            this.current_track.update();
         }
         this.paused = true;
         let self = this;
         this.current_track = src;
         this.track_number = this.queue.indexOf(this.current_track);
-        $('#current').html(this.current_track.now_playing());
-        this.current_track.playing();
-        $('#card' + this.current_track.id).replaceWith(this.current_track.tag);
+        this.current_track.isPlaying = true;
+        this.current_track.show();
+        this.current_track.update();
         SC.stream(`/tracks/` + src.id).then(function (player) {
             self.audio = player;
             self.audio.on('finish', function () {
@@ -504,14 +418,3 @@ class Player {
         }
     }
 }
-
-Array.prototype.remove = function () {
-    var what, a = arguments, L = a.length, ax;
-    while (L && this.length) {
-        what = a[--L];
-        while ((ax = this.indexOf(what)) !== -1) {
-            this.splice(ax, 1);
-        }
-    }
-    return this;
-};
