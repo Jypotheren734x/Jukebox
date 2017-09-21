@@ -17,13 +17,15 @@ class Jukebox {
         this.player.init();
         let json = JSON.parse(localStorage.getItem('my_tracks'));
         this.my_tracks = [];
-        json.forEach(function (track) {
-            let curr = SC.get('/tracks/' + track.id).then(function (result) {
-                let t = new Track(self, result);
-                t.inMyTracks = true;
-                self.my_tracks.push(t);
+        if(json != null){
+            json.forEach(function (track) {
+                let curr = SC.get('/tracks/' + track.id).then(function (result) {
+                    let t = new Track(self, result);
+                    t.inMyTracks = true;
+                    self.my_tracks.push(t);
+                });
             });
-        });
+        }
         this.mytracksbtn = $('#my_tracks');
         this.mytracksbtn.click(function () {
             self.display_my_tracks();
