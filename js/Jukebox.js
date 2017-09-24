@@ -66,6 +66,7 @@ class Jukebox {
         let self = this;
         self.tracks_container.empty();
         self.player.emptyQueue();
+        console.log(self.my_tracks);
         $('#preloader').addClass('active');
         this.my_tracks.forEach(function (track) {
             track.show();
@@ -169,7 +170,7 @@ class Track {
         } else {
             this.tag = "<div class='card horizontal' id='card" + this.id + "'>";
         }
-        this.tag += '<div class="card-image">'
+        this.tag += '<div class="card-image">';
         if (this.artwork != null) {
             this.tag += "<img class='responsive-img activator' src=\"" + this.artwork + "\"/>";
         } else {
@@ -207,7 +208,9 @@ class Track {
             this.tag += "<button class='btn-flat waves-effect waves-cyan' id='" + this.id + "'>Play</button>";
         }
         if (this.inMyTracks) {
-                this.tag += "<button class='btn-flat waves-effect waves-cyan' id='add" + this.id + "'>Add to your Tracks</button>";
+            this.tag += "<button class='btn-flat waves-effect waves-cyan' id='remove" + this.id + "'>Remove from your Tracks</button>";
+        }else{
+            this.tag += "<button class='btn-flat waves-effect waves-cyan' id='add" + this.id + "'>Add to your Tracks</button>";
         }
         this.tag  += "</div>";
         if (this.description != null) {
