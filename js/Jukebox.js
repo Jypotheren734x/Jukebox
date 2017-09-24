@@ -125,6 +125,9 @@ class Track {
     playbtn() {
         return $('#' + this.id);
     };
+    pausebtn() {
+        return $('#pause' + this.id);
+    };
     addbtn () {
         return $('#add' + this.id);
     };
@@ -152,6 +155,9 @@ class Track {
         this.addbtn().click(function () {
             jukebox.add_to_my_tracks(self);
         });
+        this.pausebtn().click(function () {
+            jukebox.player.stop();
+        });
         this.removebtn().click(function () {
             jukebox.remove_from_my_tracks(self);
         });
@@ -159,7 +165,7 @@ class Track {
 
     show() {
         if (this.isPlaying) {
-            this.tag = "<div class='card horizontal grey' id='card" + this.id + "'>";
+            this.tag = "<div class='card horizontal cyan' id='card" + this.id + "'>";
         } else {
             this.tag = "<div class='card horizontal' id='card" + this.id + "'>";
         }
@@ -195,25 +201,23 @@ class Track {
         if (this.src_url != null) {
             this.tag += "<a class='btn-flat waves-effect right' href='" + this.src_url + "'>View on SoundCloud</a>";
         }
-        if (this.inMyTracks) {
-            if (this.isPlaying) {
-                this.tag += "<button class='btn-flat waves-effect disabled' id='" + this.id + "'>Playing</button><button class='btn-flat waves-effect' id='remove" + this.id + "'>Remove from your Tracks</button></div></div>";
-            } else {
-                this.tag += "<button class='btn-flat waves-effect' id='" + this.id + "'>Play</button><button class='btn-flat waves-effect' id='remove" + this.id + "'>Remove from your Tracks</button></div></div>";
-            }
+        if (this.isPlaying) {
+            this.tag += "<button class='btn-flat waves-effect waves-cyan' id='pause" + this.id + "'>Stop</button>";
         } else {
-            if (this.isPlaying) {
-                this.tag += "<button class='btn-flat waves-effect disabled' id='" + this.id + "'>Playing</button><button class='btn-flat waves-effect' id='add" + this.id + "'>Add to your Tracks</button></div></div>";
-            } else {
-                this.tag += "<button class='btn-flat waves-effect' id='" + this.id + "'>Play</button><button class='btn-flat waves-effect' id='add" + this.id + "'>Add to your Tracks</button></div></div>";
-            }
+            this.tag += "<button class='btn-flat waves-effect waves-cyan' id='" + this.id + "'>Play</button>";
         }
+        if (this.inMyTracks) {
+                this.tag += "<button class='btn-flat waves-effect waves-cyan' id='add" + this.id + "'>Add to your Tracks</button>";
+        }
+        this.tag  += "</div>";
         if (this.description != null) {
             this.tag += "<div class='card-reveal'><span class=\"card-title grey-text text-darken-4\">" + this.title + "<i class=\"material-icons right\">close</i></span><p>" + this.description + "</p></div>";
         }
         this.tag += "</div>";
         if (this.isPlaying) {
             $('#current').html(this.now_playing());
+        }else{
+            $('#current').empty();
         }
     }
 
@@ -263,20 +267,20 @@ class Player {
             switch (self.repeat){
                 case 0:
                     self.repeat = 1;
-                    $(this).attr('data-tooltip', 'Repeat One');
+                    $(this).attr('data-tooltip', 'Repeat All Songs');
                     $(this).tooltip();
                     self.repeatbtn.html('<i class="material-icons">repeat</i>');
                     $(this).toggleClass('cyan-text');
                     break;
                 case 1:
                     self.repeat = 2;
-                    $(this).attr('data-tooltip', 'No Repeat');
+                    $(this).attr('data-tooltip', 'Repeat Current Song');
                     $(this).tooltip();
                     self.repeatbtn.html('<i class="material-icons">repeat_one</i>');
                     break;
                 case 2:
                     self.repeat = 0;
-                    $(this).attr('data-tooltip', 'Repeat');
+                    $(this).attr('data-tooltip', 'Repeat off');
                     $(this).tooltip();
                     self.repeatbtn.html('<i class="material-icons">repeat</i>');
                     $(this).toggleClass('cyan-text');
@@ -307,7 +311,6 @@ class Player {
             self.audio.play();
             self.paused = false;
         });
-
         this.volumebtn.click(function () {
             self.muted = !self.muted;
             if (self.muted) {
@@ -378,18 +381,26 @@ class Player {
     }
 
     previous() {
-        let self = this;
         if (this.queue.length > 0) {
-            this.track_number--;
-            if (this.track_number < 0) {
-                this.track_number = this.queue.length - 1;
+            if(this.repeat < 2) {
+                this.track_number--;
+            }else{
+                this.audio.seek(0);
             }
-            this.changeSrc(this.queue[this.track_number]);
+            if (this.track_number < 0) {
+                if (this.repeat == 1) {
+                    this.track_number = this.queue.length - 1;
+                    this.changeSrc(this.queue[this.track_number]);
+                } else {
+                    this.audio.seek(0);
+                }
+            }else{
+                this.changeSrc(this.queue[this.track_number]);
+            }
         }
     }
 
     next() {
-        let self = this;
         if (this.queue.length > 0) {
             if(this.repeat < 2) {
                 this.track_number++;
@@ -399,20 +410,19 @@ class Player {
             }
             if (this.track_number >= this.queue.length) {
                 if(this.shuffle){
-                    shuffle_array(self.queue);
-                    console.log(self.queue);
+                    shuffle_array(this.queue);
                     if(this.repeat == 1){
                         this.track_number = 1;
                         this.changeSrc(this.queue[this.track_number]);
                     }else{
-                        self.stop();
+                        this.stop();
                     }
                 }else {
                     if (this.repeat == 1) {
                         this.track_number = 0;
                         this.changeSrc(this.queue[this.track_number]);
                     } else {
-                        self.stop();
+                        this.stop();
                     }
                 }
             }else {
@@ -428,8 +438,13 @@ class Player {
                 this.audio.play();
                 this.paused = false;
                 this.playbtn.html('<i class="material-icons">pause</i>');
+                this.playbtn.attr('data-tooltip', 'Pause');
+                this.playbtn.tooltip();
                 $('.playing').css("animation-play-state", "running");
                 $('.now_playing').css("animation-play-state", "running");
+                this.current_track.isPlaying = true;
+                this.current_track.show();
+                this.current_track.update(this.jukebox);
                 this.updater = setInterval(function () {
                     self.timeUpdate()
                 }, 1);
@@ -438,6 +453,8 @@ class Player {
                 this.audio.pause();
                 this.paused = true;
                 this.playbtn.html('<i class="material-icons">play_arrow</i>');
+                this.playbtn.attr('data-tooltip', 'Play');
+                this.playbtn.tooltip();
                 $('.playing').css("animation-play-state", "paused");
                 $('.now_playing').css("animation-play-state", "paused");
             }
@@ -451,7 +468,9 @@ class Player {
         this.audio.seek(0);
         this.play();
         clearInterval(self.updater);
-        this.playbtn.html('<i class="material-icons">play_arrow</i>');
+        self.current_track.isPlaying = false;
+        self.current_track.show();
+        self.current_track.update(self.jukebox);
     }
 
     changeSrc(src) {
