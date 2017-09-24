@@ -13,7 +13,7 @@ class Jukebox {
         this.tracks_container = $('#tracks');
         this.search_results = [];
         this.searching = false;
-        this.player = new Player();
+        this.player = new Player(self);
         this.player.init();
         let json = JSON.parse(localStorage.getItem('my_tracks'));
         this.my_tracks = [];
@@ -21,7 +21,7 @@ class Jukebox {
             $('#preloader').addClass('active');
             json.forEach(function (track) {
                 let curr = SC.get('/tracks/' + track.id).then(function (result) {
-                    let t = new Track(self, result);
+                    let t = new Track(result);
                     t.inMyTracks = true;
                     self.my_tracks.push(t);
                 });
@@ -38,6 +38,7 @@ class Jukebox {
     search() {
         let self = this;
         self.searching = true;
+        self.player.queue = [];
         self.tracks_container.empty();
         $('#preloader').addClass('active');
         if (self.search_bar.val() != '') {
@@ -49,11 +50,12 @@ class Jukebox {
                     if(exists > 0){
                         current = self.my_tracks[exists];
                     }else {
-                        current = new Track(self, track);
+                        current = new Track(track);
                     }
                     current.show();
                     current.display(self.tracks_container);
-                    current.addListeners();
+                    current.addListeners(self);
+                    self.player.addToQueue(current);
                 });
                 $('#preloader').removeClass('active');
             });
@@ -63,11 +65,12 @@ class Jukebox {
     display_my_tracks() {
         let self = this;
         self.tracks_container.empty();
+        self.player.emptyQueue();
         $('#preloader').addClass('active');
         this.my_tracks.forEach(function (track) {
             track.show();
             track.display(self.tracks_container);
-            track.addListeners();
+            track.addListeners(self);
             self.player.addToQueue(track);
         });
         $('#preloader').removeClass('active');
@@ -80,7 +83,8 @@ class Jukebox {
             Materialize.toast(track.title + " has been added to your tracks", 4000);
             track.inMyTracks = true;
             track.show();
-            track.update();
+            track.update(self);
+            localStorage.setItem("my_tracks", JSON.stringify(self.my_tracks));
         }
     }
 
@@ -93,18 +97,17 @@ class Jukebox {
             track.inMyTracks = false;
             track.show();
             if(self.searching){
-                track.update();
+                track.update(self);
             }else{
                 track.card().remove();
             }
+            localStorage.setItem('my_tracks',  JSON.stringify(self.my_tracks));
         }
     }
 }
 
 class Track {
-    constructor(jukebox, track) {
-        let self = this;
-        this.jukebox = jukebox;
+    constructor(track) {
         this.id = track.id;
         this.artwork = track.artwork_url;
         if (track.release_day != null && track.release_month != null && track.release_year != null) {
@@ -115,41 +118,42 @@ class Track {
         this.duration = track.duration;
         this.src_url = track.permalink_url;
         this.description = track.description;
-        this.playbtn = function () {
-            return $('#' + self.id);
-        };
-        this.addbtn = function () {
-            return $('#add' + self.id);
-        };
-        this.removebtn = function () {
-            return $('#remove' + self.id);
-        };
         this.isPlaying = false;
         this.inMyTracks = false;
-        this.card = function () {
-            return $('#card' + this.id);
-        };
     }
+
+    playbtn() {
+        return $('#' + this.id);
+    };
+    addbtn () {
+        return $('#add' + this.id);
+    };
+    removebtn() {
+        return $('#remove' + this.id);
+    };
+    card() {
+        return $('#card' + this.id);
+    };
 
     display(container) {
         container.append(this.tag);
     }
 
-    update() {
+    update(jukebox) {
         this.card().replaceWith(this.tag);
-        this.addListeners()
+        this.addListeners(jukebox)
     }
 
-    addListeners() {
+    addListeners(jukebox) {
         let self = this;
         this.playbtn().click(function () {
-            self.jukebox.player.changeSrc(self);
+            jukebox.player.changeSrc(self);
         });
         this.addbtn().click(function () {
-            self.jukebox.add_to_my_tracks(self);
+            jukebox.add_to_my_tracks(self);
         });
         this.removebtn().click(function () {
-            self.jukebox.remove_from_my_tracks(self);
+            jukebox.remove_from_my_tracks(self);
         });
     }
 
@@ -232,7 +236,8 @@ class Track {
 }
 
 class Player {
-    constructor() {
+    constructor(jukebox) {
+        this.jukebox = jukebox;
         this.queue = [];
         this.playbtn = $('#playbtn');
         this.shufflebtn = $('#shufflebtn');
@@ -240,6 +245,7 @@ class Player {
         this.previousbtn = $('#previousbtn');
         this.indicator = $('#indicator')[0];
         this.duration_indicator = $('#duration');
+        this.repeatbtn = $('#repeatbtn');
         this.volumebtn = $('#volbtn');
         this.volume_slider = $('#vol-control');
         this.volume = 50;
@@ -248,10 +254,30 @@ class Player {
         this.paused = true;
         this.audio = undefined;
         this.shuffle = false;
+        this.repeat = 0;
     }
 
     init() {
         let self = this;
+        this.repeatbtn.click(function () {
+            switch (self.repeat){
+                case 0:
+                    self.repeat = 1;
+                    self.repeatbtn.html('<i class="material-icons">repeat</i>');
+                    $(this).toggleClass('cyan-text');
+                    break;
+                case 1:
+                    self.repeat = 2;
+                    self.repeatbtn.html('<i class="material-icons">repeat_one</i>');
+                    break;
+                case 2:
+                    self.repeat = 0;
+                    self.repeatbtn.html('<i class="material-icons">repeat</i>');
+                    $(this).toggleClass('cyan-text');
+                    break;
+            }
+            console.log(self.repeat);
+        });
         this.playbtn.click(function () {
             self.play();
         });
@@ -261,9 +287,6 @@ class Player {
         this.previousbtn.click(function () {
             self.previous();
         });
-        setInterval(function () {
-            self.timeUpdate()
-        }, 1);
         noUiSlider.create(self.indicator, {
             start: 0,
             animate: false,
@@ -322,9 +345,14 @@ class Player {
             }
         });
         this.shufflebtn.click(function () {
-            $(this).toggleClass('orange-text');
+            $(this).toggleClass('cyan-text');
             self.shuffle = !self.shuffle;
+            shuffle_array(self.queue);
         });
+    }
+
+    emptyQueue(){
+        this.queue = [];
     }
 
     addToQueue(track) {
@@ -340,37 +368,49 @@ class Player {
     }
 
     previous() {
+        let self = this;
         if (this.queue.length > 0) {
             this.track_number--;
             if (this.track_number < 0) {
                 this.track_number = this.queue.length - 1;
             }
             this.changeSrc(this.queue[this.track_number]);
-            $('html, body').animate({
-                scrollTop: $('#card' + this.current_track.id).offset().top - $('nav').height()
-            }, 1000);
         }
     }
 
     next() {
+        let self = this;
         if (this.queue.length > 0) {
-            if (this.shuffle) {
-                let rand = Math.floor(Math.random() * this.queue.length);
-                while (rand === this.track_number) {
-                    rand = Math.floor(Math.random() * this.queue.length);
-                }
-                this.track_number = rand;
-            } else {
+            if(this.repeat < 2) {
                 this.track_number++;
+            }else{
+                this.paused = true;
+                this.play();
             }
-            if (this.track_number === this.queue.length) {
-                this.track_number = 0;
+            if (this.track_number >= this.queue.length) {
+                if(this.shuffle){
+                    if(this.repeat == 1){
+                        this.track_number = 0;
+                        this.changeSrc(this.queue[this.track_number]);
+                    }else{
+                        self.stop();
+                    }
+                }else {
+                    if (this.repeat == 1) {
+                        this.track_number = 0;
+                        this.changeSrc(this.queue[this.track_number]);
+                    } else {
+                        self.stop();
+                    }
+                }
+            }else {
+                this.changeSrc(this.queue[this.track_number]);
             }
-            this.changeSrc(this.queue[this.track_number]);
         }
     }
 
     play() {
+        let self = this;
         if (this.audio != undefined) {
             if (this.paused) {
                 this.audio.play();
@@ -378,6 +418,9 @@ class Player {
                 this.playbtn.html('<i class="material-icons">pause</i>');
                 $('.playing').css("animation-play-state", "running");
                 $('.now_playing').css("animation-play-state", "running");
+                this.updater = setInterval(function () {
+                    self.timeUpdate()
+                }, 1);
             }
             else {
                 this.audio.pause();
@@ -392,7 +435,10 @@ class Player {
     }
 
     stop() {
+        let self = this;
         this.audio.seek(0);
+        this.play();
+        clearInterval(self.updater);
         this.playbtn.html('<i class="material-icons">play_arrow</i>');
     }
 
@@ -403,7 +449,7 @@ class Player {
         if (this.current_track != undefined) {
             this.current_track.isPlaying = false;
             this.current_track.show();
-            this.current_track.update();
+            this.current_track.update(this.jukebox);
         }
         this.paused = true;
         let self = this;
@@ -411,7 +457,7 @@ class Player {
         this.track_number = this.queue.indexOf(this.current_track);
         this.current_track.isPlaying = true;
         this.current_track.show();
-        this.current_track.update();
+        this.current_track.update(this.jukebox);
         SC.stream(`/tracks/` + src.id).then(function (player) {
             self.audio = player;
             self.audio.on('finish', function () {
