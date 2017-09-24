@@ -3,6 +3,5 @@
  */
 $(document).ready(function () {
     let jukebox = new Jukebox();
-    console.log(jukebox);
     $('#controls').pushpin({offset: window.innerHeight - 100});
 });

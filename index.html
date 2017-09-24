@@ -30,45 +30,59 @@
                     <input id="search-bar" type="text" class="validate"/>
                     <label for="search-bar" class="black-text">Search by artist,title,genre,etc.</label>
                 </div>
+                <div class="preloader-wrapper small right" id="preloader">
+                    <div class="spinner-layer spinner-blue">
+                        <div class="circle-clipper left">
+                            <div class="circle"></div>
+                        </div>
+                        <div class="gap-patch">
+                            <div class="circle"></div>
+                        </div>
+                        <div class="circle-clipper right">
+                            <div class="circle"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <button class="btn-flat waves-effect left" id="my_tracks">My Tracks</button>
         </div>
     </nav>
 </div>
 <main>
-    <div id="tracks" class="container"></div>
-    <div class="row">
-        <div id="controls" class="card col s12" style="z-index: 999;">
-            <div class="card-content row">
-                <div class="col s12 m6">
-                    <div class="row">
-                        <div class="col s12 m9">
-                            <a id="previousbtn" class="btn-flat waves-effect"><i
-                                    class="material-icons">skip_previous</i></a>
-                            <a id="playbtn" class="btn-flat waves-effect"><i class="material-icons">play_arrow</i></a>
-                            <a id="nextbtn" class="btn-flat waves-effect"><i class="material-icons">skip_next</i></a>
-                            <a id="shufflebtn" class="btn-flat waves-effect tooltipped" data-position="top"
-                               data-delay="50" data-tooltip="Shuffle"><i class="material-icons">shuffle</i></a>
-                            <a id="volbtn" class="btn-flat waves-effect"><i class="material-icons">volume_up</i></a>
-                            <i class="material-icons"><input id="vol-control" type="range" min="0" max="1" step=".001"
-                                                             value="100"></i>
-                        </div>
-                        <div id="current" class="col s12 m3">
+    <div id="tracks" class="container">
+    </div>
+        <div class="row">
+            <div id="controls" class="card col s12" style="z-index: 999;">
+                <div class="card-content row">
+                    <div class="col s12 m6">
+                        <div class="row">
+                            <div class="col s12 m9">
+                                <a id="previousbtn" class="btn-flat waves-effect"><i
+                                        class="material-icons">skip_previous</i></a>
+                                <a id="playbtn" class="btn-flat waves-effect"><i class="material-icons">play_arrow</i></a>
+                                <a id="nextbtn" class="btn-flat waves-effect"><i class="material-icons">skip_next</i></a>
+                                <a id="shufflebtn" class="btn-flat waves-effect tooltipped" data-position="top"
+                                   data-delay="50" data-tooltip="Shuffle"><i class="material-icons">shuffle</i></a>
+                                <a id="volbtn" class="btn-flat waves-effect"><i class="material-icons">volume_up</i></a>
+                                <i class="material-icons"><input id="vol-control" type="range" min="0" max="1" step=".001"
+                                                                 value="100"></i>
+                            </div>
+                            <div id="current" class="col s12 m3">
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col s12 m5">
-                    <div id="indicator"></div>
-                </div>
-                <div class="col s12 m1">
-                    <div id="duration" class="right">0:00/0:00</div>
+                    <div class="col s12 m5">
+                        <div id="indicator"></div>
+                    </div>
+                    <div class="col s12 m1">
+                        <div id="duration" class="right">0:00/0:00</div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <audio id="music">
-        <source id="mp3" type="audio/mp3">
-    </audio>
+        <audio id="music">
+            <source id="mp3" type="audio/mp3">
+        </audio>
 </main>
 <script src="js/script.js"></script>
 </body>

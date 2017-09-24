@@ -18,6 +18,7 @@ class Jukebox {
         let json = JSON.parse(localStorage.getItem('my_tracks'));
         this.my_tracks = [];
         if(json != null){
+            $('#preloader').addClass('active');
             json.forEach(function (track) {
                 let curr = SC.get('/tracks/' + track.id).then(function (result) {
                     let t = new Track(self, result);
@@ -25,6 +26,7 @@ class Jukebox {
                     self.my_tracks.push(t);
                 });
             });
+            $('#preloader').removeClass('active');
         }
         this.mytracksbtn = $('#my_tracks');
         this.mytracksbtn.click(function () {
@@ -37,8 +39,9 @@ class Jukebox {
         let self = this;
         self.searching = true;
         self.tracks_container.empty();
+        $('#preloader').addClass('active');
         if (self.search_bar.val() != '') {
-            SC.get(`/tracks`, {q: self.search_bar.val(), limit: 20}).then(function (tracks) {
+            SC.get(`/tracks`, {q: self.search_bar.val(), limit: 200}).then(function (tracks) {
                 self.search_results = [];
                 tracks.forEach(function (track) {
                     let exists = findWithAttr(self.my_tracks, "id", track.id);
@@ -52,6 +55,7 @@ class Jukebox {
                     current.display(self.tracks_container);
                     current.addListeners();
                 });
+                $('#preloader').removeClass('active');
             });
         }
     };
@@ -59,12 +63,14 @@ class Jukebox {
     display_my_tracks() {
         let self = this;
         self.tracks_container.empty();
+        $('#preloader').addClass('active');
         this.my_tracks.forEach(function (track) {
             track.show();
             track.display(self.tracks_container);
             track.addListeners();
             self.player.addToQueue(track);
         });
+        $('#preloader').removeClass('active');
     }
 
     add_to_my_tracks(track) {
