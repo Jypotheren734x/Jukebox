@@ -22,12 +22,17 @@ function shuffle_array(a) {
 	}
 }
 function findWithAttr(array, attr, value) {
-	for(var i = 0; i < array.length; i += 1) {
-		if(array[i][attr] === value) {
-			return i;
-		}
-	}
-	return -1;
+    for (var i = 0; i < array.length; i += 1) {
+        if (array[i][attr] === value) {
+            return i;
+        }
+    }
+    return -1;
+}
+function swap(list, pos1, pos2){
+    var temp = list[pos2];
+    list[pos2] = list[pos1];
+    list[pos1] = temp;
 }
 $.fn.setClass = function(classes) {
 	this.attr('class', classes);

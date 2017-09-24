@@ -263,20 +263,25 @@ class Player {
             switch (self.repeat){
                 case 0:
                     self.repeat = 1;
+                    $(this).attr('data-tooltip', 'Repeat One');
+                    $(this).tooltip();
                     self.repeatbtn.html('<i class="material-icons">repeat</i>');
                     $(this).toggleClass('cyan-text');
                     break;
                 case 1:
                     self.repeat = 2;
+                    $(this).attr('data-tooltip', 'No Repeat');
+                    $(this).tooltip();
                     self.repeatbtn.html('<i class="material-icons">repeat_one</i>');
                     break;
                 case 2:
                     self.repeat = 0;
+                    $(this).attr('data-tooltip', 'Repeat');
+                    $(this).tooltip();
                     self.repeatbtn.html('<i class="material-icons">repeat</i>');
                     $(this).toggleClass('cyan-text');
                     break;
             }
-            console.log(self.repeat);
         });
         this.playbtn.click(function () {
             self.play();
@@ -346,9 +351,14 @@ class Player {
         });
         this.shufflebtn.click(function () {
             $(this).toggleClass('cyan-text');
-            self.shuffle = !self.shuffle;
-            shuffle_array(self.queue);
+            self.shuffleQueue();
         });
+    }
+
+    shuffleQueue(){
+        let self = this;
+        self.shuffle = !self.shuffle;
+        shuffle_array(self.queue);
     }
 
     emptyQueue(){
@@ -389,8 +399,10 @@ class Player {
             }
             if (this.track_number >= this.queue.length) {
                 if(this.shuffle){
+                    shuffle_array(self.queue);
+                    console.log(self.queue);
                     if(this.repeat == 1){
-                        this.track_number = 0;
+                        this.track_number = 1;
                         this.changeSrc(this.queue[this.track_number]);
                     }else{
                         self.stop();
