@@ -17,7 +17,7 @@ class Jukebox {
         this.player.init();
         let json = JSON.parse(localStorage.getItem('my_tracks'));
         this.my_tracks = new Playlist(self);
-        if(json != null){
+        if (json != null) {
             $('#preloader').addClass('active');
             json.forEach(function (track) {
                 let curr = SC.get('/tracks/' + track.id).then(function (result) {
@@ -30,7 +30,7 @@ class Jukebox {
         }
         this.mytracksbtn = $('#my_tracks');
         this.mytracksbtn.click(function () {
-            self.display_my_tracks();
+            self.display_playlist(self.my_tracks);
             self.search_bar.val('');
         });
     }
@@ -38,36 +38,38 @@ class Jukebox {
     search() {
         let self = this;
         self.searching = true;
-        self.player.queue = [];
         self.tracks_container.empty();
         $('#preloader').html('<div class="preloader-wrapper small active"><div class="spinner-layer spinner-blue"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div></div><div class="circle-clipper right"><div class="circle"></div></div></div></div>');
         if (self.search_bar.val() != '') {
             SC.get(`/tracks`, {q: self.search_bar.val(), limit: 200}).then(function (tracks) {
                 self.search_results = [];
                 tracks.forEach(function (track) {
-                    let exists = findWithAttr(self.my_tracks, "id", track.id);
                     let current = undefined;
-                    if(exists > 0){
-                        current = self.my_tracks[exists];
-                    }else {
+                    let exists = self.my_tracks.find_by_id(track.id);
+                    if (exists > 0) {
+                        current = self.my_tracks.get(exists);
+                    } else {
                         current = new Track(track);
                     }
                     current.show();
+                    if (current.inMyTracks) {
+                        console.log(current.title, current.inMyTracks);
+                    }
                     current.display(self.tracks_container);
                     current.addListeners(self);
-                    self.player.addToQueue(current);
                 });
                 $('#preloader').html('search');
             });
         }
     };
 
-    display_my_tracks() {
+    display_playlist(playlist) {
         this.tracks_container.empty();
-        this.player.emptyQueue();
         this.searching = false;
         $('#preloader').addClass('active');
-        this.my_tracks.display(this.tracks_container);
+        playlist.display(this.tracks_container);
+        this.player.setQueue(playlist);
+        this.player.updateQueue();
         $('#preloader').removeClass('active');
     }
 
@@ -91,12 +93,12 @@ class Jukebox {
             Materialize.toast(track.title + " has been removed from your tracks", 4000);
             track.inMyTracks = false;
             track.show();
-            if(self.searching){
+            if (self.searching) {
                 track.update(self);
-            }else{
+            } else {
                 track.card().remove();
             }
-            localStorage.setItem('my_tracks',  JSON.stringify(self.my_tracks));
+            localStorage.setItem('my_tracks', JSON.stringify(self.my_tracks));
         }
     }
 }
@@ -115,22 +117,27 @@ class Track {
         this.description = track.description;
         this.isPlaying = false;
         this.inMyTracks = false;
+        this.inQueue = false;
     }
 
     playbtn() {
-        return $('#' + this.id);
+        return $('.' + this.id);
     };
+
     pausebtn() {
-        return $('#pause' + this.id);
+        return $('.pause' + this.id);
     };
-    addbtn () {
-        return $('#add' + this.id);
+
+    addbtn() {
+        return $('.add' + this.id);
     };
+
     removebtn() {
-        return $('#remove' + this.id);
+        return $('.remove' + this.id);
     };
+
     card() {
-        return $('#card' + this.id);
+        return $('.card' + this.id);
     };
 
     display(container) {
@@ -170,19 +177,15 @@ class Track {
     }
 
     show() {
-        if(this.isPlaying){
-            this.tag = "<li id='card"+this.id+"' class='collection-item avatar'>";
-        }else{
-            this.tag = "<li id='card"+this.id+"' class='collection-item avatar'>";
-        }
+        this.tag = "<li class='card" + this.id + " collection-item avatar'>";
         if (this.isPlaying) {
             this.tag += '<div id="bars" style="margin-top: 35px; margin-left: -50px;">';
             for (var i = 0; i < 3; i++) {
                 this.tag += '<div class="playing"></div>';
             }
             this.tag += "</div>"
-        }else {
-            this.tag += "<a href='#' id='" + this.id + "'>";
+        } else {
+            this.tag += "<a href='#' class='" + this.id + "'>";
             if (this.artwork != null) {
                 this.tag += "<img class='circle' width='50px' height='50px' src=\"" + this.artwork + "\"/>";
             } else {
@@ -200,13 +203,13 @@ class Track {
         if (this.duration != null) {
             this.tag += "<span class='black-text'>" + formatSecondsAsTime(Math.floor(this.duration / 1000)) + "</span>";
         }
-        this.tag += '<a id="track_actions" class="dropdown-button btn-flat black-text" data-activates="track_actions'+this.id+'"><i class="material-icons">more_vert</i></a>';
+        this.tag += '<a id="track_actions_btn' + this.id + '" class="dropdown-button btn-flat black-text" data-activates="track_actions' + this.id + '"><i class="material-icons">more_vert</i></a>';
         this.tag += "</div></li>";
-        this.tag += "<ul id='track_actions"+this.id+"' class='dropdown-content'>";
+        this.tag += "<ul id='track_actions" + this.id + "' class='dropdown-content'>";
         if (this.inMyTracks) {
-            this.tag += "<li><a id='remove" + this.id + "'>Remove from your Tracks</a></li>";
-        }else{
-            this.tag += "<li><a id='add" + this.id + "'>Add to your Tracks</a></li>";
+            this.tag += "<li><a class='remove" + this.id + "'>Remove from your Tracks</a></li>";
+        } else {
+            this.tag += "<li><a class='add" + this.id + "'>Add to your Tracks</a></li>";
         }
         if (this.src_url != null) {
             this.tag += "<li class='divider'>";
@@ -215,7 +218,7 @@ class Track {
         this.tag += "</ul>";
         if (this.isPlaying) {
             $('#current').html(this.now_playing());
-        }else{
+        } else {
             $('#current').empty();
         }
     }
@@ -235,13 +238,25 @@ class Track {
     }
 }
 
-class Playlist{
-    constructor(jukebox, playlist){
+class Playlist {
+    constructor(jukebox, playlist) {
         this.tracks = [];
         this.jukebox = jukebox;
     }
 
-    display(container){
+    get(id) {
+        return this.tracks[id];
+    }
+
+    find_by_id(id) {
+        return findWithAttr(this.tracks, "id", id);
+    }
+
+    includes(track) {
+        return this.tracks.includes(track);
+    }
+
+    display(container) {
         let self = this;
         this.tracks.forEach(function (track) {
             track.show();
@@ -250,19 +265,19 @@ class Playlist{
         });
     }
 
-    totalTime(){
+    totalTime() {
         let time = 0;
-        for(track in this.tracks){
+        this.tracks.forEach(function (track) {
             time += track.duration;
-        }
+        });
         return time;
     }
 
-    add(track){
+    add(track) {
         this.tracks.push(track);
     }
 
-    remove(track){
+    remove(track) {
         this.tracks.remove(track);
     }
 }
@@ -287,12 +302,26 @@ class Player {
         this.audio = undefined;
         this.shuffle = false;
         this.repeat = 0;
+        this.queuebtn = $('#queuebtn');
+        this.queuepopoup = $('#queue');
+        this.queuebox = $('#queue_tracks');
     }
 
     init() {
         let self = this;
+        this.queuebtn.click(function () {
+            if ($(this).attr('active') == "false") {
+                $(this).attr('data-tooltip', 'Close Queue');
+                $(this).attr('active', 'true');
+            } else {
+                $(this).attr('data-tooltip', 'Open Queue');
+                $(this).attr('active', 'false');
+            }
+            $(this).tooltip();
+            self.queuepopoup.toggleClass('scale-in');
+        });
         this.repeatbtn.click(function () {
-            switch (self.repeat){
+            switch (self.repeat) {
                 case 0:
                     self.repeat = 1;
                     $(this).attr('data-tooltip', 'Repeats all songs. Click to repeat current song only.');
@@ -390,33 +419,53 @@ class Player {
         });
     }
 
-    shuffleQueue(){
+    setQueue(playlist) {
+        this.emptyQueue();
+        this.queue = playlist.tracks;
+    }
+
+    updateQueue() {
+        let self = this;
+        this.queuebox.empty();
+        this.queue.forEach(function (track) {
+            track.show();
+            track.display(self.queuebox);
+            $('#track_actions_btn' + track.id).replaceWith('<a id="queue_track_actions" class="dropdown-button btn-flat black-text" data-activates="queue_track_actions' + track.id + '"><i class="material-icons">more_vert</i></a>');
+            track.addListeners(self.jukebox);
+        })
+    }
+
+    shuffleQueue() {
         let self = this;
         self.shuffle = !self.shuffle;
         shuffle_array(self.queue);
     }
 
-    emptyQueue(){
+    emptyQueue() {
         this.queue = [];
     }
 
     addToQueue(track) {
         if (!this.queue.includes(track)) {
             this.queue.push(track);
+            track.inQueue = true;
+            console.log(track.inMyTracks);
+            this.updateQueue();
         }
     }
 
     removeFromQueue(track) {
         if (this.queue.includes(track)) {
             this.queue.remove(track);
+            this.updateQueue();
         }
     }
 
     previous() {
         if (this.queue.length > 0) {
-            if(this.repeat < 2) {
+            if (this.repeat < 2) {
                 this.track_number--;
-            }else{
+            } else {
                 this.audio.seek(0);
             }
             if (this.track_number < 0) {
@@ -426,7 +475,7 @@ class Player {
                 } else {
                     this.audio.seek(0);
                 }
-            }else{
+            } else {
                 this.changeSrc(this.queue[this.track_number]);
             }
         }
@@ -434,22 +483,22 @@ class Player {
 
     next() {
         if (this.queue.length > 0) {
-            if(this.repeat < 2) {
+            if (this.repeat < 2) {
                 this.track_number++;
-            }else{
+            } else {
                 this.paused = true;
                 this.play();
             }
             if (this.track_number >= this.queue.length) {
-                if(this.shuffle){
+                if (this.shuffle) {
                     shuffle_array(this.queue);
-                    if(this.repeat == 1){
+                    if (this.repeat == 1) {
                         this.track_number = 1;
                         this.changeSrc(this.queue[this.track_number]);
-                    }else{
+                    } else {
                         this.stop();
                     }
-                }else {
+                } else {
                     if (this.repeat == 1) {
                         this.track_number = 0;
                         this.changeSrc(this.queue[this.track_number]);
@@ -457,7 +506,7 @@ class Player {
                         this.stop();
                     }
                 }
-            }else {
+            } else {
                 this.changeSrc(this.queue[this.track_number]);
             }
         }
@@ -542,6 +591,7 @@ class Player {
         }
     }
 }
+
 Array.prototype.remove = function () {
     var what, a = arguments, L = a.length, ax;
     while (L && this.length) {

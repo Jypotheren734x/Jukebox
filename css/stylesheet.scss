@@ -4,6 +4,7 @@
 
   @return $randomNum;
 }
+
 body {
   display: flex;
   min-height: 100vh;
@@ -13,16 +14,20 @@ body {
 main {
   flex: 1 0 auto;
 }
+
 .pin-top {
   position: relative;
 }
+
 .pin-bottom {
   position: relative;
 }
+
 .pinned {
   position: fixed !important;
 }
-input[type="range"]{
+
+input[type="range"] {
   -webkit-appearance: none;
   -moz-apperance: none;
   border-radius: 6px;
@@ -43,10 +48,12 @@ input[type='range']::-webkit-slider-thumb {
   height: 15px;
   width: 15px;
 }
+
 .noUi-handle {
   display: none;
 }
-#tracks{
+
+#tracks {
   overflow: hidden;
 }
 
@@ -69,13 +76,14 @@ input[type='range']::-webkit-slider-thumb {
   position: absolute;
   width: 10px;
   animation: sound 0ms -800ms linear infinite alternate;
-  @for $i from 1 through 10{
+  @for $i from 1 through 10 {
     &:nth-child(#{$i}) {
       left: #{$i*10}px;
       animation-duration: #{randomNum(400, 500)}ms;
     }
   }
 }
+
 .now_playing {
   background: #000000;
   bottom: 1px;
@@ -83,7 +91,7 @@ input[type='range']::-webkit-slider-thumb {
   position: absolute;
   width: 2px;
   animation: sound_small 0ms -800ms linear infinite alternate;
-  @for $i from 1 through 24{
+  @for $i from 1 through 24 {
     &:nth-child(#{$i}) {
       left: #{$i*2}px;
       animation-duration: #{randomNum(400, 500)}ms;
@@ -101,6 +109,7 @@ input[type='range']::-webkit-slider-thumb {
     height: 50px;
   }
 }
+
 @keyframes sound_small {
   0% {
     opacity: .35;
@@ -111,12 +120,14 @@ input[type='range']::-webkit-slider-thumb {
     height: 30px;
   }
 }
+
 .noselect {
-   -webkit-touch-callout: none; /* iOS Safari */
-   -webkit-user-select: none; /* Safari */
-   -khtml-user-select: none; /* Konqueror HTML */
-   -moz-user-select: none; /* Firefox */
-   -ms-user-select: none; /* Internet Explorer/Edge */
-   user-select: none; /* Non-prefixed version, currently
-                                  supported by Chrome and Opera */
- }
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none;
+  /* Non-prefixed version, currently
+                                   supported by Chrome and Opera */
+}

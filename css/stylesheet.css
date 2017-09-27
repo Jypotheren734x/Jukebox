@@ -1,99 +1,172 @@
 body {
-  display: flex;
-  min-height: 100vh;
-  flex-direction: column; }
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
 
 main {
-  flex: 1 0 auto; }
+    flex: 1 0 auto;
+}
 
 .pin-top {
-  position: relative; }
+    position: relative;
+}
 
 .pin-bottom {
-  position: relative; }
+    position: relative;
+}
 
 .pinned {
-  position: fixed !important; }
+    position: fixed !important;
+}
 
 input[type="range"] {
-  -webkit-appearance: none;
-  -moz-apperance: none;
-  border-radius: 6px;
-  height: 6px;
-  background-image: -webkit-gradient(linear, left top, right top, color-stop(0.15, #94A14E), color-stop(0.15, #C5C5C5)); }
+    -webkit-appearance: none;
+    -moz-apperance: none;
+    border-radius: 6px;
+    height: 6px;
+    background-image: -webkit-gradient(linear, left top, right top, color-stop(0.15, #94A14E), color-stop(0.15, #C5C5C5));
+}
 
 input[type='range']::-webkit-slider-thumb {
-  -webkit-appearance: none !important;
-  background-color: #E9E9E9;
-  border: 1px solid #CECECE;
-  height: 15px;
-  width: 15px; }
+    -webkit-appearance: none !important;
+    background-color: #E9E9E9;
+    border: 1px solid #CECECE;
+    height: 15px;
+    width: 15px;
+}
 
 .noUi-handle {
-  display: none; }
+    display: none;
+}
 
 #tracks {
-  overflow: hidden; }
+    overflow: hidden;
+}
 
 #bars {
-  position: absolute;
-  background-color: #000000; }
-  #bars img {
+    position: absolute;
+    background-color: #000000;
+}
+
+#bars img {
     bottom: 1px;
     left: 1px;
     position: absolute;
     overflow: hidden;
-    opacity: 0.8; }
+    opacity: 0.8;
+}
 
 .playing {
-  background: #00bcd4;
-  bottom: 1px;
-  height: 3px;
-  position: absolute;
-  width: 10px;
-  animation: sound 0ms -800ms linear infinite alternate; }
-  .playing:nth-child(1) {
+    background: #00bcd4;
+    bottom: 1px;
+    height: 3px;
+    position: absolute;
+    width: 10px;
+    animation: sound 0ms -800ms linear infinite alternate;
+}
+
+.playing:nth-child(1) {
     left: 0px;
-    animation-duration: 406ms; }
-  .playing:nth-child(2) {
+    animation-duration: 406ms;
+}
+
+.playing:nth-child(2) {
     left: 11px;
-    animation-duration: 432ms; }
-  .playing:nth-child(3) {
+    animation-duration: 432ms;
+}
+
+.playing:nth-child(3) {
     left: 22px;
-    animation-duration: 483ms; }
-  .playing:nth-child(4) {
+    animation-duration: 483ms;
+}
+
+.playing:nth-child(4) {
     left: 40px;
-    animation-duration: 410ms; }
-  .playing:nth-child(5) {
+    animation-duration: 410ms;
+}
+
+.playing:nth-child(5) {
     left: 50px;
-    animation-duration: 498ms; }
-  .playing:nth-child(6) {
+    animation-duration: 498ms;
+}
+
+.playing:nth-child(6) {
     left: 60px;
-    animation-duration: 452ms; }
-  .playing:nth-child(7) {
+    animation-duration: 452ms;
+}
+
+.playing:nth-child(7) {
     left: 70px;
-    animation-duration: 418ms; }
-  .playing:nth-child(8) {
+    animation-duration: 418ms;
+}
+
+.playing:nth-child(8) {
     left: 80px;
-    animation-duration: 437ms; }
-  .playing:nth-child(9) {
+    animation-duration: 437ms;
+}
+
+.playing:nth-child(9) {
     left: 90px;
-    animation-duration: 498ms; }
-  .playing:nth-child(10) {
+    animation-duration: 498ms;
+}
+
+.playing:nth-child(10) {
     left: 100px;
-    animation-duration: 478ms; }
+    animation-duration: 478ms;
+}
+
 @keyframes sound {
-  0% {
-    height: 10px; }
-  25% {
-    height: 15px; }
-  50% {
-    height: 20px; }
-  75% {
-    height: 25px; }
-  100% {
-    height: 30px; } }
+    0% {
+        height: 10px;
+    }
+    25% {
+        height: 15px;
+    }
+    50% {
+        height: 20px;
+    }
+    75% {
+        height: 25px;
+    }
+    100% {
+        height: 30px;
+    }
+}
+
 /*# sourceMappingURL=stylesheet.css.map */
 .collection {
-  overflow: visible !important;
+    overflow: visible !important;
+}
+
+#queue {
+    padding: 5px 5px 25px 5px;
+    pointer-events: visible !important;
+    position: fixed;
+    left: 75px;
+    top: 510.5px;
+    opacity: 1;
+    width: 600px;
+    height: 350px;
+    z-index: 2000;
+    text-align: left;
+    overflow: visible;
+}
+
+#queue_tracks {
+    height: 100%;
+    overflow-y: auto !important;
+}
+
+#queue:after {
+    position: absolute;
+    content: " ";
+    top: 100%;
+    left: 50%;
+    margin-left: -290px;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 15px 13px 0 13px;
+    border-color: rgba(255, 255, 255, 1) transparent transparent transparent;
 }
