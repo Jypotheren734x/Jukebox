@@ -52,9 +52,6 @@ class Jukebox {
                         current = new Track(track);
                     }
                     current.show();
-                    if (current.inMyTracks) {
-                        console.log(current.title, current.inMyTracks);
-                    }
                     current.display(self.tracks_container);
                     current.addListeners(self);
                 });
@@ -189,12 +186,12 @@ class Track {
             if (this.artwork != null) {
                 this.tag += "<img class='circle' width='50px' height='50px' src=\"" + this.artwork + "\"/>";
             } else {
-                this.tag += '<img src="https://dummyimage.com/100x100/000/fff&text=' + this.title + '" class="activator responsive-img"/>'
+                this.tag += '<img src="https://dummyimage.com/100x100/000/fff&text=' + this.title + '" class="activator circle responsive-img"/>'
             }
             this.tag += "</a>";
         }
         if (this.title != null) {
-            this.tag += "<span class='title' >Title: " + this.title + "</span>";
+            this.tag += "<span class='title truncate' >Title: " + this.title + "</span>";
         }
         if (this.genre != null) {
             this.tag += "<p>Genre: " + this.genre + "</p>";
@@ -232,7 +229,7 @@ class Track {
         }
         tag += '</div>';
         if (this.title != null) {
-            tag += this.title;
+            tag += "<span class='truncate'>" +this.title+ "</span>";
         }
         return tag;
     }
