@@ -7368,10 +7368,11 @@ input[type=range] + .thumb {
     transform-origin: 50% 50%;
     -webkit-transform: rotate(-45deg);
     transform: rotate(-45deg);
+    display: none;
 }
 
 input[type=range] + .thumb .value {
-    display: block;
+    display: none;
     width: 30px;
     text-align: center;
     color: #26a69a;
