@@ -62,7 +62,6 @@ class Jukebox {
         if (!self.my_tracks.includes(track)) {
             self.my_tracks.add(track);
             Materialize.toast(track.title + " has been added to your tracks", 4000);
-            track.inMyTracks = true;
             track.update(self);
             self.my_tracks.save();
         }
@@ -101,8 +100,6 @@ class Track {
         this.src_url = track.permalink_url;
         this.description = track.description;
         this.isPlaying = false;
-        this.inMyTracks = false;
-        this.inQueue = false;
     }
 
     playbtn() {
@@ -129,23 +126,30 @@ class Track {
         return $('#queue_card'+this.id);
     };
 
-    display(jukebox, container, actions = false) {
-        this.show(actions);
+    display(jukebox, playlist, container, actions = false) {
+        this.show(playlist, actions);
         container.append(this.tag);
-        console.log(this.tag);
         this.addListeners(jukebox);
+        if (this.isPlaying) {
+            $('#current').html(this.now_playing());
+        } else {
+            $('#current').empty();
+        }
     }
 
-    update(jukebox, actions = false) {
-        this.show();
+    update(jukebox, playlist, actions = false) {
+        this.show(playlist);
         this.card().replaceWith(this.tag);
-        console.log(this.tag);
         if(actions){
-            this.show(actions);
+            this.show(playlist,actions);
             this.queue_card().replaceWith(this.tag);
-            console.log(this.tag);
         }
         this.addListeners(jukebox);
+        if (this.isPlaying) {
+            $('#current').html(this.now_playing());
+        } else {
+            $('#current').empty();
+        }
     }
 
     addListeners(jukebox) {
@@ -177,13 +181,13 @@ class Track {
                 hover: false, // Activate on hover
                 gutter: 0, // Spacing from edge
                 belowOrigin: false, // Displays dropdown below the button
-                alignment: 'left', // Displays dropdown with edge aligned to the left of button
+                alignment: 'right', // Displays dropdown with edge aligned to the left of button
                 stopPropagation: false // Stops event propagation
             }
         );
     }
 
-    show(actions) {
+    show(playlist, actions) {
         if(actions){
             this.tag = "<li id='queue_card" + this.id + "' class='collection-item avatar'>";
         }else{
@@ -219,36 +223,23 @@ class Track {
         if (actions) {
             this.tag += '<a id="queue_track_actions_btn' + this.id + '" class="dropdown-button btn-flat black-text" data-activates="queue_track_actions' + this.id + '"><i class="material-icons">more_vert</i></a>';
             this.tag += "<ul id='queue_track_actions" + this.id + "' class='dropdown-content'>";
-            if (this.inMyTracks) {
-                this.tag += "<li><a class='remove" + this.id + "'>Remove from your Tracks</a></li>";
-            } else {
-                this.tag += "<li><a class='add" + this.id + "'>Add to your Tracks</a></li>";
-            }
-            if (this.src_url != null) {
-                this.tag += "<li class='divider'>";
-                this.tag += "<li><a href='" + this.src_url + "'>View on SoundCloud</a></li>";
-            }
-            this.tag += "</ul>";
         } else {
             this.tag += '<a id="track_actions_btn' + this.id + '" class="dropdown-button btn-flat black-text" data-activates="track_actions' + this.id + '"><i class="material-icons">more_vert</i></a>';
             this.tag += "<ul id='track_actions" + this.id + "' class='dropdown-content'>";
-            if (this.inMyTracks) {
+        }
+        if(playlist != undefined) {
+            if (playlist.includes(this)) {
                 this.tag += "<li><a class='remove" + this.id + "'>Remove from your Tracks</a></li>";
             } else {
                 this.tag += "<li><a class='add" + this.id + "'>Add to your Tracks</a></li>";
             }
-            if (this.src_url != null) {
-                this.tag += "<li class='divider'>";
-                this.tag += "<li><a href='" + this.src_url + "'>View on SoundCloud</a></li>";
-            }
-            this.tag += "</ul>";
         }
+        if (this.src_url != null) {
+            this.tag += "<li class='divider'>";
+            this.tag += "<li><a href='" + this.src_url + "'>View on SoundCloud</a></li>";
+        }
+        this.tag += "</ul>";
         this.tag += "</div></li>";
-        if (this.isPlaying) {
-            $('#current').html(this.now_playing());
-        } else {
-            $('#current').empty();
-        }
     }
 
     now_playing() {
@@ -308,7 +299,7 @@ class Playlist {
     display(container, actions = false) {
         let self = this;
         this.tracks.forEach(function (track) {
-            track.display(self.jukebox, container, actions);
+            track.display(self.jukebox, self, container, actions);
         });
     }
 
@@ -473,7 +464,7 @@ class Player {
         let self = this;
         this.queuebox.empty();
         this.queue.forEach(function (track) {
-            track.display(self.jukebox, self.queuebox, true);
+            track.display(self.jukebox,self.jukebox.my_tracks, self.queuebox, true);
         })
     }
 
@@ -604,14 +595,14 @@ class Player {
         }
         if (this.current_track != undefined) {
             this.current_track.isPlaying = false;
-            this.current_track.update(this.jukebox, true);
+            this.current_track.update(this.jukebox, this.jukebox.my_tracks, true);
         }
         this.paused = true;
         let self = this;
         this.current_track = src;
         this.track_number = this.queue.indexOf(this.current_track);
         this.current_track.isPlaying = true;
-        this.current_track.update(this.jukebox, true);
+        this.current_track.update(this.jukebox, this.jukebox.my_tracks, true);
         SC.stream(`/tracks/` + src.id).then(function (player) {
             self.audio = player;
             self.audio.on('finish', function () {
