@@ -15,7 +15,7 @@ class Jukebox {
         this.searching = false;
         this.player = new Player(self);
         this.player.init();
-        this.my_tracks = new Playlist(self, "my_tracks");
+        this.my_tracks = new Playlist(self, "My Tracks");
         this.my_tracks.load();
         this.mytracksbtn = $('#my_tracks');
         this.mytracksbtn.click(function () {
@@ -30,7 +30,7 @@ class Jukebox {
         self.tracks_container.empty();
         $('#preloader').html('<div class="preloader-wrapper small active"><div class="spinner-layer spinner-blue"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div></div><div class="circle-clipper right"><div class="circle"></div></div></div></div>');
         if (self.search_bar.val() != '') {
-            SC.get(`/tracks`, {q: self.search_bar.val(), limit: 100}).then(function (tracks) {
+            SC.get(`/tracks`, {q: self.search_bar.val(), limit: 200}).then(function (tracks) {
                 self.search_results = [];
                 tracks.forEach(function (track) {
                     let current = undefined;
@@ -54,35 +54,6 @@ class Jukebox {
         playlist.display(this.tracks_container);
         this.player.displayQueue();
         $('#preloader').removeClass('active');
-    }
-
-    add_to_my_tracks(track) {
-        let self = this;
-        if (!self.my_tracks.includes(track)) {
-            self.my_tracks.add(track);
-            Materialize.toast(track.title + " has been added to your tracks", 4000);
-            track.update(self);
-            self.my_tracks.save();
-        }
-    }
-
-    remove_from_my_tracks(track) {
-        let self = this;
-        if (self.my_tracks.includes(track)) {
-            self.my_tracks.remove(track);
-            self.player.removeFromQueue(track);
-            Materialize.toast(track.title + " has been removed from your tracks <button id='undo'" + track.id + " class=\"btn-flat toast-action\">Undo</button>", 4000);
-            $('#undo' + track.id).click(function () {
-                self.add_to_my_tracks(track)
-            });
-            track.inMyTracks = false;
-            if (self.searching) {
-                track.update(self);
-            } else {
-                track.card().remove();
-            }
-            self.my_tracks.save();
-        }
     }
 }
 
@@ -129,11 +100,6 @@ class Track {
         this.show(playlist, actions);
         container.append(this.tag);
         this.addListeners(jukebox);
-        if (this.isPlaying) {
-            $('#current').html(this.now_playing());
-        } else {
-            $('#current').empty();
-        }
     }
 
     update(jukebox, playlist, actions = false) {
@@ -145,11 +111,6 @@ class Track {
             this.queue_card().replaceWith(this.tag);
         }
         this.addListeners(jukebox);
-        if (this.isPlaying) {
-            $('#current').html(this.now_playing());
-        } else {
-            $('#current').empty();
-        }
     }
 
     addListeners(jukebox) {
@@ -162,7 +123,7 @@ class Track {
         this.addbtn().unbind();
         this.addbtn().bind('click', function (event) {
             event.stopPropagation();
-            jukebox.add_to_my_tracks(self);
+            jukebox.my_tracks.add(self);
         });
         this.pausebtn().unbind();
         this.pausebtn().bind('click', function (event) {
@@ -172,7 +133,7 @@ class Track {
         this.removebtn().unbind();
         this.removebtn().bind('click', function (event) {
             event.stopPropagation();
-            jukebox.remove_from_my_tracks(self);
+            jukebox.my_tracks.remove(self);
         });
         $('.dropdown-button').dropdown({
                 inDuration: 300,
@@ -277,7 +238,11 @@ class Playlist {
             json.forEach(function (track) {
                 let curr = SC.get('/tracks/' + track.id).then(function (result) {
                     let t = new Track(result);
-                    self.add(t);
+                    if (!self.tracks.includes(t)) {
+                        self.tracks.push(t);
+                        t.display(self.jukebox, self);
+                        self.save();
+                    }
                 });
             });
             $('#preloader').removeClass('active');
@@ -294,7 +259,7 @@ class Playlist {
     }
 
     find_by_id(id) {
-        return findWithAttr(this.tracks, "id", id);
+        return this.tracks.findWithAttr("id", id);
     }
 
     includes(track) {
@@ -308,6 +273,13 @@ class Playlist {
         });
     }
 
+    update(container, actions = false) {
+        let self = this;
+        this.tracks.forEach(function (track) {
+            track.update(self.jukebox, container, self, actions);
+        });
+    }
+
     totalTime() {
         let time = 0;
         this.tracks.forEach(function (track) {
@@ -317,11 +289,26 @@ class Playlist {
     }
 
     add(track) {
-        this.tracks.push(track);
+        let self = this;
+        if (!self.tracks.includes(track)) {
+            self.tracks.push(track);
+            Materialize.toast(track.title + " has been added to "+this.name, 4000);
+            track.update(self.jukebox, self);
+            self.save();
+        }
     }
 
     remove(track) {
-        this.tracks.remove(track);
+        let self = this;
+        if (self.tracks.includes(track)) {
+            self.tracks.remove(track);
+            Materialize.toast(track.title + " has been removed from "+this.name+"<button id='undo" + track.id + "' class=\"btn-flat toast-action\">Undo</button>", 4000);
+            $('#undo' + track.id).click(function () {
+                self.add(track);
+            });
+            track.update(self.jukebox, self);
+            self.save();
+        }
     }
 }
 
@@ -471,9 +458,9 @@ class Player {
     shuffleQueue() {
         let self = this;
         self.shuffle = !self.shuffle;
-        shuffle_array(self.queue);
+        self.queue.shuffle();
         if (self.current_track != undefined) {
-            swap(self.queue, 0, findWithAttr(self.queue, "id", self.current_track.id));
+            self.queue.swap(0, self.queue.findWithAttr("id", self.current_track.id));
         }
         this.displayQueue();
     }
@@ -527,7 +514,8 @@ class Player {
             }
             if (this.track_number >= this.queue.length) {
                 if (this.shuffle) {
-                    shuffle_array(this.queue);
+                    this.queue.shuffle();
+                    this.displayQueue();
                     if (this.repeat == 1) {
                         this.track_number = 1;
                         this.changeSrc(this.queue[this.track_number]);
@@ -631,6 +619,7 @@ class Player {
                 self.next();
             });
             self.play();
+            $('#current').html(self.current_track.now_playing());
             $('#queue_tracks').animate({
                 scrollTop: self.current_track.card().offset().top - $('nav').height()
             }, 1000);

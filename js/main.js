@@ -16,27 +16,25 @@ function formatSecondsAsTime(secs, format) {
     return min + ':' + sec;
 }
 
-function shuffle_array(a) {
-    for (let i = a.length; i; i--) {
+Array.prototype.shuffle = function() {
+    for (let i = this.length; i; i--) {
         let j = Math.floor(Math.random() * i);
-        [a[i - 1], a[j]] = [a[j], a[i - 1]];
+        [this[i - 1], this[j]] = [this[j], this[i - 1]];
     }
-}
-
-function findWithAttr(array, attr, value) {
-    for (var i = 0; i < array.length; i += 1) {
-        if (array[i][attr] === value) {
+};
+Array.prototype.findWithAttr = function( attr, value) {
+    for (var i = 0; i < this.length; i += 1) {
+        if (this[i][attr] === value) {
             return i;
         }
     }
     return -1;
-}
-
-function swap(list, pos1, pos2) {
-    var temp = list[pos2];
-    list[pos2] = list[pos1];
-    list[pos1] = temp;
-}
+};
+Array.prototype.swap = function(pos1, pos2) {
+    var temp = this[pos2];
+    this[pos2] = this[pos1];
+    this[pos1] = temp;
+};
 Array.prototype.remove = function () {
     var what, a = arguments, L = a.length, ax;
     while (L && this.length) {
