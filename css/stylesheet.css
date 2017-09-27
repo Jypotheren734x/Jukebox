@@ -36,8 +36,8 @@ input[type='range']::-webkit-slider-thumb {
     width: 15px;
 }
 
-.noUi-handle {
-    display: none;
+#controls{
+
 }
 
 #tracks {
@@ -144,7 +144,7 @@ input[type='range']::-webkit-slider-thumb {
     pointer-events: visible !important;
     position: fixed;
     left: 25px;
-    top: 510.5px;
+    top: 490.5px;
     opacity: 1;
     width: 700px;
     height: 350px;

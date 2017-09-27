@@ -121,11 +121,11 @@ class Track {
         return $('#card' + this.id);
     };
 
-    queue_card(){
-        return $('#queue_card'+this.id);
+    queue_card() {
+        return $('#queue_card' + this.id);
     };
 
-    display(jukebox,container, playlist,  actions = false) {
+    display(jukebox, container, playlist, actions = false) {
         this.show(playlist, actions);
         container.append(this.tag);
         this.addListeners(jukebox);
@@ -140,7 +140,7 @@ class Track {
         playlist.includes(this);
         this.show(playlist);
         this.card().replaceWith(this.tag);
-        if(actions){
+        if (actions) {
             this.show(playlist, actions);
             this.queue_card().replaceWith(this.tag);
         }
@@ -188,9 +188,9 @@ class Track {
     }
 
     show(playlist, actions) {
-        if(actions){
+        if (actions) {
             this.tag = "<li id='queue_card" + this.id + "' class='collection-item avatar'>";
-        }else{
+        } else {
             this.tag = "<li id='card" + this.id + "' class='collection-item avatar'>";
         }
         if (this.isPlaying) {
@@ -202,9 +202,9 @@ class Track {
         } else {
             this.tag += "<a href='#' class='" + this.id + "'>";
             if (this.artwork != null) {
-                this.tag += "<img class='circle' width='50px' height='50px' src=\"" + this.artwork + "\"/>";
+                this.tag += "<img class='no-select circle' width='50px' height='50px' src=\"" + this.artwork + "\"/>";
             } else {
-                this.tag += '<img src="https://dummyimage.com/100x100/000/fff&text=' + this.title + '" class="activator circle responsive-img"/>'
+                this.tag += '<img src="https://dummyimage.com/100x100/000/fff&text=' + this.title + '" class="activator circle no-select responsive-img"/>'
             }
             this.tag += "</a>";
         }
@@ -227,7 +227,7 @@ class Track {
             this.tag += '<a id="track_actions_btn' + this.id + '" class="dropdown-button btn-flat black-text" data-activates="track_actions' + this.id + '"><i class="material-icons">more_vert</i></a>';
             this.tag += "<ul id='track_actions" + this.id + "' class='dropdown-content'>";
         }
-        if(playlist != undefined) {
+        if (playlist != undefined) {
             if (playlist.includes(this)) {
                 this.tag += "<li><a class='remove" + this.id + "'>Remove from your Tracks</a></li>";
             } else {
@@ -245,13 +245,13 @@ class Track {
     now_playing() {
         let tag = '<div class="row"><div class="col s12 m2">';
         if (this.artwork != null) {
-            tag += '<img src="' + this.artwork + '" width="50px" height="50px"/>';
+            tag += '<img class="no-select circle" src="' + this.artwork + '" width="50px" height="50px"/>';
         } else {
-            tag += '<img src="https://dummyimage.com/50x50/000/fff&text=' + this.title + '"/>'
+            tag += '<img class="no-select circle" src="https://dummyimage.com/50x50/000/fff&text=' + this.title + '"/>'
         }
-        tag += "</div><div class='col s12 m1'></div><div class='col s12 m9'>";
+        tag += "</div><div class='col s12 m10'>";
         if (this.title != null) {
-            tag += "<span class='truncate'>" + this.title + "</span>";
+            tag += "<span class=''>" + this.title + "</span>";
         }
         tag += '</div></div>';
         return tag;
@@ -286,9 +286,9 @@ class Playlist {
 
     get(id) {
         let spot = this.find_by_id(id);
-        if(spot >= 0){
+        if (spot >= 0) {
             return this.tracks[spot];
-        }else{
+        } else {
             return null;
         }
     }
@@ -396,19 +396,7 @@ class Player {
         this.previousbtn.click(function () {
             self.previous();
         });
-        noUiSlider.create(self.indicator, {
-            start: 0,
-            animate: false,
-            connect: [true, false],
-            step: 0.000000000000000000000001,
-            range: {
-                'min': 0,
-                'max': 1
-            }
-        });
-        this.indicator.noUiSlider.on('change', function () {
-            self.audio.seek(self.current_track.duration * this.get());
-        });
+        this.dragging = false;
         this.volumebtn.click(function () {
             self.muted = !self.muted;
             if (self.muted) {
@@ -469,14 +457,14 @@ class Player {
         let self = this;
         this.queuebox.empty();
         this.queue.forEach(function (track) {
-            track.display(self.jukebox,self.queuebox,self.jukebox.my_tracks,  true);
+            track.display(self.jukebox, self.queuebox, self.jukebox.my_tracks, true);
         })
     }
 
     updateQueue() {
         let self = this;
         this.queue.forEach(function (track) {
-            track.update(self.jukebox,self.jukebox.my_tracks, true);
+            track.update(self.jukebox, self.jukebox.my_tracks, true);
         })
     }
 
@@ -484,7 +472,7 @@ class Player {
         let self = this;
         self.shuffle = !self.shuffle;
         shuffle_array(self.queue);
-        if(self.current_track != undefined){
+        if (self.current_track != undefined) {
             swap(self.queue, 0, findWithAttr(self.queue, "id", self.current_track.id));
         }
         this.displayQueue();
@@ -571,6 +559,29 @@ class Player {
                 this.playbtn.attr('data-tooltip', 'Pause');
                 this.playbtn.tooltip();
                 $('.playing').css("animation", "sound 0ms -800ms linear infinite alternate;");
+                if(self.indicator.noUiSlider !=undefined) {
+                    self.indicator.noUiSlider.destroy();
+                }
+                noUiSlider.create(self.indicator, {
+                    start: 0,
+                    animate: false,
+                    connect: [true, false],
+                    step: 1,
+                    range: {
+                        'min': 0,
+                        'max': self.current_track.duration
+                    }
+                });
+                this.indicator.noUiSlider.on('slide', function () {
+                    self.dragging = true;
+                    self.duration_indicator.html("" + formatSecondsAsTime(Math.floor(this.get() / 1000)) + "/" + formatSecondsAsTime(Math.floor(self.current_track.duration / 1000)));
+                });
+                this.indicator.noUiSlider.on('set', function () {
+                    self.dragging = false;
+                });
+                this.indicator.noUiSlider.on('change', function () {
+                    self.audio.seek(this.get());
+                });
                 this.updater = setInterval(function () {
                     self.timeUpdate()
                 }, 1);
@@ -629,9 +640,10 @@ class Player {
     timeUpdate() {
         let self = this;
         if (self.audio != undefined) {
-            let percent = (self.audio.currentTime() / self.current_track.duration);
-            self.duration_indicator.html("" + formatSecondsAsTime(Math.floor(self.audio.currentTime() / 1000)) + "/" + formatSecondsAsTime(Math.floor(self.current_track.duration / 1000)));
-            self.indicator.noUiSlider.set(percent);
+            if (!self.dragging) {
+                self.duration_indicator.html("" + formatSecondsAsTime(Math.floor(self.audio.currentTime() / 1000)) + "/" + formatSecondsAsTime(Math.floor(self.current_track.duration / 1000)));
+                self.indicator.noUiSlider.set(self.audio.currentTime());
+            }
         }
     }
 }
