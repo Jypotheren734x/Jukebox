@@ -487,7 +487,7 @@ class Player {
         if(self.current_track != undefined){
             swap(self.queue, 0, findWithAttr(self.queue, "id", self.current_track.id));
         }
-        this.updateQueue();
+        this.displayQueue();
     }
 
     emptyQueue() {
@@ -571,8 +571,6 @@ class Player {
                 this.playbtn.attr('data-tooltip', 'Pause');
                 this.playbtn.tooltip();
                 $('.playing').css("animation", "sound 0ms -800ms linear infinite alternate;");
-                this.current_track.isPlaying = true;
-                this.current_track.update(this.jukebox);
                 this.updater = setInterval(function () {
                     self.timeUpdate()
                 }, 1);
