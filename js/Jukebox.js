@@ -31,7 +31,7 @@ class Jukebox {
         self.player.emptyQueue();
         $('#preloader').html('<div class="preloader-wrapper small active"><div class="spinner-layer spinner-blue"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div></div><div class="circle-clipper right"><div class="circle"></div></div></div></div>');
         if (self.search_bar.val() != '') {
-            SC.get(`/tracks`, {q: self.search_bar.val(), limit: 200}).then(function (tracks) {
+            SC.get(`/tracks`, {q: self.search_bar.val(), limit: 100}).then(function (tracks) {
                 self.search_results = [];
                 tracks.forEach(function (track) {
                     let current = undefined;
@@ -452,14 +452,16 @@ class Player {
         this.queuebox.empty();
         this.queue.forEach(function (track) {
             track.display(self.jukebox, self.queuebox, self.jukebox.my_tracks, true);
-        })
+        });
+        $('.playing').toggleClass("running");
     }
 
     updateQueue() {
         let self = this;
         this.queue.forEach(function (track) {
             track.update(self.jukebox, self.jukebox.my_tracks, true);
-        })
+        });
+        $('.playing').toggleClass("running");
     }
 
     shuffleQueue() {
@@ -523,7 +525,7 @@ class Player {
                     this.queue.shuffle();
                     this.displayQueue();
                     if (this.repeat == 1) {
-                        this.track_number = 1;
+                        this.track_number = 0;
                         this.changeSrc(this.queue[this.track_number]);
                     } else {
                         this.stop();
@@ -625,6 +627,7 @@ class Player {
                 self.next();
             });
             self.play();
+            $('#current').html(self.current_track.now_playing());
             $('html body').animate({
                 scrollTop: self.current_track.card()[0].offsetTop
             }, 1000);
@@ -632,8 +635,6 @@ class Player {
                 scrollTop: self.current_track.queue_card()[0].offsetTop
             }, 1000);
             this.paused = false;
-            console.log((this));
-            $('#current').html(self.current_track.now_playing());
         });
     }
 
