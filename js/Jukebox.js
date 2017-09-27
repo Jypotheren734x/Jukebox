@@ -28,6 +28,7 @@ class Jukebox {
         let self = this;
         self.searching = true;
         self.tracks_container.empty();
+        self.player.emptyQueue();
         $('#preloader').html('<div class="preloader-wrapper small active"><div class="spinner-layer spinner-blue"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div></div><div class="circle-clipper right"><div class="circle"></div></div></div></div>');
         if (self.search_bar.val() != '') {
             SC.get(`/tracks`, {q: self.search_bar.val(), limit: 200}).then(function (tracks) {
@@ -40,7 +41,9 @@ class Jukebox {
                         current = new Track(track);
                     }
                     current.display(self, self.tracks_container, self.my_tracks);
+                    self.player.addToQueue(current);
                 });
+                self.player.displayQueue();
                 $('#preloader').html('search');
             });
         }
@@ -118,21 +121,25 @@ class Track {
         this.playbtn().unbind();
         this.playbtn().bind('click', function (event) {
             event.stopPropagation();
+            event.preventDefault();
             jukebox.player.changeSrc(self);
         });
         this.addbtn().unbind();
         this.addbtn().bind('click', function (event) {
             event.stopPropagation();
+            event.preventDefault();
             jukebox.my_tracks.add(self);
         });
         this.pausebtn().unbind();
         this.pausebtn().bind('click', function (event) {
             event.stopPropagation();
+            event.preventDefault();
             jukebox.player.stop();
         });
         this.removebtn().unbind();
         this.removebtn().bind('click', function (event) {
             event.stopPropagation();
+            event.preventDefault();
             jukebox.my_tracks.remove(self);
         });
         $('.dropdown-button').dropdown({
@@ -473,7 +480,6 @@ class Player {
         if (!this.queue.includes(track)) {
             this.queue.push(track);
             track.inQueue = true;
-            this.updateQueue();
         }
     }
 
@@ -546,7 +552,7 @@ class Player {
                 this.playbtn.html('<i class="material-icons">pause</i>');
                 this.playbtn.attr('data-tooltip', 'Pause');
                 this.playbtn.tooltip();
-                $('.playing').css("animation", "sound 0ms -800ms linear infinite alternate;");
+                $('.playing').toggleClass("running");
                 this.updater = setInterval(function () {
                     self.timeUpdate()
                 }, 1);
@@ -557,8 +563,7 @@ class Player {
                 this.playbtn.html('<i class="material-icons">play_arrow</i>');
                 this.playbtn.attr('data-tooltip', 'Play');
                 this.playbtn.tooltip();
-                $('.playing').css("animation", "none");
-                $('.playing').css('height', '3px');
+                $('.playing').toggleClass("running");
             }
         } else {
             this.changeSrc(this.queue[0]);
@@ -570,8 +575,10 @@ class Player {
         this.audio.seek(0);
         this.play();
         clearInterval(self.updater);
-        self.current_track.isPlaying = false;
-        self.current_track.update(self.jukebox, self.jukebox.my_tracks, true);
+        if(self.current_track != undefined) {
+            self.current_track.isPlaying = false;
+            self.current_track.update(self.jukebox, self.jukebox.my_tracks, true);
+        }
         self.indicator.noUiSlider.set(0);
     }
 
@@ -615,14 +622,18 @@ class Player {
         SC.stream(`/tracks/` + src.id).then(function (player) {
             self.audio = player;
             self.audio.on('finish', function () {
-                $('.playing').css("animation-play-state", "paused");
                 self.next();
             });
             self.play();
-            $('#current').html(self.current_track.now_playing());
-            $('#queue_tracks').animate({
-                scrollTop: self.current_track.card().offset().top - $('nav').height()
+            $('html body').animate({
+                scrollTop: self.current_track.card()[0].offsetTop
             }, 1000);
+            $('#queue_tracks').animate({
+                scrollTop: self.current_track.queue_card()[0].offsetTop
+            }, 1000);
+            this.paused = false;
+            console.log((this));
+            $('#current').html(self.current_track.now_playing());
         });
     }
 
