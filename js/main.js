@@ -37,8 +37,31 @@ function swap(list, pos1, pos2) {
     list[pos2] = list[pos1];
     list[pos1] = temp;
 }
-
+Array.prototype.remove = function () {
+    var what, a = arguments, L = a.length, ax;
+    while (L && this.length) {
+        what = a[--L];
+        while ((ax = this.indexOf(what)) !== -1) {
+            this.splice(ax, 1);
+        }
+    }
+    return this;
+};
 $.fn.setClass = function (classes) {
     this.attr('class', classes);
     return this;
+};
+$.fn.listHandlers = function(events, outputFunction) {
+    return this.each(function(i){
+        var elem = this,
+            dEvents = $(this).data('events');
+        if (!dEvents) {return;}
+        $.each(dEvents, function(name, handler){
+            if((new RegExp('^(' + (events === '*' ? '.+' : events.replace(',','|').replace(/^on/i,'')) + ')$' ,'i')).test(name)) {
+                $.each(handler, function(i,handler){
+                    outputFunction(elem, 'n' + i + ': [' + name + '] : ' + handler );
+                });
+            }
+        });
+    });
 };
