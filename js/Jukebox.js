@@ -128,17 +128,21 @@ class Track {
     display(jukebox, container, actions = false) {
         this.show(actions);
         container.append(this.tag);
-        this.addListeners(jukebox)
+        this.addListeners(jukebox);
     }
 
     update(jukebox, actions = false) {
         this.show(actions);
         this.card().replaceWith(this.tag);
-        this.addListeners(jukebox)
+        this.addListeners(jukebox);
     }
 
     addListeners(jukebox) {
         let self = this;
+        this.playbtn().unbind('click');
+        this.addbtn().unbind('click');
+        this.pausebtn().unbind('click');
+        this.removebtn().unbind('click');
         this.playbtn().bind('click', function (event) {
             event.stopPropagation();
             jukebox.player.changeSrc(self);
@@ -285,10 +289,10 @@ class Playlist {
         return this.tracks.includes(track);
     }
 
-    display(container) {
+    display(container, actions = false) {
         let self = this;
         this.tracks.forEach(function (track) {
-            track.display(self.jukebox, container);
+            track.display(self.jukebox, container, actions);
         });
     }
 
@@ -456,8 +460,6 @@ class Player {
         this.queuebox.empty();
         this.queue.forEach(function (track) {
             track.display(self.jukebox, self.queuebox, true);
-            $('#track_actions_btn' + track.id).replaceWith('<a id="queue_track_actions" class="dropdown-button btn-flat black-text" data-activates="queue_track_actions' + track.id + '"><i class="material-icons">more_vert</i></a>');
-            track.addListeners(self.jukebox);
         })
     }
 
@@ -465,6 +467,9 @@ class Player {
         let self = this;
         self.shuffle = !self.shuffle;
         shuffle_array(self.queue);
+        if(self.current_track != undefined){
+            swap(self.queue, 0, findWithAttr(self.queue, "id", self.current_track.id));
+        }
         this.updateQueue();
     }
 
@@ -600,7 +605,7 @@ class Player {
                 self.next();
             });
             self.play();
-            $('html, body').animate({
+            $('#queue_tracks').animate({
                 scrollTop: self.current_track.card().offset().top - $('nav').height()
             }, 1000);
         });
