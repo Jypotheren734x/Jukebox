@@ -34,9 +34,8 @@ class Jukebox {
                 self.search_results = [];
                 tracks.forEach(function (track) {
                     let current = undefined;
-                    let exists = self.my_tracks.find_by_id(track.id);
-                    if (exists > 0) {
-                        current = self.my_tracks.get(exists);
+                    if (self.my_tracks.find_by_id(track.id) >= 0) {
+                        current = self.my_tracks.get(track.id);
                     } else {
                         current = new Track(track);
                     }
@@ -138,10 +137,11 @@ class Track {
     }
 
     update(jukebox, playlist, actions = false) {
+        playlist.includes(this);
         this.show(playlist);
         this.card().replaceWith(this.tag);
         if(actions){
-            this.show(playlist,actions);
+            this.show(playlist, actions);
             this.queue_card().replaceWith(this.tag);
         }
         this.addListeners(jukebox);
@@ -285,7 +285,12 @@ class Playlist {
     }
 
     get(id) {
-        return this.tracks[id];
+        let spot = this.find_by_id(id);
+        if(spot >= 0){
+            return this.tracks[spot];
+        }else{
+            return null;
+        }
     }
 
     find_by_id(id) {
@@ -293,7 +298,7 @@ class Playlist {
     }
 
     includes(track) {
-        return this.tracks.includes(track);
+        return this.find_by_id(track.id) >= 0;
     }
 
     display(container, actions = false) {
@@ -585,7 +590,7 @@ class Player {
         this.play();
         clearInterval(self.updater);
         self.current_track.isPlaying = false;
-        self.current_track.update(self.jukebox);
+        self.current_track.update(self.jukebox, self.jukebox.my_tracks, true);
         self.indicator.noUiSlider.set(0);
     }
 
