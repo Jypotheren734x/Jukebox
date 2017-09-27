@@ -30,7 +30,7 @@ class Jukebox {
         self.tracks_container.empty();
         $('#preloader').html('<div class="preloader-wrapper small active"><div class="spinner-layer spinner-blue"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div></div><div class="circle-clipper right"><div class="circle"></div></div></div></div>');
         if (self.search_bar.val() != '') {
-            SC.get(`/tracks`, {q: self.search_bar.val(), limit: 200}).then(function (tracks) {
+            SC.get(`/tracks`, {q: self.search_bar.val(), limit: 100}).then(function (tracks) {
                 self.search_results = [];
                 tracks.forEach(function (track) {
                     let current = undefined;
@@ -39,7 +39,7 @@ class Jukebox {
                     } else {
                         current = new Track(track);
                     }
-                    current.display(self, self.tracks_container);
+                    current.display(self, self.tracks_container, self.my_tracks);
                 });
                 $('#preloader').html('search');
             });
@@ -52,7 +52,7 @@ class Jukebox {
         $('#preloader').addClass('active');
         this.player.setQueue(playlist);
         playlist.display(this.tracks_container);
-        this.player.updateQueue();
+        this.player.displayQueue();
         $('#preloader').removeClass('active');
     }
 
@@ -125,7 +125,7 @@ class Track {
         return $('#queue_card'+this.id);
     };
 
-    display(jukebox, playlist, container, actions = false) {
+    display(jukebox,container, playlist,  actions = false) {
         this.show(playlist, actions);
         container.append(this.tag);
         this.addListeners(jukebox);
@@ -304,7 +304,7 @@ class Playlist {
     display(container, actions = false) {
         let self = this;
         this.tracks.forEach(function (track) {
-            track.display(self.jukebox, self, container, actions);
+            track.display(self.jukebox, container, self, actions);
         });
     }
 
@@ -465,11 +465,18 @@ class Player {
         this.queue = playlist.tracks;
     }
 
-    updateQueue() {
+    displayQueue() {
         let self = this;
         this.queuebox.empty();
         this.queue.forEach(function (track) {
-            track.display(self.jukebox,self.jukebox.my_tracks, self.queuebox, true);
+            track.display(self.jukebox,self.queuebox,self.jukebox.my_tracks,  true);
+        })
+    }
+
+    updateQueue() {
+        let self = this;
+        this.queue.forEach(function (track) {
+            track.update(self.jukebox,self.jukebox.my_tracks, true);
         })
     }
 
