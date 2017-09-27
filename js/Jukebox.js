@@ -559,29 +559,6 @@ class Player {
                 this.playbtn.attr('data-tooltip', 'Pause');
                 this.playbtn.tooltip();
                 $('.playing').css("animation", "sound 0ms -800ms linear infinite alternate;");
-                if(self.indicator.noUiSlider !=undefined) {
-                    self.indicator.noUiSlider.destroy();
-                }
-                noUiSlider.create(self.indicator, {
-                    start: 0,
-                    animate: false,
-                    connect: [true, false],
-                    step: 1,
-                    range: {
-                        'min': 0,
-                        'max': self.current_track.duration
-                    }
-                });
-                this.indicator.noUiSlider.on('slide', function () {
-                    self.dragging = true;
-                    self.duration_indicator.html("" + formatSecondsAsTime(Math.floor(this.get() / 1000)) + "/" + formatSecondsAsTime(Math.floor(self.current_track.duration / 1000)));
-                });
-                this.indicator.noUiSlider.on('set', function () {
-                    self.dragging = false;
-                });
-                this.indicator.noUiSlider.on('change', function () {
-                    self.audio.seek(this.get());
-                });
                 this.updater = setInterval(function () {
                     self.timeUpdate()
                 }, 1);
@@ -624,6 +601,29 @@ class Player {
         this.track_number = this.queue.indexOf(this.current_track);
         this.current_track.isPlaying = true;
         this.current_track.update(this.jukebox, this.jukebox.my_tracks, true);
+        if(self.indicator.noUiSlider !=undefined) {
+            self.indicator.noUiSlider.destroy();
+        }
+        noUiSlider.create(self.indicator, {
+            start: 0,
+            animate: false,
+            connect: [true, false],
+            step: 1,
+            range: {
+                'min': 0,
+                'max': self.current_track.duration
+            }
+        });
+        this.indicator.noUiSlider.on('slide', function () {
+            self.dragging = true;
+            self.duration_indicator.html("" + formatSecondsAsTime(Math.floor(this.get() / 1000)) + "/" + formatSecondsAsTime(Math.floor(self.current_track.duration / 1000)));
+        });
+        this.indicator.noUiSlider.on('set', function () {
+            self.dragging = false;
+        });
+        this.indicator.noUiSlider.on('change', function () {
+            self.audio.seek(this.get());
+        });
         SC.stream(`/tracks/` + src.id).then(function (player) {
             self.audio = player;
             self.audio.on('finish', function () {
