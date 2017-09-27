@@ -140,21 +140,21 @@ class Track {
     addListeners(jukebox) {
         let self = this;
         this.playbtn().unbind('click');
-        this.addbtn().unbind('click');
-        this.pausebtn().unbind('click');
-        this.removebtn().unbind('click');
         this.playbtn().bind('click', function (event) {
             event.stopPropagation();
             jukebox.player.changeSrc(self);
         });
+        this.addbtn().unbind('click');
         this.addbtn().bind('click', function (event) {
             event.stopPropagation();
             jukebox.add_to_my_tracks(self);
         });
+        this.pausebtn().unbind('click');
         this.pausebtn().bind('click', function (event) {
             event.stopPropagation();
             jukebox.player.stop();
         });
+        this.removebtn().unbind('click');
         this.removebtn().bind('click', function (event) {
             event.stopPropagation();
             jukebox.remove_from_my_tracks(self);
@@ -237,16 +237,17 @@ class Track {
     }
 
     now_playing() {
-        let tag = '<div id="bars" style="margin-left: -100px;margin-top: 50px;">';
+        let tag = '<div class="row"><div class="col s12 m2">';
         if (this.artwork != null) {
             tag += '<img src="' + this.artwork + '" width="50px" height="50px"/>';
         } else {
             tag += '<img src="https://dummyimage.com/50x50/000/fff&text=' + this.title + '"/>'
         }
-        tag += '</div>';
+        tag += "</div><div class='col s12 m1'></div><div class='col s12 m9'>";
         if (this.title != null) {
             tag += "<span class='truncate'>" + this.title + "</span>";
         }
+        tag += '</div></div>';
         return tag;
     }
 }
@@ -355,14 +356,14 @@ class Player {
             switch (self.repeat) {
                 case 0:
                     self.repeat = 1;
-                    $(this).attr('data-tooltip', 'Repeats all songs. Click to repeat current song only.');
+                    $(this).attr('data-tooltip', 'Repeating all songs. Click to repeat current song only.');
                     $(this).tooltip();
                     self.repeatbtn.html('<i class="material-icons">repeat</i>');
                     $(this).toggleClass('cyan-text');
                     break;
                 case 1:
                     self.repeat = 2;
-                    $(this).attr('data-tooltip', 'Repeats current song. Click to stop repeating.');
+                    $(this).attr('data-tooltip', 'Repeating current song. Click to stop repeating.');
                     $(this).tooltip();
                     self.repeatbtn.html('<i class="material-icons">repeat_one</i>');
                     break;
@@ -396,8 +397,6 @@ class Player {
         });
         this.indicator.noUiSlider.on('change', function () {
             self.audio.seek(self.current_track.duration * this.get());
-            self.audio.play();
-            self.paused = false;
         });
         this.volumebtn.click(function () {
             self.muted = !self.muted;
@@ -554,7 +553,7 @@ class Player {
                 this.playbtn.html('<i class="material-icons">pause</i>');
                 this.playbtn.attr('data-tooltip', 'Pause');
                 this.playbtn.tooltip();
-                $('.playing').css("animation-play-state", "running");
+                $('.playing').css("animation", "sound 0ms -800ms linear infinite alternate;");
                 this.current_track.isPlaying = true;
                 this.current_track.update(this.jukebox);
                 this.updater = setInterval(function () {
@@ -567,7 +566,8 @@ class Player {
                 this.playbtn.html('<i class="material-icons">play_arrow</i>');
                 this.playbtn.attr('data-tooltip', 'Play');
                 this.playbtn.tooltip();
-                $('.playing').css("animation-play-state", "paused");
+                $('.playing').css("animation", "none");
+                $('.playing').css('height', '3px');
             }
         } else {
             this.changeSrc(this.queue[0]);
