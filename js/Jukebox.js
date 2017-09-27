@@ -190,12 +190,14 @@ class Track {
             }
             this.tag += "</a>";
         }
+        this.tag += "<div class='content'>";
         if (this.title != null) {
             this.tag += "<span class='title truncate' >Title: " + this.title + "</span>";
         }
         if (this.genre != null) {
             this.tag += "<p>Genre: " + this.genre + "</p>";
         }
+        this.tag += "</div>";
         this.tag += "<div class='secondary-content'>";
         if (this.duration != null) {
             this.tag += "<span class='black-text'>" + formatSecondsAsTime(Math.floor(this.duration / 1000)) + "</span>";
