@@ -52,8 +52,8 @@ class Jukebox {
         this.searching = false;
         $('#preloader').addClass('active');
         this.player.setQueue(playlist);
-        this.player.updateQueue();
         playlist.display(this.tracks_container);
+        this.player.updateQueue();
         $('#preloader').removeClass('active');
     }
 
@@ -122,39 +122,50 @@ class Track {
     };
 
     card() {
-        return $('.card' + this.id);
+        return $('#card' + this.id);
+    };
+
+    queue_card(){
+        return $('#queue_card'+this.id);
     };
 
     display(jukebox, container, actions = false) {
         this.show(actions);
         container.append(this.tag);
+        console.log(this.tag);
         this.addListeners(jukebox);
     }
 
     update(jukebox, actions = false) {
-        this.show(actions);
+        this.show();
         this.card().replaceWith(this.tag);
+        console.log(this.tag);
+        if(actions){
+            this.show(actions);
+            this.queue_card().replaceWith(this.tag);
+            console.log(this.tag);
+        }
         this.addListeners(jukebox);
     }
 
     addListeners(jukebox) {
         let self = this;
-        this.playbtn().unbind('click');
+        this.playbtn().unbind();
         this.playbtn().bind('click', function (event) {
             event.stopPropagation();
             jukebox.player.changeSrc(self);
         });
-        this.addbtn().unbind('click');
+        this.addbtn().unbind();
         this.addbtn().bind('click', function (event) {
             event.stopPropagation();
             jukebox.add_to_my_tracks(self);
         });
-        this.pausebtn().unbind('click');
+        this.pausebtn().unbind();
         this.pausebtn().bind('click', function (event) {
             event.stopPropagation();
             jukebox.player.stop();
         });
-        this.removebtn().unbind('click');
+        this.removebtn().unbind();
         this.removebtn().bind('click', function (event) {
             event.stopPropagation();
             jukebox.remove_from_my_tracks(self);
@@ -173,7 +184,11 @@ class Track {
     }
 
     show(actions) {
-        this.tag = "<li class='card" + this.id + " collection-item avatar'>";
+        if(actions){
+            this.tag = "<li id='queue_card" + this.id + "' class='collection-item avatar'>";
+        }else{
+            this.tag = "<li id='card" + this.id + "' class='collection-item avatar'>";
+        }
         if (this.isPlaying) {
             this.tag += '<div id="bars" style="margin-top: 35px; margin-left: -50px;">';
             for (var i = 0; i < 3; i++) {
@@ -480,7 +495,6 @@ class Player {
         if (!this.queue.includes(track)) {
             this.queue.push(track);
             track.inQueue = true;
-            console.log(track.inMyTracks);
             this.updateQueue();
         }
     }
@@ -590,14 +604,14 @@ class Player {
         }
         if (this.current_track != undefined) {
             this.current_track.isPlaying = false;
-            this.current_track.update(this.jukebox);
+            this.current_track.update(this.jukebox, true);
         }
         this.paused = true;
         let self = this;
         this.current_track = src;
         this.track_number = this.queue.indexOf(this.current_track);
         this.current_track.isPlaying = true;
-        this.current_track.update(this.jukebox);
+        this.current_track.update(this.jukebox, true);
         SC.stream(`/tracks/` + src.id).then(function (player) {
             self.audio = player;
             self.audio.on('finish', function () {
