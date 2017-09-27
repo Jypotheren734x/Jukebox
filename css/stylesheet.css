@@ -144,7 +144,6 @@ input[type='range']::-webkit-slider-thumb {
     pointer-events: visible !important;
     position: fixed;
     left: 25px;
-    top: 490.5px;
     opacity: 1;
     width: 700px;
     height: 350px;
