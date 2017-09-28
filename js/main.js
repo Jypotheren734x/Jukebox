@@ -6,14 +6,16 @@ function formatSecondsAsTime(secs, format) {
     let min = Math.floor((secs - (hr * 3600)) / 60);
     let sec = Math.floor(secs - (hr * 3600) - (min * 60));
 
+    if(hr < 10){
+        hr = "0" + hr;
+    }
     if (min < 10) {
         min = "0" + min;
     }
     if (sec < 10) {
         sec = "0" + sec;
     }
-
-    return min + ':' + sec;
+    return hr + ':' +min + ':' + sec;
 }
 
 Array.prototype.shuffle = function() {
