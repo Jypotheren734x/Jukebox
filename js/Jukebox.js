@@ -275,7 +275,7 @@ class Playlist {
 
     display(container, actions = false) {
         let self = this;
-        container.append('<h1>'+this.name+'<button id="play" class="btn-flat"><i class="material-icons large">play_arrow</i></button></h1><hr/>');
+        container.append('<h1>'+this.name+'<button id="play" class="btn-flat"><i class="material-icons large">play_arrow</i></button>'+formatSecondsAsTime(Math.floor(self.totalTime() / 1000))+'</h1><hr/>');
         this.tracks.forEach(function (track) {
             track.display(self.jukebox, container, self, actions);
         });

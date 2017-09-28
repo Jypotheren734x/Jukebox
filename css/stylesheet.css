@@ -20,6 +20,11 @@ main {
     position: fixed !important;
 }
 
+#controls{
+    height: 90px;
+    bottom: -15px;
+}
+
 input[type="range"] {
     -webkit-appearance: none;
     -moz-apperance: none;

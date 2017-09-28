@@ -45,7 +45,7 @@
         </div>
     </nav>
 </div>
-<div class="scale-transition scale-out z-depth-5 white" id="queue">
+<div class="scale-transition scale-out z-depth-5 white pinned" id="queue">
     <ul class="collection with-header z-depth-0 black-text" id="queue_tracks">
         <li><h5 class="center">You have nothing in your queue.</h5></li>
     </ul>
@@ -55,8 +55,13 @@
         <ul id="tracks" class="collection z-depth-0">
         </ul>
     </div>
+    <audio id="music">
+        <source id="mp3" type="audio/mp3">
+    </audio>
+</main>
+<footer>
     <div class="row">
-        <div id="controls" class="card col s12" style="z-index: 999;">
+        <div id="controls" class="card col s12 pinned z-depth-5" style="z-index: 999;">
             <div id="indicator"></div>
             <div class="card-content row">
                 <div class="col s11">
@@ -89,10 +94,7 @@
             </div>
         </div>
     </div>
-    <audio id="music">
-        <source id="mp3" type="audio/mp3">
-    </audio>
-</main>
+</footer>
 <script src="js/script.js"></script>
 </body>
 </html>
