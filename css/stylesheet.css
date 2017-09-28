@@ -25,6 +25,10 @@ main {
     bottom: -15px;
 }
 
+#queue{
+    bottom: 110px;
+}
+
 input[type="range"] {
     -webkit-appearance: none;
     -moz-apperance: none;
