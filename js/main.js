@@ -15,7 +15,11 @@ function formatSecondsAsTime(secs, format) {
     if (sec < 10) {
         sec = "0" + sec;
     }
-    return hr + ':' +min + ':' + sec;
+    if(hr == 0) {
+        return hr + ':' + min + ':' + sec;
+    }else{
+        return min + ':' + sec;
+    }
 }
 
 Array.prototype.shuffle = function() {
