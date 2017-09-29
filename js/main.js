@@ -16,9 +16,9 @@ function formatSecondsAsTime(secs, format) {
         sec = "0" + sec;
     }
     if(hr == 0) {
-        return hr + ':' + min + ':' + sec;
-    }else{
         return min + ':' + sec;
+    }else{
+        return hr + ':' + min + ':' + sec;
     }
 }
 
